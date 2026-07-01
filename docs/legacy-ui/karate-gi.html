@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIROTA</title>
+  <link rel="icon" type="image/svg+xml" href="../images/hirota_symb_blue.svg">
+  <link rel="stylesheet" href="../css/output.css">
+  <link rel="stylesheet" href="https://use.typekit.net/qtw5ydf.css">
+</head>
+
+<body class="theme-skyblue">
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="fixed top-0 left-0 w-full h-[26px] border-y border-neutral-400 bg-white z-50 flex items-center justify-between px-2 pb-[1px] select-none">
+    <img src="../images/hirota-logo-空手衣のヒロタ.svg" alt="HIROTA Logo" class="h-[22px] object-contain object-center"/>
+
+    <!-- THEME DOTS -->
+    <div class="flex items-center gap-1">
+      <div id="theme-skyblue" class="w-[12px] h-[12px] rounded-full border border-neutral-400 bg-[#BAE8FD] cursor-pointer"></div>
+      <div id="theme-red" class="w-[12px] h-[12px] rounded-full border border-neutral-400 bg-[#E21E20] cursor-pointer"></div>
+      <div class="w-[12px] h-[12px] rounded-full border border-neutral-400 bg-[#3F5BA6] cursor-pointer"></div>
+    </div>
+  </header>
+
+
+
+  <!-- ===== MAIN ===== -->
+  <main class="mt-[26px] h-[calc(100vh-26px)] flex overflow-hidden">
+
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <!------ ////////////////////////////// COLUMN 1 — LOGO ////////////////////////////// ------>
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <section class="basis-[7.5%] border-r border-neutral-400 overflow-hidden flex items-center justify-center">
+      <img src="../images/hirota_logo_unflavored_vertical.svg" alt="HIROTA Vertical Logo" class="h-[85vh] opacity-50"/>
+    </section>
+
+
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <!------ ////////////////////////////// COLUMN 2 — INFO ////////////////////////////// ------>
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <section class="basis-[20%] border-r border-neutral-400 overflow-y-auto scrollbar-none">
+      <!-- hirota title -->
+      <div class="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-neutral-400 text-sm leading-none backdrop-blur-xs">hirota</div>
+      <!-- hirota company information -->
+      <div class="mt-2 mx-1.5 text-xs leading-tight">
+        <!-- introduction -->
+        <img src="../images/hirota_logo_unflavored_simp.svg" alt="HIROTA Logo Simplified" class="inline opacity-50 h-[18px] align-baseline"/>
+        <span class="ml-0.5">is a Japanese manufacturing house specializing in premium karate-gi and karate equipment.</span>
+        <p class="mt-2">
+          Founded in 1965, the company has established a long-standing reputation for precision craftsmanship, material excellence, and uncompromising quality. HIROTA uniforms are trusted and worn by masters, instructors, and elite competitors at the highest levels of traditional and competitive karate worldwide.
+        </p>
+        <!-- 空手衣のヒロタ -->
+        <div id="storeSymbol" class="mx-1.5 my-3 relative cursor-pointer select-none">
+          <img src="../images/empty-空手衣のヒロタ.svg" alt="Karate-Gi no Hirota" class="w-full opacity-50 hover:opacity-75 cursor-pointer hover:scale-[1.03] previewable" data-preview="../images/hirota_store.png"/>
+        </div>
+        <!-- tokyo head office -->
+        <div>
+          <p class="font-bold">東京本社 Tokyo Head Office</p>
+          <p>NS Bldg. 1F, 5-33-6 Kamata, Ohta-ku, Tokyo 144-0052, Japan.</p>
+          <div class="flex justify-between">
+            <span>TEL(03)3730-5366</span>
+            <span>FAX(03)3730-5336</span>
+          </div>
+          <span class="underline cursor-pointer hover:text-[#5e8fff]">tokyo@karategi-hirota.co.jp</span>
+          <p>Business Hours:</p>
+          <ul class="list-disc list-inside">
+            <li>Monday–Friday: 9:00–18:00</li>
+            <li>Saturday: 9:00–17:00</li>
+            <li>Sunday, National Holidays, and 2nd Saturday of each month: Closed</li>
+          </ul>
+        </div>
+        <!-- fukoka branch -->
+        <div class="mt-6">
+          <p class="font-bold">福岡支店 Fukuoka Branch</p>
+          <p>4-2-15 Sumiyon Bldg., Sumiyoshi, Hakata-ku, Fukuoka City 812-0018, Japan.</p>
+          <div class="flex justify-between">
+            <span>TEL(092)475-1810</span>
+            <span>FAX(092)475-1817</span>
+          </div>
+          <span class="underline cursor-pointer hover:text-[#5e8fff]">fukuoka@karategi-hirota.co.jp</span>
+          <p>Business Hours:</p>
+          <ul class="list-disc list-inside">
+            <li>Monday–Friday: 9:00–18:00</li>
+            <li>Saturday: 9:00–17:00</li>
+            <li>Sunday, National Holidays, and 2nd Saturday of each month: Closed</li>
+          </ul>
+        </div>
+        <!-- aichi factory -->
+        <div class="mt-6">
+          <p class="font-bold">愛知工場 Aichi Factory</p>
+          <p>16-3 Rendai, Yonezu-cho, Nishio City, Aichi 445-0802, Japan.</p>
+          <div class="flex justify-between">
+            <span>TEL(0563)54-3600</span>
+            <span>FAX(0563)54-5822</span>
+          </div>
+        </div>
+        <!-- store visit & measurement appointments -->
+        <div class="mt-8">
+          <p><span class="uppercase">※ About store visit & measurement appointments</span>:</p>
+          <p>To ensure proper attention and accurate measurement, please make a reservation before visiting any HIROTA location. Please call the branch you plan to visit and make a reservation in advance.</p>
+          <p class="mt-2">If you would like to have your karate-gi measurements taken, please inform us of your height, weight, and preferred fabric type when booking. For measurement sessions, please wear or bring a T-shirt and tight-fitting bottoms (such as spats) to ensure accurate fitting.</p>
+          <p class="mt-2">If you visit without a reservation or during busy periods with many appointments, we may not be able to assist you. Please make sure to book your visit in advance.</p>
+        </div>
+      </div>
+      <!-- local footer -->
+      <div class="mt-8 mb-2 flex flex-col items-center select-none">
+        <img src="../images/hirota-footer-logo.svg" alt="HIROTA Footer Logo" class="w-[97%] opacity-50"/>
+        <p class="w-[97%] text-center tracking-wider text-black/35" style="font-size: clamp(9px, 0.7vw, 12px);">© <span id="footerYear"></span> HIROTA CO., LTD. All Rights Reserved.</p>
+      </div>
+    </section>
+
+
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <!------ ////////////////////////////// COLUMN 3 — SHOP ////////////////////////////// ------>
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <section class="basis-[45%] border-r border-neutral-400 overflow-y-auto scrollbar-none">
+      <!-- shop title -->
+      <div class="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-neutral-400 text-sm leading-none backdrop-blur-xs">shop</div>
+      <!-- shop navigation links -->
+      <div>
+        <nav id="shop-nav" class="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-2xl leading-none">
+          <a href="karate-gi.html" class="hover:opacity-60">karate-gi</a>
+          <a href="obi.html" class="hover:opacity-60">obi</a>
+          <a href="equipment.html" class="hover:opacity-60">equipment</a>
+          <a href="accessories.html" class="hover:opacity-60">accessories</a>
+        </nav>
+        <!-- products title -->
+        <div class="h-[26px] flex items-center px-1.5 border-b border-neutral-400 text-sm leading-none backdrop-blur-xs">products / karate-gi</div>
+
+        <!-- products / karate-gi -->
+        <div class="flex w-full">
+
+          <!----------------------------------------------------------------->
+          <!--------------------------- LEFT SIDE --------------------------->
+          <!----------------------------------------------------------------->
+          <div class="basis-[55%] pt-2 px-2.5 pb-5 leading-tight">
+          
+            <!--=======================================-->
+            <!--=========== KARATE-GI MODEL ===========-->
+            <!--=======================================-->
+            <p class="text-lg font-bold mb-2">Karate-gi model</p>
+            <!-- Karate-gi model table -->
+            <table class="w-full border-collapse text-xs font-bold">
+              <tbody>
+                <tr class="gi-option gi-model cursor-pointer" data-id="tsubasa-evo-1" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">Tsubasa Evo 1 (ツバエボ1)</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-model cursor-pointer" data-id="tsubasa" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">Tsubasa (ツバサ)</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-model cursor-pointer" data-id="kuu" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">Kuu (クウ)</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-model cursor-pointer" data-id="pinac-kumite" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">Pinac Kumite (ピナック組手用)</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-model cursor-pointer" data-id="takumi" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">Takumi (タクミ)</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-model cursor-pointer" data-id="pinac-kata" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">Pinac Kata (ピナック形用)</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-model cursor-pointer" data-id="mh-10" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">MH-10</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-model cursor-pointer" data-id="mh-11" data-price="250">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">MH-11</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">$250</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+
+            <!--========================================-->
+            <!--================ SIZING ================-->
+            <!--========================================-->
+            <p class="text-lg font-bold pt-5">Sizing</p>
+            <!-- jacket measurements text -->
+            <p class="text-xs pt-1 mb-1">jacket measurements</p>
+            <!-- jacket measurements table-->
+            <table class="w-full border-collapse text-xs font-bold">
+              <tbody>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">A</span>
+                      <input type="number" placeholder="length" class="gi-input gi-jacket-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="A" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">B</span>
+                      <input type="number" placeholder="length" class="gi-input gi-jacket-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="B" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">C</span>
+                      <input type="number" placeholder="length" class="gi-input gi-jacket-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="C" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">D</span>
+                      <input type="number" placeholder="length" class="gi-input gi-jacket-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="D" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">E</span>
+                      <input type="number" placeholder="length" class="gi-input gi-jacket-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="E" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">F</span>
+                      <input type="number" placeholder="length" class="gi-input gi-jacket-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="F" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- pants measurements text -->
+            <p class="text-xs pt-3 mb-1">pants measurements</p>
+            <!-- pants measurements table-->
+            <table class="w-full border-collapse text-xs font-bold">
+              <tbody>
+                <tr class="gi-addon gi-high-waist cursor-pointer" data-id="high-waist" data-price="15">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">high-waist (optional)</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-text">+ $15</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">G</span>
+                      <input type="number" placeholder="length" class="gi-input gi-pants-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="G" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">H</span>
+                      <input type="number" placeholder="length" class="gi-input gi-pants-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="H" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">I</span>
+                      <input type="number" placeholder="length" class="gi-input gi-pants-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="I" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">J</span>
+                      <input type="number" placeholder="length" class="gi-input gi-pants-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="J" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- shrinkage text -->
+            <p class="text-xs pt-3 mb-1">shrinkage</p>
+            <!-- shrinkage table-->
+            <table class="w-full border-collapse text-xs font-bold">
+              <tbody>
+                <tr class="gi-option gi-shrinkage cursor-pointer" data-id="shrinkage-not-accounted">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">to be added by HIROTA</span>
+                      <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                        <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-option gi-shrinkage cursor-pointer" data-id="shrinkage-accounted">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">already accounted</span>
+                      <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                        <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- body measurements text -->
+            <p class="text-xs pt-3 mb-1">body measurements</p>
+            <!-- body measurements table-->
+            <table class="w-full border-collapse text-xs font-bold">
+              <tbody>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">height</span>
+                      <input type="number" placeholder="enter your height" class="gi-input gi-body-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="height" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">weight</span>
+                      <input type="number" placeholder="enter your weight" class="gi-input gi-body-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="weight" data-type="number"/>
+                      <span class="input-text">kg</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">waist</span>
+                      <input type="number" placeholder="enter your waist" class="gi-input gi-body-measure required flex-1 text-right bg-transparent focus:outline-none" data-id="waist" data-type="number"/>
+                      <span class="input-text">cm</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+
+            <!--=======================================-->
+            <!--============== OPTIONALS ==============-->
+            <!--=======================================-->
+            <p class="text-lg font-bold pt-5">Optionals</p>
+            <!-- embroidery text -->
+            <p class="text-xs pt-1 mb-1">embroidery (+ $1.75 per character)</p>
+            <!-- embroidery table-->
+            <table class="w-full border-collapse text-xs font-bold">
+              <tbody>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">jacket</span>
+                      <input type="text" placeholder="none" class="gi-input gi-embroidery optional flex-1 text-right bg-transparent focus:outline-none" data-id="embr-jacket" data-type="text" data-price-per-char="1.75"/>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">pants</span>
+                      <input type="text" placeholder="none" class="gi-input gi-embroidery optional flex-1 text-right bg-transparent focus:outline-none" data-id="embr-pants" data-type="text" data-price-per-char="1.75"/>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">chest</span>
+                      <input type="text" placeholder="none" class="gi-input gi-embroidery optional flex-1 text-right bg-transparent focus:outline-none" data-id="embr-chest" data-type="text" data-price-per-char="1.75"/>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-input-row cursor-pointer">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center gap-1.5">
+                      <span class="input-text">left shoulder</span>
+                      <input type="text" placeholder="none" class="gi-input gi-embroidery optional flex-1 text-right bg-transparent focus:outline-none" data-id="embr-shoulder" data-type="text" data-price-per-char="1.75"/>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Sleves, pants & jacket hems text -->
+            <p class="text-xs pt-3 mb-1">sleves, pants & jacket hems</p>
+            <!-- Sleves, pants & jacket hems table -->
+            <table class="w-full border-collapse text-xs font-bold">
+              <tbody>
+                <tr class="gi-hems cursor-pointer" data-id="4cm-thick" data-price="12">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">4cm width, thick</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-price">+ $12</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-hems cursor-pointer" data-id="4cm-ultra-thick" data-price="22">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">4cm width, ultra-thick</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-price">+ $22</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-hems cursor-pointer" data-id="5cm-normal" data-price="12">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">5cm width, normal thickness</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-price">+ $12</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-hems cursor-pointer" data-id="5cm-thick" data-price="22">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">5cm width, thick</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-price">+ $22</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="gi-hems cursor-pointer" data-id="5cm-ultra-thick" data-price="35">
+                  <td class="group px-2 py-1 border border-neutral-400">
+                    <div class="flex items-center justify-between">
+                      <span class="option-text">5cm width, ultra-thick</span>
+                      <div class="flex items-center gap-2">
+                        <span class="option-price">+ $35</span>
+                        <div class="circle relative w-[8px] h-[8px] rounded-full border border-black/50 flex items-center justify-center">
+                          <div class="inner-circle hidden w-[4px] h-[4px] rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div> <!-- close LEFT side -->
+
+
+                    
+          <!------------------------------------------------------------------>
+          <!--------------------------- RIGHT SIDE --------------------------->
+          <!------------------------------------------------------------------>
+          <div class="basis-[45%] flex flex-col mt-8.5 mb-5">
+            <!-- Karate-gi SVG -->
+            <img src="../images/karate-gi-figure.svg" alt="karate-gi figure" class="w-[60%] mx-auto opacity-50 select-none"/>
+            <!-- Karate-gi images -->
+            <div class="flex items-center justify-end gap-2 mt-4 mx-8 select-none">
+              <!-- IMAGE 1 -->
+              <div class="group w-8 h-8 border border-neutral-400 overflow-hidden hover:border-neutral-500">
+                <img src="../images/karate-gi-1.jpg"
+                  alt="karate-gi image 1"
+                  class="w-full h-full object-cover object-center opacity-50 group-hover:opacity-85" />
+              </div>
+              <!-- IMAGE 2 -->
+              <div class="group w-8 h-8 border border-neutral-400 overflow-hidden hover:border-neutral-500">
+                <img src="../images/karate-gi-2.jpg"
+                  alt="karate-gi image 2"
+                  class="w-full h-full object-cover object-center opacity-50 group-hover:opacity-85" />
+              </div>
+              <!-- IMAGE 3 -->
+              <div class="group w-8 h-8 border border-neutral-400 overflow-hidden hover:border-neutral-500">
+                <img src="../images/karate-gi-3.jpg"
+                  alt="karate-gi image 3"
+                  class="w-full h-full object-cover object-center opacity-50 group-hover:opacity-85" />
+              </div>
+            </div>
+            <div class="mt-6 mx-8">
+              <!-- karate-gi model -->
+              <p class="gi-model-name text-lg font-bold leading-tight mb-1">Tsubasa Evo 1 (ツバエボ1)</p>
+              <!-- karate-gi characteristics -->
+              <p class="gi-model-material text-[11px] italic leading-tight mb-0.5 text-black/35">95% polyester / 5% elasthan</p>
+              <p class="gi-model-type text-[11px] italic leading-tight mb-1.5 text-black/35">kumite karate-gi</p>
+              <!-- karate-gi model description -->
+              <p class="gi-model-desc text-xs leading-tight">This is our refined and improved original Tsubasa. Tsubasa Evo-1 is the ultimate lightweight dogi for ultra-fast, ultra-mobile kumite action. Using the latest technology, we have woven the 100% polyester material with a diamond-shaped texture on the inside surface (instead of dots found on the original Tsubasa) to reduce friction even further and assist with gliding over the body.</p>
+            </div>
+            <div class="gi-selected-features flex flex-col mt-2.5 mx-8 gap-0.5 leading-tight text-[11px] text-black/35">
+              <!-- karate-gi selected features -->
+              <div class="flex justify-between">
+                <p>Tsubasa Evo 1 (ツバエボ1)</p>
+                <p>$250</p>
+              </div>
+              <p>A = 97</p>
+              <p>B = 61</p>
+              <p>C = 47</p>
+              <p>D = 16</p>
+              <p>E = 24</p>
+              <p>F = 44</p>
+              <div class="flex justify-between">
+                <p>high-waist added</p>
+                <p>$15</p>
+              </div>
+              <p>G = 16</p>
+              <p>H = 47</p>
+              <p>I = 16</p>
+              <p>J = 24</p>
+              <p>shrinkage to be added</p>
+              <div class="flex justify-between">
+                <p>jacket embr = 老馬</p>
+                <p>$3.5</p>
+              </div>
+              <div class="flex justify-between">
+                <p>pants embr = 老馬</p>
+                <p>$3.5</p>
+              </div>
+              <div class="flex justify-between">
+                <p>5cm width, ultra-thick hems</p>
+                <p>$35</p>
+              </div>
+            </div>
+            <div class="flex justify-between mt-2.5 mx-8">
+              <p class="text-lg font-bold leading-tight">SUBTOTAL</p>
+              <p class="gi-subtotal text-lg font-bold leading-tight">$317</p>
+            </div>
+            <button class="mt-2.5 mx-8 text-xs font-bold bg-transparent text-black/50 border border-neutral-400 tracking-wide py-1 hover:bg-black/10"> 
+              ADD TO CART 
+            </button>
+
+          </div> <!-- close RIGHT side -->
+
+        </div> <!-- close products / karate-gi -->
+
+      </div>
+
+    </section>
+
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <!------ ////////////////////////////// COLUMN 4 — CART ////////////////////////////// ------>
+    <!------ ///////////////////////////////////////////////////////////////////////////// ------>
+    <section class="basis-[27.5%] overflow-y-auto scrollbar-none">
+      <!-- cart title -->
+      <div class="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-neutral-400 text-sm leading-none backdrop-blur-xs">cart</div>
+      <!-- cart items -->
+      <div class="mt-2 mx-1.5 text-xs leading-tight">
+        <p>Your cart is empty :(</p>
+      </div>
+    </section>
+
+  </main>
+
+
+
+  <!-- ===== Global Image Preview ===== -->
+  <div id="imagePreviewContainer" class="hidden fixed bottom-4 right-4 w-[260px] bg-white/70 shadow-md border border-black/50 z-50 select-none">
+    <!-- Sleves, pants & jacket hems text -->
+    <img id="imagePreview" src="" alt="Preview" class="w-full h-auto opacity-90 object-contain"/>
+  </div>
+
+
+  <!-- ===== Links a js ===== -->
+  <script src="../js/main.js"></script>
+  <script src="../js/karate-gi-models.js"></script>
+  <script src="../js/karate-gi.js"></script>
+
+
+</body>
+</html>
