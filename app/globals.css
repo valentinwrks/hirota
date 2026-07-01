@@ -24,9 +24,35 @@ body {
   background: linear-gradient(135deg, #b3e5fc, #ffffff, #b3e5fc);
   background-size: 300% 300%;
   animation: gradientMove 8s ease-in-out infinite;
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Monospaced "spreadsheet" aesthetic + muted black/50 text (design language). */
+  color: rgba(0, 0, 0, 0.5);
+  font-family: Consolas, "SF Mono", "Menlo", "Liberation Mono", ui-monospace,
+    monospace;
   -ms-overflow-style: none;
+}
+
+/* Hide number-input spinners (measurement/qty fields), matching the prototype. */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+::selection {
+  background: rgba(64, 64, 64, 1);
+  color: #fff;
+}
+
+/* Utility: hide scrollbars on the scrolling columns (design language). */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  scrollbar-width: none;
 }
 
 body::-webkit-scrollbar {

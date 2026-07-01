@@ -1,0 +1,75 @@
+{
+  "TopBar": {
+    "language": "言語",
+    "currency": "通貨",
+    "logoAlt": "ヒロタ"
+  },
+  "Nav": {
+    "shop": "ショップ",
+    "karateGi": "空手衣",
+    "obi": "帯",
+    "equipment": "用具",
+    "accessories": "アクセサリー",
+    "products": "商品"
+  },
+  "Catalog": {
+    "products": "商品",
+    "empty": "このカテゴリーの商品はまだありません。",
+    "configuratorComing": "設定機能は近日公開",
+    "configuratorNote": "このラインのオーダーメイド設定機能は現在準備中です。近日公開予定です。",
+    "viewProduct": "見る",
+    "outOfStock": "在庫切れ"
+  },
+  "Product": {
+    "back": "← もどる",
+    "size": "サイズ",
+    "color": "色",
+    "selectSize": "サイズを選択",
+    "selectColor": "色を選択",
+    "inStock": "在庫あり",
+    "outOfStock": "在庫切れ",
+    "stockCount": "在庫 {count} 点",
+    "addToCart": "カートに入れる",
+    "added": "追加しました",
+    "cosmeticNote": "サイズと色は価格に影響しません",
+    "notFound": "商品が見つかりません。"
+  },
+  "Cart": {
+    "title": "カート",
+    "empty": "カートは空です :(",
+    "subtotal": "小計",
+    "remove": "削除",
+    "qty": "数量",
+    "checkout": "レジへ進む",
+    "checkoutComing": "レジ機能は近日公開"
+  },
+  "About": {
+    "title": "ヒロタ",
+    "intro": "は、高級空手衣と空手用具を専門とする日本の製造メーカーです。",
+    "history": "【JA】Founded in 1965, the company has established a long-standing reputation for precision craftsmanship, material excellence, and uncompromising quality. HIROTA uniforms are trusted and worn by masters, instructors, and elite competitors at the highest levels of traditional and competitive karate worldwide.",
+    "tokyoTitle": "東京本社 Tokyo Head Office",
+    "tokyoAddress": "〒144-0052 東京都大田区蒲田5-33-6 NSビル1F",
+    "tokyoTel": "TEL(03)3730-5366",
+    "tokyoFax": "FAX(03)3730-5336",
+    "tokyoEmail": "tokyo@karategi-hirota.co.jp",
+    "fukuokaTitle": "福岡支店 Fukuoka Branch",
+    "fukuokaAddress": "〒812-0018 福岡県福岡市博多区住吉4-2-15 住吉4ビル",
+    "fukuokaTel": "TEL(092)475-1810",
+    "fukuokaFax": "FAX(092)475-1817",
+    "fukuokaEmail": "fukuoka@karategi-hirota.co.jp",
+    "aichiTitle": "愛知工場 Aichi Factory",
+    "aichiAddress": "〒445-0802 愛知県西尾市米津町連台16-3",
+    "aichiTel": "TEL(0563)54-3600",
+    "aichiFax": "FAX(0563)54-5822",
+    "hoursTitle": "営業時間:",
+    "hoursWeekday": "月曜〜金曜: 9:00〜18:00",
+    "hoursSaturday": "土曜: 9:00〜17:00",
+    "hoursClosed": "日曜・祝日・毎月第2土曜: 定休日",
+    "visitTitle": "※ ご来店・採寸のご予約について",
+    "visitP1": "【JA】To ensure proper attention and accurate measurement, please make a reservation before visiting any HIROTA location. Please call the branch you plan to visit and make a reservation in advance.",
+    "visitP2": "【JA】If you would like to have your karate-gi measurements taken, please inform us of your height, weight, and preferred fabric type when booking. For measurement sessions, please wear or bring a T-shirt and tight-fitting bottoms (such as spats) to ensure accurate fitting.",
+    "visitP3": "【JA】If you visit without a reservation or during busy periods with many appointments, we may not be able to assist you. Please make sure to book your visit in advance.",
+    "copyright": "© {year} HIROTA CO., LTD. All Rights Reserved.",
+    "disclaimer": "自主制作のコンセプト作品です。ヒロタからの依頼・承認によるものではありません。"
+  }
+}

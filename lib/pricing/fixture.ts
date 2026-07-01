@@ -87,8 +87,8 @@ const tables: PricingTables = {
     { width_cm: 4.5, thread: 'metallic', price_per_char: 330 },
   ],
   products: [
-    { id: 1, name: { en: 'Seiken Supporter' }, description: { en: 'HIROTA logo' }, product_type: null, category: 'equipment', subcategory: 'competition-equipment', price: 2530, options: null, stock: 100 },
-    { id: 3, name: { en: 'Red Fist Supporter' }, description: null, product_type: null, category: 'equipment', subcategory: 'competition-equipment', price: 3960, options: { size: ['XS', 'S', 'M', 'L'] }, stock: 100 },
+    { id: 1, slug: 'seiken-supporter', name: { en: 'Seiken Supporter' }, description: { en: 'HIROTA logo' }, product_type: null, category: 'equipment', subcategory: 'competition-equipment', price: 2530, options: null, stock: 100 },
+    { id: 3, slug: 'red-fist-supporter', name: { en: 'Red Fist Supporter' }, description: null, product_type: null, category: 'equipment', subcategory: 'competition-equipment', price: 3960, options: { size: ['XS', 'S', 'M', 'L'] }, stock: 100 },
   ],
 }
 

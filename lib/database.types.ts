@@ -426,6 +426,7 @@ export type Database = {
           options: Json | null
           price: number
           product_type: string | null
+          slug: string
           stock: number
           subcategory: Database["public"]["Enums"]["product_subcategory"]
         }
@@ -437,6 +438,7 @@ export type Database = {
           options?: Json | null
           price: number
           product_type?: string | null
+          slug: string
           stock?: number
           subcategory: Database["public"]["Enums"]["product_subcategory"]
         }
@@ -448,6 +450,7 @@ export type Database = {
           options?: Json | null
           price?: number
           product_type?: string | null
+          slug?: string
           stock?: number
           subcategory?: Database["public"]["Enums"]["product_subcategory"]
         }

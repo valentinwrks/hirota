@@ -1,0 +1,75 @@
+{
+  "TopBar": {
+    "language": "language",
+    "currency": "currency",
+    "logoAlt": "HIROTA"
+  },
+  "Nav": {
+    "shop": "shop",
+    "karateGi": "karate-gi",
+    "obi": "obi",
+    "equipment": "equipment",
+    "accessories": "accessories",
+    "products": "products"
+  },
+  "Catalog": {
+    "products": "products",
+    "empty": "No products in this category yet.",
+    "configuratorComing": "configurator coming",
+    "configuratorNote": "The made-to-order configurator for this line is in progress. Check back soon.",
+    "viewProduct": "view",
+    "outOfStock": "out of stock"
+  },
+  "Product": {
+    "back": "← back",
+    "size": "size",
+    "color": "color",
+    "selectSize": "select a size",
+    "selectColor": "select a color",
+    "inStock": "in stock",
+    "outOfStock": "out of stock",
+    "stockCount": "{count} in stock",
+    "addToCart": "ADD TO CART",
+    "added": "ADDED",
+    "cosmeticNote": "size & color do not change the price",
+    "notFound": "Product not found."
+  },
+  "Cart": {
+    "title": "cart",
+    "empty": "Your cart is empty :(",
+    "subtotal": "SUBTOTAL",
+    "remove": "remove",
+    "qty": "qty",
+    "checkout": "CHECKOUT",
+    "checkoutComing": "checkout coming"
+  },
+  "About": {
+    "title": "hirota",
+    "intro": "is a Japanese manufacturing house specializing in premium karate-gi and karate equipment.",
+    "history": "Founded in 1965, the company has established a long-standing reputation for precision craftsmanship, material excellence, and uncompromising quality. HIROTA uniforms are trusted and worn by masters, instructors, and elite competitors at the highest levels of traditional and competitive karate worldwide.",
+    "tokyoTitle": "東京本社 Tokyo Head Office",
+    "tokyoAddress": "NS Bldg. 1F, 5-33-6 Kamata, Ohta-ku, Tokyo 144-0052, Japan.",
+    "tokyoTel": "TEL(03)3730-5366",
+    "tokyoFax": "FAX(03)3730-5336",
+    "tokyoEmail": "tokyo@karategi-hirota.co.jp",
+    "fukuokaTitle": "福岡支店 Fukuoka Branch",
+    "fukuokaAddress": "4-2-15 Sumiyon Bldg., Sumiyoshi, Hakata-ku, Fukuoka City 812-0018, Japan.",
+    "fukuokaTel": "TEL(092)475-1810",
+    "fukuokaFax": "FAX(092)475-1817",
+    "fukuokaEmail": "fukuoka@karategi-hirota.co.jp",
+    "aichiTitle": "愛知工場 Aichi Factory",
+    "aichiAddress": "16-3 Rendai, Yonezu-cho, Nishio City, Aichi 445-0802, Japan.",
+    "aichiTel": "TEL(0563)54-3600",
+    "aichiFax": "FAX(0563)54-5822",
+    "hoursTitle": "Business Hours:",
+    "hoursWeekday": "Monday–Friday: 9:00–18:00",
+    "hoursSaturday": "Saturday: 9:00–17:00",
+    "hoursClosed": "Sunday, National Holidays, and 2nd Saturday of each month: Closed",
+    "visitTitle": "※ About store visit & measurement appointments",
+    "visitP1": "To ensure proper attention and accurate measurement, please make a reservation before visiting any HIROTA location. Please call the branch you plan to visit and make a reservation in advance.",
+    "visitP2": "If you would like to have your karate-gi measurements taken, please inform us of your height, weight, and preferred fabric type when booking. For measurement sessions, please wear or bring a T-shirt and tight-fitting bottoms (such as spats) to ensure accurate fitting.",
+    "visitP3": "If you visit without a reservation or during busy periods with many appointments, we may not be able to assist you. Please make sure to book your visit in advance.",
+    "copyright": "© {year} HIROTA CO., LTD. All Rights Reserved.",
+    "disclaimer": "Self-initiated concept build. Not commissioned or endorsed by HIROTA."
+  }
+}

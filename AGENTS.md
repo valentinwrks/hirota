@@ -130,10 +130,18 @@ customer configured and paid. The admin reads this snapshot to render the full s
  
 ### 8.1 Pattern A — Simple products (equipment + accessories)
 - ~32 products. Fields: category (`equipment`/`accessories`), subcategory, localized
-  name/description, fixed JPY price, `options` JSONB (`{ size:[…], color:[…] }` where
-  applicable), stock (tracked at product level, not per variant), image.
-- **Size and color are cosmetic and never change price.** (One real product, the groin
-  supporter in S, is 200 JPY cheaper — deliberately ignored to avoid per-variant pricing.)
+  name/description, fixed JPY price, `options` JSONB (`{ size:[…], color:[…] }` — a product
+  may offer either, both, or neither), stock (tracked at product level, **not** per
+  variant), image.
+- **Price:** size and color never change price. Pattern A is a single fixed JPY price.
+  (One real product, the groin supporter in S, is 200 JPY cheaper — deliberately ignored
+  to avoid per-variant pricing.)
+- **Selection is required, not optional.** When a product offers a `size` list and/or a
+  `color` list, the buyer MUST pick one value from each offered group before the item can
+  be added to the cart. A glove with no chosen size is not a valid line item. Products that
+  offer neither have nothing to select. The chosen values are recorded on the cart item and
+  the order snapshot for fulfillment — they don't affect price or stock accounting, but the
+  admin needs them to fulfill the order (this replaces the fax form).
 ### 8.2 Pattern B1 — Karate-gi Standard (ready-made)
 Price = lookup `(product line, size)` in `gi_standard_prices`. Sold as **full sets only**
 (no separate pieces in standard). Availability and options per model:
