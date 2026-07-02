@@ -6,7 +6,8 @@
   },
   "Nav": {
     "shop": "shop",
-    "karateGi": "karate-gi",
+    "karateGiCustom": "karate-gi (fully-tailored)",
+    "karateGiStandard": "karate-gi (ready-made)",
     "obi": "obi",
     "equipment": "equipment",
     "accessories": "accessories",
@@ -40,6 +41,8 @@
     "subtotal": "SUBTOTAL",
     "remove": "remove",
     "qty": "qty",
+    "increase": "increase quantity",
+    "decrease": "decrease quantity",
     "checkout": "CHECKOUT",
     "checkoutComing": "checkout coming"
   },

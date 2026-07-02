@@ -15,7 +15,8 @@ export async function ShopColumn({ children }: { children: React.ReactNode }) {
 
       <CategoryNav
         labels={{
-          "karate-gi": t("karateGi"),
+          "karate-gi-custom": t("karateGiCustom"),
+          "karate-gi-standard": t("karateGiStandard"),
           obi: t("obi"),
           equipment: t("equipment"),
           accessories: t("accessories"),

@@ -13,7 +13,7 @@ export function CategoryNav({
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-2xl leading-none">
+    <nav className="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-[20px] leading-none">
       {NAV_CATEGORIES.map((category) => {
         const href = `/catalog/${category}`;
         const active = pathname === href;

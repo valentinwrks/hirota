@@ -6,11 +6,13 @@ export type ProductRow = Database["public"]["Tables"]["products"]["Row"];
 export type ProductCategory =
   Database["public"]["Enums"]["product_category"];
 
-// The four top-level nav categories. `karate-gi` and `obi` are configurator
-// lines (no simple products); only `equipment` and `accessories` have a
-// functional grid this sprint.
+// The top-level nav categories. The two `karate-gi-*` lines and `obi` are
+// configurator lines (no simple products); only `equipment` and `accessories`
+// have a functional product grid. karate-gi is split into the fully-tailored
+// (custom, Pattern C) and ready-made (standard, Pattern B1) configurators.
 export const NAV_CATEGORIES = [
-  "karate-gi",
+  "karate-gi-custom",
+  "karate-gi-standard",
   "obi",
   "equipment",
   "accessories",

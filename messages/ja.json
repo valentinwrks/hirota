@@ -6,7 +6,8 @@
   },
   "Nav": {
     "shop": "ショップ",
-    "karateGi": "空手衣",
+    "karateGiCustom": "空手衣（フルオーダー）",
+    "karateGiStandard": "空手衣（既製）",
     "obi": "帯",
     "equipment": "用具",
     "accessories": "アクセサリー",
@@ -40,6 +41,8 @@
     "subtotal": "小計",
     "remove": "削除",
     "qty": "数量",
+    "increase": "数量を増やす",
+    "decrease": "数量を減らす",
     "checkout": "レジへ進む",
     "checkoutComing": "レジ機能は近日公開"
   },

@@ -4,7 +4,6 @@ import { getTranslations } from "next-intl/server";
 // Narrowest of the three regions. Static chrome (server component).
 export async function AboutColumn() {
   const t = await getTranslations("About");
-  const year = new Date().getFullYear();
 
   return (
     <section className="basis-[22%] shrink-0 border-r border-line overflow-y-auto overscroll-contain scrollbar-none">
@@ -86,25 +85,6 @@ export async function AboutColumn() {
           <p className="mt-2">{t("visitP2")}</p>
           <p className="mt-2">{t("visitP3")}</p>
         </div>
-      </div>
-
-      {/* local footer */}
-      <div className="mt-8 mb-2 flex flex-col items-center select-none">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/hirota/logo-footer.svg"
-          alt="HIROTA"
-          className="w-[97%] opacity-50"
-        />
-        <p
-          className="w-[97%] text-center tracking-wider text-ink/35"
-          style={{ fontSize: "clamp(9px, 0.7vw, 12px)" }}
-        >
-          {t("copyright", { year })}
-        </p>
-        <p className="w-[90%] mt-1 text-center text-ink/25 text-[9px] leading-tight">
-          {t("disclaimer")}
-        </p>
       </div>
     </section>
   );

@@ -11,9 +11,15 @@ import { ObiConfiguratorSection } from "@/components/obi/ObiConfiguratorSection"
 
 // Pre-render the four category routes per locale.
 export function generateStaticParams() {
-  return (["karate-gi", "obi", "equipment", "accessories"] as const).map(
-    (category) => ({ category }),
-  );
+  return (
+    [
+      "karate-gi-custom",
+      "karate-gi-standard",
+      "obi",
+      "equipment",
+      "accessories",
+    ] as const
+  ).map((category) => ({ category }));
 }
 
 export default async function CatalogCategoryPage({
