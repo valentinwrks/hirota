@@ -1,58 +1,74 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  /* ------------------------------------------------------------------ */
+  /* Paleta — ÚNICA fuente de verdad para el color del sitio. Cambiá un  */
+  /* valor acá y se actualiza en todos lados (los tokens de @theme de    */
+  /* abajo generan las utilidades text-, bg- y border- que usan los      */
+  /* componentes). Se mantiene el sistema de opacidades: p.ej. el texto  */
+  /* muted es text-ink/40, no un color aparte.                           */
+  /* ------------------------------------------------------------------ */
+
+  /* Tinta: todo el texto e iconos. Se usa con opacidad (text-ink/70…25). */
+  --ink: #000000;
+  /* Papel: superficies y fondos claros (bg-paper/30, bg-paper, text-paper). */
+  --paper: #ffffff;
+  /* Líneas / bordes finos. -soft = bordes y separadores más tenues.     */
+  --line: oklch(0.708 0 0); /* ex neutral-400 */
+  --line-soft: oklch(0.87 0 0); /* ex neutral-300 */
+  /* Azul del degradé de fondo de la página.                             */
+  --sky: #b3e5fc;
+  /* Resaltado al seleccionar texto.                                     */
+  --selection: #585858;
+
+  /* Tokens base del scaffold (se conservan).                            */
+  --background: var(--paper);
   --foreground: #171717;
 }
 
 @theme inline {
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-sky: var(--sky);
+  --color-selection: var(--selection);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 }
 
+
+
+
+
+
+
+
+/* ------------------------------------------------------------------- */
+/* ---------------------------- GENERALES ---------------------------- */
+/* ------------------------------------------------------------------- */
+
 html {
   min-height: 100%;
   scrollbar-width: none;
+  overflow: hidden;
 }
 
 html::-webkit-scrollbar {
   display: none;
 }
 
+
 body {
   min-height: 100%;
-  background: linear-gradient(135deg, #b3e5fc, #ffffff, #b3e5fc);
+  background: linear-gradient(135deg, var(--sky), var(--paper), var(--sky));
   background-size: 300% 300%;
   animation: gradientMove 8s ease-in-out infinite;
-  /* Monospaced "spreadsheet" aesthetic + muted black/50 text (design language). */
-  color: rgba(0, 0, 0, 0.5);
+  /* Monospaced "spreadsheet" aesthetic + muted ink/50 text (design language). */
+  color: color-mix(in oklab, var(--ink) 50%, transparent);
   font-family: Consolas, "SF Mono", "Menlo", "Liberation Mono", ui-monospace,
     monospace;
   -ms-overflow-style: none;
-}
-
-/* Hide number-input spinners (measurement/qty fields), matching the prototype. */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
-::selection {
-  background: rgba(64, 64, 64, 1);
-  color: #fff;
-}
-
-/* Utility: hide scrollbars on the scrolling columns (design language). */
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  scrollbar-width: none;
 }
 
 body::-webkit-scrollbar {
@@ -71,4 +87,28 @@ body::-webkit-scrollbar {
   100% {
     background-position: 0% 50%;
   }
+}
+
+::selection {
+  background: var(--selection);
+  color: var(--paper);
+}
+
+/* Utility: hide scrollbars on the scrolling columns (design language). */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+/* Hide number-input spinners (measurement/qty fields), matching the prototype. */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

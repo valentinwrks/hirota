@@ -10,6 +10,7 @@ import {
 } from "@/lib/catalog/types";
 import { localize, type LocalizedText } from "@/lib/i18n/localized";
 import { ProductPurchase } from "@/components/pdp/ProductPurchase";
+import { CategorySubHeader } from "@/components/catalog/CategorySubHeader";
 
 export default async function ProductPage({
   params,
@@ -30,47 +31,52 @@ export default async function ProductPage({
   const options = parseOptions(product.options);
 
   return (
-    <div className="p-2.5 max-w-[640px]">
-      <Link
-        href={`/catalog/${product.category}`}
-        className="text-xs text-black/40 hover:text-black/70"
-      >
-        {t("back")}
-      </Link>
+    <div>
+      {/* Keep the "products / <category>" context bar visible on the PDP. */}
+      <CategorySubHeader category={product.category} />
 
-      <div className="mt-3 flex gap-4">
-        {/* product image */}
-        <div className="basis-[45%] shrink-0">
-          <div className="aspect-square border border-neutral-400 overflow-hidden bg-white/20">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={productImage(product.id)}
-              alt={name}
-              className="w-full h-full object-cover object-center opacity-80"
+      <div className="p-2.5 max-w-[640px]">
+        <Link
+          href={`/catalog/${product.category}`}
+          className="text-xs text-ink/40 hover:text-ink/70"
+        >
+          {t("back")}
+        </Link>
+
+        <div className="mt-3 flex gap-4">
+          {/* product image */}
+          <div className="basis-[45%] shrink-0">
+            <div className="aspect-square border border-line overflow-hidden bg-paper/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={productImage(product.id)}
+                alt={name}
+                className="w-full h-full object-cover object-center opacity-80"
+              />
+            </div>
+          </div>
+
+          {/* product info + purchase */}
+          <div className="flex-1 min-w-0">
+            <p className="text-lg font-bold leading-tight mb-1">{name}</p>
+            {product.product_type && (
+              <p className="text-[11px] italic leading-tight mb-1 text-ink/35">
+                {product.product_type}
+              </p>
+            )}
+            {description && (
+              <p className="text-xs leading-tight">{description}</p>
+            )}
+
+            <ProductPurchase
+              productId={product.id}
+              slug={product.slug}
+              name={product.name as LocalizedText}
+              priceJpy={product.price}
+              stock={product.stock}
+              options={options}
             />
           </div>
-        </div>
-
-        {/* product info + purchase */}
-        <div className="flex-1 min-w-0">
-          <p className="text-lg font-bold leading-tight mb-1">{name}</p>
-          {product.product_type && (
-            <p className="text-[11px] italic leading-tight mb-1 text-black/35">
-              {product.product_type}
-            </p>
-          )}
-          {description && (
-            <p className="text-xs leading-tight">{description}</p>
-          )}
-
-          <ProductPurchase
-            productId={product.id}
-            slug={product.slug}
-            name={product.name as LocalizedText}
-            priceJpy={product.price}
-            stock={product.stock}
-            options={options}
-          />
         </div>
       </div>
     </div>

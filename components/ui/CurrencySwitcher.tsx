@@ -11,18 +11,19 @@ export function CurrencySwitcher({ label }: { label: string }) {
   const { currency, setCurrency } = useCurrency();
 
   return (
-    <div className="flex items-center gap-1" aria-label={label}>
+    <div className="flex items-center gap-0.5" aria-label={label}>
       {CURRENCIES.map((c, i) => (
-        <span key={c} className="flex items-center gap-1">
-          {i > 0 && <span className="text-neutral-300">/</span>}
+        <span key={c} className="flex items-center gap-0.5">
+          {i > 0 && <span className="text-line-soft">·</span>}
           <button
             type="button"
             onClick={() => setCurrency(c)}
             aria-pressed={c === currency}
             className={
-              c === currency
-                ? "text-black/70"
-                : "text-black/40 hover:text-black/70"
+              "cursor-pointer " +
+              (c === currency
+                ? "text-ink/60"
+                : "text-ink/40 hover:text-ink/60")
             }
           >
             {c}

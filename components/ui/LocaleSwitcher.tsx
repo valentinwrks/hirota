@@ -4,9 +4,16 @@ import { useLocale } from "next-intl";
 import { useParams } from "next/navigation";
 import { useTransition } from "react";
 import { usePathname, useRouter } from "@/lib/i18n/navigation";
-import { routing, type Locale } from "@/lib/i18n/routing";
+import { type Locale } from "@/lib/i18n/routing";
 
-// EN/JA switch. Navigates to the same path under the chosen locale (next-intl
+// Display order + labels. The routing locale codes stay "en"/"ja" (URLs, next-intl);
+// only the surfaced label differs (ja → "JP"). JP is shown first per design.
+const LOCALE_ORDER: { locale: Locale; label: string }[] = [
+  { locale: "ja", label: "JP" },
+  { locale: "en", label: "EN" },
+];
+
+// EN/JP switch. Navigates to the same path under the chosen locale (next-intl
 // locale-aware router preserves the current route + params).
 export function LocaleSwitcher({ label }: { label: string }) {
   const active = useLocale();
@@ -28,22 +35,23 @@ export function LocaleSwitcher({ label }: { label: string }) {
   }
 
   return (
-    <div className="flex items-center gap-1" aria-label={label}>
-      {routing.locales.map((locale, i) => (
-        <span key={locale} className="flex items-center gap-1">
-          {i > 0 && <span className="text-neutral-300">/</span>}
+    <div className="flex items-center gap-0.5" aria-label={label}>
+      {LOCALE_ORDER.map(({ locale, label: code }, i) => (
+        <span key={locale} className="flex items-center gap-0.5">
+          {i > 0 && <span className="text-line-soft">·</span>}
           <button
             type="button"
             onClick={() => select(locale)}
             disabled={isPending}
             aria-pressed={locale === active}
             className={
-              locale === active
-                ? "uppercase text-black/70"
-                : "uppercase text-black/40 hover:text-black/70"
+              "cursor-pointer " +
+              (locale === active
+                ? "uppercase text-ink/60"
+                : "uppercase text-ink/40 hover:text-ink/60")
             }
           >
-            {locale}
+            {code}
           </button>
         </span>
       ))}

@@ -1,22 +1,12 @@
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { routing, type Locale } from "@/lib/i18n/routing";
-import {
-  isNavCategory,
-  isSimpleCategory,
-  type NavCategory,
-} from "@/lib/catalog/types";
+import { isNavCategory, isSimpleCategory } from "@/lib/catalog/types";
 import { getSimpleProducts } from "@/lib/catalog/queries";
 import { ProductGrid } from "@/components/catalog/ProductGrid";
 import { ConfiguratorPlaceholder } from "@/components/catalog/ConfiguratorPlaceholder";
-
-const CATEGORY_LABEL_KEY: Record<NavCategory, string> = {
-  "karate-gi": "karateGi",
-  obi: "obi",
-  equipment: "equipment",
-  accessories: "accessories",
-};
+import { CategorySubHeader } from "@/components/catalog/CategorySubHeader";
 
 // Pre-render the four category routes per locale.
 export function generateStaticParams() {
@@ -35,16 +25,9 @@ export default async function CatalogCategoryPage({
   if (!isNavCategory(category)) notFound();
   setRequestLocale(locale);
 
-  const tNav = await getTranslations("Nav");
-  const tCatalog = await getTranslations("Catalog");
-  const categoryLabel = tNav(CATEGORY_LABEL_KEY[category]);
-
   return (
     <div>
-      {/* products / <category> sub-header */}
-      <div className="h-[26px] flex items-center px-1.5 border-b border-neutral-400 text-sm leading-none backdrop-blur-xs bg-white/20">
-        {tCatalog("products")} / {categoryLabel}
-      </div>
+      <CategorySubHeader category={category} />
 
       {isSimpleCategory(category) ? (
         <ProductGrid

@@ -7,9 +7,9 @@ export async function AboutColumn() {
   const year = new Date().getFullYear();
 
   return (
-    <section className="basis-[22%] shrink-0 border-r border-neutral-400 overflow-y-auto scrollbar-none">
+    <section className="basis-[22%] shrink-0 border-r border-line overflow-y-auto overscroll-contain scrollbar-none">
       {/* sticky section header */}
-      <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-neutral-400 text-sm leading-none backdrop-blur-xs bg-white/30">
+      <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-line text-sm leading-none backdrop-blur-xs bg-paper/30">
         {t("title")}
       </div>
 
@@ -97,12 +97,12 @@ export async function AboutColumn() {
           className="w-[97%] opacity-50"
         />
         <p
-          className="w-[97%] text-center tracking-wider text-black/35"
+          className="w-[97%] text-center tracking-wider text-ink/35"
           style={{ fontSize: "clamp(9px, 0.7vw, 12px)" }}
         >
           {t("copyright", { year })}
         </p>
-        <p className="w-[90%] mt-1 text-center text-black/25 text-[9px] leading-tight">
+        <p className="w-[90%] mt-1 text-center text-ink/25 text-[9px] leading-tight">
           {t("disclaimer")}
         </p>
       </div>

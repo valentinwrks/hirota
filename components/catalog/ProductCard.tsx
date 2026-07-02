@@ -19,9 +19,9 @@ export function ProductCard({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group flex flex-col border border-neutral-400 hover:bg-black/[0.04]"
+      className="group flex flex-col border border-line hover:bg-ink/[0.04]"
     >
-      <div className="aspect-square border-b border-neutral-400 overflow-hidden bg-white/20">
+      <div className="aspect-square border-b border-line overflow-hidden bg-paper/20">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={productImage(product.id)}
@@ -38,7 +38,7 @@ export function ProductCard({
           />
         </div>
         {description && (
-          <p className="mt-0.5 text-[11px] italic text-black/35">
+          <p className="mt-0.5 text-[11px] italic text-ink/35">
             {description}
           </p>
         )}

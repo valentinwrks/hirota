@@ -17,8 +17,8 @@ export function CartColumn() {
   const { format } = useCurrency();
 
   return (
-    <section className="basis-[27%] shrink-0 overflow-y-auto scrollbar-none">
-      <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-neutral-400 text-sm leading-none backdrop-blur-xs bg-white/30">
+    <section className="basis-[27%] shrink-0 overflow-y-auto overscroll-contain scrollbar-none">
+      <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-line text-sm leading-none backdrop-blur-xs bg-paper/30">
         {t("title")}
       </div>
 
@@ -34,7 +34,7 @@ export function CartColumn() {
             <tbody>
               {items.map((item) => (
                 <tr key={item.lineId} className="align-top">
-                  <td className="px-2 py-1 border border-neutral-400">
+                  <td className="px-2 py-1 border border-line">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="font-bold truncate">
@@ -42,7 +42,7 @@ export function CartColumn() {
                         </p>
                         {item.kind === "simple" &&
                           (item.size || item.color) && (
-                            <p className="text-black/40">
+                            <p className="text-ink/40">
                               {[item.size, item.color]
                                 .filter(Boolean)
                                 .join(" · ")}
@@ -50,7 +50,7 @@ export function CartColumn() {
                           )}
                         <div className="mt-1 flex items-center gap-2">
                           <label className="flex items-center gap-1">
-                            <span className="text-black/40">{t("qty")}</span>
+                            <span className="text-ink/40">{t("qty")}</span>
                             <input
                               type="number"
                               min={1}
@@ -61,13 +61,13 @@ export function CartColumn() {
                                   Math.max(1, Number(e.target.value) || 1),
                                 )
                               }
-                              className="w-10 text-right bg-transparent border border-neutral-400 focus:outline-none px-1"
+                              className="w-10 text-right bg-transparent border border-line focus:outline-none px-1"
                             />
                           </label>
                           <button
                             type="button"
                             onClick={() => removeItem(item.lineId)}
-                            className="text-black/40 underline hover:text-black/70"
+                            className="text-ink/40 underline hover:text-ink/70 cursor-pointer"
                           >
                             {t("remove")}
                           </button>
@@ -95,7 +95,7 @@ export function CartColumn() {
             type="button"
             disabled
             title={t("checkoutComing")}
-            className="w-full mt-2.5 text-xs font-bold bg-transparent text-black/30 border border-neutral-300 tracking-wide py-1 cursor-not-allowed"
+            className="w-full mt-2.5 text-xs font-bold bg-transparent text-ink/30 border border-line-soft tracking-wide py-1 cursor-not-allowed"
           >
             {t("checkout")}
           </button>
