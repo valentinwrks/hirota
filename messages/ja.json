@@ -43,6 +43,67 @@
     "checkout": "レジへ進む",
     "checkoutComing": "レジ機能は近日公開"
   },
+  "Obi": {
+    "color": "色",
+    "material": "素材",
+    "width": "幅",
+    "size": "サイズ",
+    "sizeRow": "#{code} · {length}cm",
+    "widthNormal": "4cm（並）",
+    "widthSpecial": "4.5cm（特上）",
+    "embroidery": "刺繍（任意）",
+    "embroideryPlaceholder": "なし",
+    "embroiderySubtitle": "刺繍",
+    "threadColorTitle": "糸の色（1文字あたりの価格）",
+    "perChar": "1文字",
+    "noEmbroideryNote": "色帯には刺繍できません。",
+    "endA": "A端",
+    "endB": "B端",
+    "chars": "文字",
+    "threadColors": {
+      "golden_brown": "金茶",
+      "red": "赤",
+      "white": "白",
+      "silver_grey": "銀鼠",
+      "gold": "金",
+      "silver": "銀"
+    },
+    "embroideredFlag": "刺繍あり",
+    "label": "ラベル",
+    "figurePlaceholder": "帯",
+    "startPrompt": "色・素材・幅・サイズを選ぶと価格が表示されます。",
+    "subtotal": "小計",
+    "addToCart": "カートに入れる",
+    "added": "追加しました",
+    "colorGroups": {
+      "dan": "有段者用",
+      "competition": "競技用",
+      "kyu": "級位者用"
+    },
+    "colors": {
+      "black": "黒",
+      "blue": "青",
+      "red": "赤",
+      "white": "白",
+      "green": "緑",
+      "yellow": "黄",
+      "purple": "紫",
+      "orange": "橙",
+      "brown": "茶"
+    },
+    "materials": {
+      "nami": "並",
+      "shushi": "朱子",
+      "yohachi": "八重",
+      "silk": "絹"
+    },
+    "materialDesc": {
+      "nami": "並木綿。標準的な木綿の帯です。",
+      "shushi": "朱子織の木綿。緻密で上品な仕上がりです。",
+      "yohachi": "特上木綿（八重）。厚手で上質な木綿織です。",
+      "silk": "絹（シルク）。最高級の帯です。"
+    }
+  },
   "About": {
     "title": "ヒロタ",
     "intro": "は、高級空手衣と空手用具を専門とする日本の製造メーカーです。",

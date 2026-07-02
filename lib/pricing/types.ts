@@ -33,6 +33,9 @@ export type ObiColor =
 
 export type ObiMaterial = 'nami' | 'shushi' | 'yohachi' | 'silk'
 
+/** Obi weave width in cm: 4 (normal) or 4.5 (special). */
+export type ObiWidth = 4 | 4.5
+
 /** Manufacturer's (HIROTA) logo placement. Both placements cost the same. */
 export type MfrLogo = 'neck' | 'breast_neck'
 
@@ -145,7 +148,7 @@ export interface ObiConfig {
   kind: 'obi'
   color: ObiColor
   material: ObiMaterial
-  widthCm: 4 | 4.5
+  widthCm: ObiWidth
   sizeCode: number
   quantity?: number
   labelId?: number

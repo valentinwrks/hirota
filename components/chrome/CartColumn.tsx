@@ -12,9 +12,31 @@ import { lineTotalJpy } from "@/lib/cart/types";
 // the currently-selected currency.
 export function CartColumn() {
   const t = useTranslations("Cart");
+  const tObi = useTranslations("Obi");
   const locale = useLocale() as Locale;
   const { items, removeItem, setQuantity, subtotalJpy, hydrated } = useCart();
   const { format } = useCurrency();
+
+  // A concise, localized one-line summary of a configured obi line.
+  function obiSummary(s: {
+    colorKey: string;
+    materialKey: string;
+    widthCm: number;
+    sizeCode: number;
+    endAChars: number;
+    endBChars: number;
+  }): string {
+    const parts = [
+      tObi(`colors.${s.colorKey}`),
+      tObi(`materials.${s.materialKey}`),
+      s.widthCm === 4 ? tObi("widthNormal") : tObi("widthSpecial"),
+      `#${s.sizeCode}`,
+    ];
+    if (s.endAChars > 0 || s.endBChars > 0) {
+      parts.push(tObi("embroideredFlag"));
+    }
+    return parts.join(" · ");
+  }
 
   return (
     <section className="basis-[27%] shrink-0 overflow-y-auto overscroll-contain scrollbar-none">
@@ -25,11 +47,11 @@ export function CartColumn() {
       {/* Until hydrated we render nothing beyond the header to avoid a flash of
           the empty state before localStorage loads. */}
       {!hydrated ? null : items.length === 0 ? (
-        <div className="mt-2 mx-1.5 text-xs leading-tight">
+        <div className="mt-2.5 mx-2.5 text-xs leading-tight">
           <p>{t("empty")}</p>
         </div>
       ) : (
-        <div className="mt-2 mx-1.5 text-xs leading-tight">
+        <div className="mt-2.5 mx-2.5 text-xs leading-tight">
           <table className="w-full border-collapse">
             <tbody>
               {items.map((item) => (
@@ -46,6 +68,12 @@ export function CartColumn() {
                               {[item.size, item.color]
                                 .filter(Boolean)
                                 .join(" · ")}
+                            </p>
+                          )}
+                        {item.kind === "configured" &&
+                          item.config.kind === "obi" && (
+                            <p className="text-ink/40">
+                              {obiSummary(item.config.summary)}
                             </p>
                           )}
                         <div className="mt-1 flex items-center gap-2">

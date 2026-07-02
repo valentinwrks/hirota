@@ -7,6 +7,7 @@ import { getSimpleProducts } from "@/lib/catalog/queries";
 import { ProductGrid } from "@/components/catalog/ProductGrid";
 import { ConfiguratorPlaceholder } from "@/components/catalog/ConfiguratorPlaceholder";
 import { CategorySubHeader } from "@/components/catalog/CategorySubHeader";
+import { ObiConfiguratorSection } from "@/components/obi/ObiConfiguratorSection";
 
 // Pre-render the four category routes per locale.
 export function generateStaticParams() {
@@ -34,6 +35,8 @@ export default async function CatalogCategoryPage({
           products={await getSimpleProducts(category)}
           locale={locale as Locale}
         />
+      ) : category === "obi" ? (
+        <ObiConfiguratorSection />
       ) : (
         <ConfiguratorPlaceholder />
       )}

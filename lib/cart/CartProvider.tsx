@@ -134,7 +134,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Configured items (later sprint) — no group requirement.
+    // Configured items (obi now; gi later). Defensive guard (AGENTS §6/§8): a
+    // configured line MUST carry a resolved config snapshot with a computed,
+    // itemized total. Never trust a line with a missing/quote breakdown into the
+    // cart — the UI already enforces this, this catches programmer error.
+    const { config } = input;
+    const total = config?.breakdown?.totalJpy;
+    if (
+      !config ||
+      config.breakdown == null ||
+      total == null ||
+      config.breakdown.quote ||
+      input.unitPriceJpy <= 0
+    ) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(
+          "[cart] refused to add configured item: missing resolved config or computed total",
+        );
+      }
+      return;
+    }
+
     setItems((prev) => [
       ...prev,
       { ...input, quantity, lineId: makeLineId() } as CartItem,

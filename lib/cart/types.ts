@@ -1,4 +1,5 @@
 import type { LocalizedText } from "../i18n/localized";
+import type { ObiConfig, PriceBreakdown } from "../pricing/types";
 
 // Cart line items are a discriminated union on `kind`. Only `simple` is used
 // this sprint; `configured` is defined now so the made-to-order configurator
@@ -34,12 +35,40 @@ export type SimpleCartItem = CartLineBase & {
   color?: string;
 };
 
-// Placeholder for the configurator output (resolved spec + itemized breakdown).
-// Not produced this sprint; `config` is intentionally loose until the pricing
-// engine's resolved-config type is wired in.
+// A concise, display-ready summary of a configured obi. The FULL resolved spec
+// lives in `config`; this is only what the cart panel needs to render a compact
+// line without re-deriving anything (labels/thread etc. rendered by the caller).
+export type ObiCartSummary = {
+  colorKey: string;
+  materialKey: string;
+  widthCm: number;
+  sizeCode: number;
+  /** Character counts per end; 0 = that end is not embroidered. */
+  endAChars: number;
+  endBChars: number;
+  /** Chosen embroidery thread color (fulfilment detail); absent if no embroidery. */
+  threadColorKey?: string;
+  labelName: string;
+};
+
+// The resolved snapshot for a configured line item, carrying the exact engine
+// input (`config`) and the itemized `breakdown` the engine returned, so the cart
+// (and, later, the order) renders precisely what was priced. A discriminated
+// union so gi snapshots can slot in later; obi is the first member.
+export type ObiConfiguredSnapshot = {
+  kind: "obi";
+  config: ObiConfig;
+  breakdown: PriceBreakdown;
+  summary: ObiCartSummary;
+};
+
+export type ConfiguredSnapshot = ObiConfiguredSnapshot;
+
+// The configurator output: a resolved spec + itemized breakdown snapshot. The
+// line's `unitPriceJpy` mirrors `config.breakdown.unitSubtotalJpy` at add time.
 export type ConfiguredCartItem = CartLineBase & {
   kind: "configured";
-  config: unknown;
+  config: ConfiguredSnapshot;
 };
 
 export type CartItem = SimpleCartItem | ConfiguredCartItem;

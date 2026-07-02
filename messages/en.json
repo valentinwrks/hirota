@@ -43,6 +43,67 @@
     "checkout": "CHECKOUT",
     "checkoutComing": "checkout coming"
   },
+  "Obi": {
+    "color": "Color",
+    "material": "Material",
+    "width": "Width",
+    "size": "Size",
+    "sizeRow": "#{code} · {length}cm",
+    "widthNormal": "4cm (normal)",
+    "widthSpecial": "4.5cm (special)",
+    "embroidery": "Embroidery (optional)",
+    "embroideryPlaceholder": "none",
+    "embroiderySubtitle": "embroidery",
+    "threadColorTitle": "thread color (prices per character)",
+    "perChar": "per char.",
+    "noEmbroideryNote": "Colored belts cannot be embroidered.",
+    "endA": "End A",
+    "endB": "End B",
+    "chars": "chars",
+    "threadColors": {
+      "golden_brown": "Golden Brown",
+      "red": "Red",
+      "white": "White",
+      "silver_grey": "Silver Grey",
+      "gold": "Gold",
+      "silver": "Silver"
+    },
+    "embroideredFlag": "embroidered",
+    "label": "Label",
+    "figurePlaceholder": "obi",
+    "startPrompt": "Choose color, material, width and size to see the price.",
+    "subtotal": "SUBTOTAL",
+    "addToCart": "ADD TO CART",
+    "added": "ADDED",
+    "colorGroups": {
+      "dan": "dan grades",
+      "competition": "competition use",
+      "kyu": "kyu grades"
+    },
+    "colors": {
+      "black": "Black",
+      "blue": "Blue",
+      "red": "Red",
+      "white": "White",
+      "green": "Green",
+      "yellow": "Yellow",
+      "purple": "Purple",
+      "orange": "Orange",
+      "brown": "Brown"
+    },
+    "materials": {
+      "nami": "Nami",
+      "shushi": "Shushi",
+      "yohachi": "Yohachi",
+      "silk": "Silk"
+    },
+    "materialDesc": {
+      "nami": "Plain cotton (nami). The standard woven cotton belt.",
+      "shushi": "Satin-weave cotton (shushi). A denser, refined finish.",
+      "yohachi": "Special cotton (yohachi). Heavier, premium cotton weave.",
+      "silk": "Silk (seda). The finest, top-of-range belt."
+    }
+  },
   "About": {
     "title": "hirota",
     "intro": "is a Japanese manufacturing house specializing in premium karate-gi and karate equipment.",
