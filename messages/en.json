@@ -49,62 +49,111 @@
   "Obi": {
     "color": "Color",
     "material": "Material",
-    "width": "Width",
+    "width": "Tailoring — Width",
     "size": "Size",
     "sizeRow": "#{code} · {length}cm",
-    "widthNormal": "4cm (normal)",
-    "widthSpecial": "4.5cm (special)",
+    "widthNormal": "並仕立て Normal tailoring — 4cm width",
+    "widthSpecial": "特別仕立て Special tailoring — 4.5cm width",
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
     "embroiderySubtitle": "embroidery",
     "threadColorTitle": "thread color (prices per character)",
     "perChar": "per char.",
     "noEmbroideryNote": "Colored belts cannot be embroidered.",
-    "endA": "End A",
+    "threadNeedsText": "Enter text in at least one end, or clear the thread color.",
+    "endA": "End A (label side)",
+    "endAShort": "End A",
     "endB": "End B",
+    "endAPlaceholder": "name?",
+    "endBPlaceholder": "style/association?",
     "chars": "chars",
     "threadColors": {
-      "golden_brown": "Golden Brown",
-      "red": "Red",
-      "white": "White",
-      "silver_grey": "Silver Grey",
-      "gold": "Gold",
-      "silver": "Silver"
+      "golden_brown": "金茶（オレンジ) Golden Brown",
+      "red": "赤 Red",
+      "white": "白 White",
+      "silver_grey": "銀ネズ（グレー) Silver gray",
+      "gold": "純金 Gold",
+      "silver": "純銀 Silver"
     },
-    "embroideredFlag": "embroidered",
+    "threadColorsShort": {
+      "golden_brown": "golden brown",
+      "red": "red",
+      "white": "white",
+      "silver_grey": "silver gray",
+      "gold": "gold",
+      "silver": "silver"
+    },
     "label": "Label",
-    "figurePlaceholder": "obi",
-    "startPrompt": "Choose color, material, width and size to see the price.",
+    "obiLine": "Obi",
+    "labelSpecNote": "Please specify the label. If there is no particular specification, select ‘Hirota.’",
+    "figureAlt": "obi figure",
+    "startPromptColor": "Please select color, material, width & size to see the price.",
+    "startPromptMaterial": "Select material, width & size to see the price.",
+    "startPromptWidth": "Select width & size to see the price.",
+    "startPromptSize": "Select size to see the price.",
     "subtotal": "SUBTOTAL",
     "addToCart": "ADD TO CART",
     "added": "ADDED",
     "colorGroups": {
       "dan": "dan grades",
-      "competition": "competition use",
+      "competition": "shiai / competition use",
       "kyu": "kyu grades"
     },
     "colors": {
-      "black": "Black",
-      "blue": "Blue",
-      "red": "Red",
-      "white": "White",
-      "green": "Green",
-      "yellow": "Yellow",
-      "purple": "Purple",
-      "orange": "Orange",
-      "brown": "Brown"
+      "black": "黒帯 Kuro obi — black",
+      "blue": "青帯 Ao obi — blue",
+      "red": "赤帯 Aka obi — red",
+      "white": "白帯 Shiro obi — white",
+      "green": "緑帯 Midori obi — green",
+      "yellow": "黄帯 Ki obi — yellow",
+      "purple": "紫帯 Murasaki obi — purple",
+      "orange": "橙帯 Daidai obi — orange",
+      "brown": "茶帯 Cha obi — brown"
     },
     "materials": {
-      "nami": "Nami",
-      "shushi": "Shushi",
-      "yohachi": "Yohachi",
-      "silk": "Silk"
+      "nami": "並 Nami — normal cotton",
+      "shushi": "朱子 Shushi — satin",
+      "yohachi": "洋八 Yōhachi — special cotton",
+      "silk": "本絹 Silk"
     },
-    "materialDesc": {
-      "nami": "Plain cotton (nami). The standard woven cotton belt.",
-      "shushi": "Satin-weave cotton (shushi). A denser, refined finish.",
-      "yohachi": "Special cotton (yohachi). Heavier, premium cotton weave.",
-      "silk": "Silk (seda). The finest, top-of-range belt."
+    "colorsShort": {
+      "black": "black",
+      "blue": "blue",
+      "red": "red",
+      "white": "white",
+      "green": "green",
+      "yellow": "yellow",
+      "purple": "purple",
+      "orange": "orange",
+      "brown": "brown"
+    },
+    "materialsShort": {
+      "nami": "normal cotton",
+      "shushi": "satin",
+      "yohachi": "special cotton",
+      "silk": "silk"
+    },
+    "widthShortNormal": "normal (4cm)",
+    "widthShortSpecial": "special (4.5cm)",
+    "materialType": {
+      "nami": "nami, 100% cotton",
+      "shushi": "shushi, satin outer",
+      "yohachi": "yōhachi, high-quality cotton outer",
+      "silk": "silk, 100% natural silk outer"
+    },
+    "materialDescription": {
+      "nami": "Made from Katsuragi cotton, Nami is a soft and easy-to-tie fabric, lighter in feel than Shushi or Yōhachi. Traditionally used for white and colored belts, it is also a popular choice for first-time black belts and kumite athletes who prefer a relatively easy-to-tighten obi that feels comfortable from the start.",
+      "shushi": "Shushi surface is glossy. The core is thicker and sturdier than the regular Nami obi. At first, it is slippery and easy to unravel, but the edges tend to peel off easily, so it will settle in relatively quickly.",
+      "yohachi": "Yōhachi fabric is made from high-quality cotton (grosgrain weave). The core is thicker and sturdier than the regular Nami obi. It is relatively hard to unravel from the start, and the edges are also hard to peel, so it is easy to wear and can be used for a long time.",
+      "silk": "Silk is the finest fabric made literally from 100% natural silk. The surface is soft and glossy, giving it an elegant finish. Compared to Shushi, it is easier to tighten from the very beginning."
+    },
+    "widthType": {
+      "normal": "normal, 4cm width",
+      "special": "special, 4.5cm width, extra thickness"
+    },
+    "widthDescription": {
+      "normal": "This is a 4 cm wide belt. It is relatively easy to tie and becomes supple with use. It is often used by first-time black belts and kumite athletes.",
+      "special": "This is a 4.5 cm wide belt with an extra layer of komi (core), giving it a thicker and more substantial feel. It is stable and makes the wearer look bigger. It is widely used by kata competitors and instructors, and is also commonly purchased as a gift."
     }
   },
   "About": {

@@ -46,6 +46,9 @@ export type ObiCartSummary = {
   /** Character counts per end; 0 = that end is not embroidered. */
   endAChars: number;
   endBChars: number;
+  /** Embroidery text per end (fulfilment detail); present when that end is used. */
+  endAText?: string;
+  endBText?: string;
   /** Chosen embroidery thread color (fulfilment detail); absent if no embroidery. */
   threadColorKey?: string;
   labelName: string;

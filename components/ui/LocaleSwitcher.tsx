@@ -47,8 +47,8 @@ export function LocaleSwitcher({ label }: { label: string }) {
             className={
               "cursor-pointer " +
               (locale === active
-                ? "uppercase text-ink/60"
-                : "uppercase text-ink/40 hover:text-ink/60")
+                ? "uppercase text-ink-60"
+                : "uppercase text-ink-40 hover:text-ink-60")
             }
           >
             {code}

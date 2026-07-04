@@ -11,9 +11,9 @@ export async function TopBar() {
     <header className="fixed top-0 left-0 w-full h-[26px] border-y border-line bg-paper z-50 flex items-center justify-between pl-1 pr-2 pb-[1px] select-none">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/hirota/logo-空手衣のヒロタ.svg"
+        src="/hirota/logo-空手衣のヒロタ.svg"
         alt={t("logoAlt")}
-        className="h-[20px] object-contain object-center"
+        className="h-[21px] object-contain object-center"
       />
       <div className="flex items-center gap-5 text-xs leading-none">
         <LocaleSwitcher label={t("language")} />

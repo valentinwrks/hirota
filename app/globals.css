@@ -2,35 +2,83 @@
 
 :root {
   /* ------------------------------------------------------------------ */
-  /* Paleta — ÚNICA fuente de verdad para el color del sitio. Cambiá un  */
-  /* valor acá y se actualiza en todos lados (los tokens de @theme de    */
-  /* abajo generan las utilidades text-, bg- y border- que usan los      */
-  /* componentes). Se mantiene el sistema de opacidades: p.ej. el texto  */
-  /* muted es text-ink/40, no un color aparte.                           */
+  /* Paleta — ÚNICA fuente de verdad para el color del sitio.            */
+  /* CADA color usado en la app (incluidas las opacidades) es su propia  */
+  /* variable. Hoy los tonos de ink/paper se derivan por color-mix del   */
+  /* color base, pero cada nivel es una perilla independiente: podés     */
+  /* reemplazar cualquier línea (p.ej. --ink-40) por un color sólido     */
+  /* distinto sin tocar el resto. Los tokens de @theme de abajo generan  */
+  /* las utilidades text-, bg- y border- que usan los componentes.       */
   /* ------------------------------------------------------------------ */
 
-  /* Tinta: todo el texto e iconos. Se usa con opacidad (text-ink/70…25). */
-  --ink: #000000;
-  /* Papel: superficies y fondos claros (bg-paper/30, bg-paper, text-paper). */
-  --paper: #ffffff;
-  /* Líneas / bordes finos. -soft = bordes y separadores más tenues.     */
-  --line: oklch(0.708 0 0); /* ex neutral-400 */
-  --line-soft: oklch(0.87 0 0); /* ex neutral-300 */
-  /* Azul del degradé de fondo de la página.                             */
-  --sky: #b3e5fc;
-  /* Resaltado al seleccionar texto.                                     */
-  --selection: #585858;
+  /* --- Colores base (fuente de los tonos derivados) ----------------- */
+  --ink: #000000; /* tinta: texto e iconos */
+  --paper: #ffffff; /* papel: superficies y fondos claros */
 
-  /* Tokens base del scaffold (se conservan).                            */
+  /* --- Tinta por nivel (texto y fills) ------------------------------ */
+  /* Nombrados por su opacidad actual. Cada uno es reemplazable por un   */
+  /* color sólido propio el día que dejes de usar opacidades de --ink.   */
+  --ink-70: color-mix(in oklab, var(--ink) 70%, transparent);
+  --ink-60: color-mix(in oklab, var(--ink) 60%, transparent);
+  --ink-50: color-mix(in oklab, var(--ink) 50%, transparent); /* texto general */
+  --ink-40: color-mix(in oklab, var(--ink) 40%, transparent); /* texto muted */
+  --ink-35: color-mix(in oklab, var(--ink) 35%, transparent);
+  --ink-25: color-mix(in oklab, var(--ink) 25%, transparent);
+  --ink-20: color-mix(in oklab, var(--ink) 20%, transparent);
+  --ink-10: color-mix(in oklab, var(--ink) 10%, transparent); /* hover suave */
+  --ink-04: color-mix(in oklab, var(--ink) 4%, transparent); /* hover sutil */
+
+  /* --- Papel por nivel (superficies translúcidas) ------------------- */
+  --paper-30: color-mix(in oklab, var(--paper) 30%, transparent); /* headers */
+  --paper-20: color-mix(in oklab, var(--paper) 20%, transparent); /* imágenes */
+
+  /* --- Líneas / bordes ---------------------------------------------- */
+  --line: oklch(0.708 0 0); /* ex neutral-400 */
+  --line-soft: oklch(0.87 0 0); /* ex neutral-300 — bordes/separadores tenues */
+  --line-pending: oklch(0.78 0 0); /* borde de celdas en estado "pending" (ajustar a gusto) */
+
+  /* --- Otros -------------------------------------------------------- */
+  --sky: #b3e5fc; /* azul del degradé de fondo */
+  --selection: #585858; /* resaltado al seleccionar texto */
+
+  /* --- Tokens base del scaffold (se conservan) ---------------------- */
   --background: var(--paper);
   --foreground: #171717;
 }
 
+/* Japanese glyphs render poorly in Consolas (a Latin monospace with no CJK/kana
+   of its own). Map every CJK/kana block to the platform's default sans via
+   unicode-range, so Japanese text uses sans-serif regardless of the i18n locale
+   — even Japanese that appears inside English content — while Latin text stays
+   monospaced. The browser resolves the font per glyph, so no markup is needed. */
+@font-face {
+  font-family: "JP Sans";
+  src: local("Hiragino Kaku Gothic ProN"), local("Hiragino Sans"),
+    local("Yu Gothic"), local("YuGothic"), local("Meiryo"),
+    local("Noto Sans JP"), local("Noto Sans CJK JP"), local("MS PGothic");
+  /* CJK punctuation, hiragana, katakana, kana ext., CJK ext-A, CJK unified,
+     CJK compat ideographs, and half/fullwidth forms. */
+  unicode-range: U+3000-303F, U+3040-309F, U+30A0-30FF, U+31F0-31FF,
+    U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+
 @theme inline {
   --color-ink: var(--ink);
+  --color-ink-70: var(--ink-70);
+  --color-ink-60: var(--ink-60);
+  --color-ink-50: var(--ink-50);
+  --color-ink-40: var(--ink-40);
+  --color-ink-35: var(--ink-35);
+  --color-ink-25: var(--ink-25);
+  --color-ink-20: var(--ink-20);
+  --color-ink-10: var(--ink-10);
+  --color-ink-04: var(--ink-04);
   --color-paper: var(--paper);
+  --color-paper-30: var(--paper-30);
+  --color-paper-20: var(--paper-20);
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
+  --color-line-pending: var(--line-pending);
   --color-sky: var(--sky);
   --color-selection: var(--selection);
   --color-background: var(--background);
@@ -64,10 +112,10 @@ body {
   background: linear-gradient(135deg, var(--sky), var(--paper), var(--sky));
   background-size: 300% 300%;
   animation: gradientMove 8s ease-in-out infinite;
-  /* Monospaced "spreadsheet" aesthetic + muted ink/50 text (design language). */
-  color: color-mix(in oklab, var(--ink) 50%, transparent);
-  font-family: Consolas, "SF Mono", "Menlo", "Liberation Mono", ui-monospace,
-    monospace;
+  /* Monospaced "spreadsheet" aesthetic + muted ink-50 text (design language). */
+  color: var(--ink-50);
+  font-family: "JP Sans", Consolas, "SF Mono", "Menlo", "Liberation Mono",
+    ui-monospace, monospace;
   -ms-overflow-style: none;
 }
 

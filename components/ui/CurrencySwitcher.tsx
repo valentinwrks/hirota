@@ -22,8 +22,8 @@ export function CurrencySwitcher({ label }: { label: string }) {
             className={
               "cursor-pointer " +
               (c === currency
-                ? "text-ink/60"
-                : "text-ink/40 hover:text-ink/60")
+                ? "text-ink-60"
+                : "text-ink-40 hover:text-ink-60")
             }
           >
             {c}

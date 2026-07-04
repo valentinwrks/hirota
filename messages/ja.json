@@ -49,7 +49,7 @@
   "Obi": {
     "color": "色",
     "material": "素材",
-    "width": "幅",
+    "width": "仕立て — 幅",
     "size": "サイズ",
     "sizeRow": "#{code} · {length}cm",
     "widthNormal": "4cm（並）",
@@ -60,8 +60,12 @@
     "threadColorTitle": "糸の色（1文字あたりの価格）",
     "perChar": "1文字",
     "noEmbroideryNote": "色帯には刺繍できません。",
+    "threadNeedsText": "いずれかの端に文字を入力するか、糸の色を解除してください。",
     "endA": "A端",
+    "endAShort": "A端",
     "endB": "B端",
+    "endAPlaceholder": "お名前？",
+    "endBPlaceholder": "流派・団体？",
     "chars": "文字",
     "threadColors": {
       "golden_brown": "金茶",
@@ -71,10 +75,22 @@
       "gold": "金",
       "silver": "銀"
     },
-    "embroideredFlag": "刺繍あり",
+    "threadColorsShort": {
+      "golden_brown": "金茶",
+      "red": "赤",
+      "white": "白",
+      "silver_grey": "銀ネズ",
+      "gold": "純金",
+      "silver": "純銀"
+    },
     "label": "ラベル",
-    "figurePlaceholder": "帯",
-    "startPrompt": "色・素材・幅・サイズを選ぶと価格が表示されます。",
+    "obiLine": "帯",
+    "labelSpecNote": "ラベルは必ずご指定ください。特に指定がない場合は、「ヒロタ」とお書きください。",
+    "figureAlt": "帯の図",
+    "startPromptColor": "色・素材・幅・サイズを選ぶと価格が表示されます。",
+    "startPromptMaterial": "素材・幅・サイズを選ぶと価格が表示されます。",
+    "startPromptWidth": "幅・サイズを選ぶと価格が表示されます。",
+    "startPromptSize": "サイズを選ぶと価格が表示されます。",
     "subtotal": "小計",
     "addToCart": "カートに入れる",
     "added": "追加しました",
@@ -84,6 +100,23 @@
       "kyu": "級位者用"
     },
     "colors": {
+      "black": "黒帯",
+      "blue": "試合用青帯",
+      "red": "試合用赤帯",
+      "white": "白帯",
+      "green": "緑帯",
+      "yellow": "黄帯",
+      "purple": "紫帯",
+      "orange": "橙帯",
+      "brown": "茶帯"
+    },
+    "materials": {
+      "nami": "並",
+      "shushi": "朱子",
+      "yohachi": "洋八",
+      "silk": "絹"
+    },
+    "colorsShort": {
       "black": "黒",
       "blue": "青",
       "red": "赤",
@@ -94,17 +127,33 @@
       "orange": "橙",
       "brown": "茶"
     },
-    "materials": {
+    "materialsShort": {
       "nami": "並",
       "shushi": "朱子",
-      "yohachi": "八重",
-      "silk": "絹"
+      "yohachi": "洋八",
+      "silk": "本絹"
     },
-    "materialDesc": {
-      "nami": "並木綿。標準的な木綿の帯です。",
-      "shushi": "朱子織の木綿。緻密で上品な仕上がりです。",
-      "yohachi": "特上木綿（八重）。厚手で上質な木綿織です。",
-      "silk": "絹（シルク）。最高級の帯です。"
+    "widthShortNormal": "並 (4cm)",
+    "widthShortSpecial": "特別 (4.5cm)",
+    "materialType": {
+      "nami": "綿100%",
+      "shushi": "表地 朱子織100%",
+      "yohachi": "上質綿100%",
+      "silk": "表地 絹100%"
+    },
+    "materialDescription": {
+      "nami": "葛城を使用した生地です。朱子、洋八に比べ柔らかく締めやすくなっています。",
+      "shushi": "表面に光沢のある生地です。芯も並黒より厚くしっかりとした仕上がりになっています。使用し始めはすべるのでほどけやすいですが、ふちがはげ易いので比較的早くなじみます。",
+      "yohachi": "上質の綿（グログラン織）を使用した生地です。芯も並黒より厚くしっかりとした仕上がりになっています。使用し始めから比較的ほどけづらく、ふちもはげづらいので、なじみ易く、また永くお使いいただけます。",
+      "silk": "文字通り絹を使用した最高級の生地です。表面はしっとりと光沢があり、上品な仕上がりになっております。朱子に比べ使用し始めから締めやすくなっています。"
+    },
+    "widthType": {
+      "normal": "並仕立て 幅4cm",
+      "special": "特別仕立て 幅4.5cm"
+    },
+    "widthDescription": {
+      "normal": "4cm幅の帯です。比較的締めやすく、なじみやすい帯になります。最初の黒帯や組手選手に多く使用されています。",
+      "special": "4.5cm幅で芯を1枚増やした重厚なつくりの帯になります。安定感があり、締める人をより大きく魅せます。贈呈用や形選手に多く使用されています。"
     }
   },
   "About": {

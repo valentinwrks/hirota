@@ -8,10 +8,10 @@ export async function ConfiguratorPlaceholder() {
   return (
     <div className="p-2.5">
       <div className="border border-line p-4 leading-tight">
-        <p className="text-lg font-bold uppercase text-ink/60">
+        <p className="text-lg font-bold uppercase text-ink-60">
           {t("configuratorComing")}
         </p>
-        <p className="mt-2 text-xs text-ink/40">{t("configuratorNote")}</p>
+        <p className="mt-2 text-xs text-ink-40">{t("configuratorNote")}</p>
       </div>
     </div>
   );
