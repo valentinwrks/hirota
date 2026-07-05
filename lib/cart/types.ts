@@ -1,5 +1,9 @@
 import type { LocalizedText } from "../i18n/localized";
-import type { ObiConfig, PriceBreakdown } from "../pricing/types";
+import type {
+  GiStandardConfig,
+  ObiConfig,
+  PriceBreakdown,
+} from "../pricing/types";
 
 // Cart line items are a discriminated union on `kind`. Only `simple` is used
 // this sprint; `configured` is defined now so the made-to-order configurator
@@ -65,7 +69,46 @@ export type ObiConfiguredSnapshot = {
   summary: ObiCartSummary;
 };
 
-export type ConfiguredSnapshot = ObiConfiguredSnapshot;
+// One embroidered gi field, for the cart summary (fulfilment detail). Only
+// present fields are recorded.
+export type GiEmbroiderySummaryField = {
+  /** Field key: 'lapel' | 'shoulder' | 'chest' | 'pants'. */
+  field: string;
+  chars: number;
+  text: string;
+};
+
+// A concise, display-ready summary of a configured standard gi. The FULL
+// resolved spec lives in `config`; the model name lives on the cart line's
+// localized `name`, so this holds only the option lines the cart panel renders.
+export type GiStandardCartSummary = {
+  /** 'slim' | 'normal'. */
+  fit: string;
+  sizeCode: string;
+  /** Manufacturer's-logo placement key ('neck' | 'breast_neck') when present. */
+  mfrLogo?: string;
+  /** Chosen embroidery thread color (fulfilment detail); absent if no embroidery. */
+  threadColorKey?: string;
+  embroidery: GiEmbroiderySummaryField[];
+  /** Shortened sleeve (C) final cm, when the sleeve was adjusted. */
+  sleeveCcm?: number;
+  /** Shortened pant-length (H) final cm, when the pant length was adjusted. */
+  pantHcm?: number;
+  /** 'accounted' | 'to_add', present only when C and/or H was adjusted. */
+  shrinkage?: string;
+  labelName: string;
+};
+
+export type GiStandardConfiguredSnapshot = {
+  kind: "gi_standard";
+  config: GiStandardConfig;
+  breakdown: PriceBreakdown;
+  summary: GiStandardCartSummary;
+};
+
+export type ConfiguredSnapshot =
+  | ObiConfiguredSnapshot
+  | GiStandardConfiguredSnapshot;
 
 // The configurator output: a resolved spec + itemized breakdown snapshot. The
 // line's `unitPriceJpy` mirrors `config.breakdown.unitSubtotalJpy` at add time.

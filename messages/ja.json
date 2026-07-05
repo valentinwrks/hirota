@@ -40,6 +40,8 @@
     "empty": "カートは空です :(",
     "subtotal": "小計",
     "remove": "削除",
+    "size": "サイズ",
+    "color": "色",
     "qty": "数量",
     "increase": "数量を増やす",
     "decrease": "数量を減らす",
@@ -63,6 +65,7 @@
     "threadNeedsText": "いずれかの端に文字を入力するか、糸の色を解除してください。",
     "endA": "A端",
     "endAShort": "A端",
+    "endBShort": "B端",
     "endB": "B端",
     "endAPlaceholder": "お名前？",
     "endBPlaceholder": "流派・団体？",
@@ -91,11 +94,10 @@
     "startPromptMaterial": "素材・幅・サイズを選ぶと価格が表示されます。",
     "startPromptWidth": "幅・サイズを選ぶと価格が表示されます。",
     "startPromptSize": "サイズを選ぶと価格が表示されます。",
-    "subtotal": "小計",
+    "subtotal": "商品合計",
     "addToCart": "カートに入れる",
     "added": "追加しました",
     "colorGroups": {
-      "dan": "有段者用",
       "competition": "競技用",
       "kyu": "級位者用"
     },
@@ -133,8 +135,8 @@
       "yohachi": "洋八",
       "silk": "本絹"
     },
-    "widthShortNormal": "並 (4cm)",
-    "widthShortSpecial": "特別 (4.5cm)",
+    "widthShortNormal": "幅4cm",
+    "widthShortSpecial": "幅4.5cm",
     "materialType": {
       "nami": "綿100%",
       "shushi": "表地 朱子織100%",
@@ -155,6 +157,72 @@
       "normal": "4cm幅の帯です。比較的締めやすく、なじみやすい帯になります。最初の黒帯や組手選手に多く使用されています。",
       "special": "4.5cm幅で芯を1枚増やした重厚なつくりの帯になります。安定感があり、締める人をより大きく魅せます。贈呈用や形選手に多く使用されています。"
     }
+  },
+  "GiStandard": {
+    "model": "モデル",
+    "fit": "仕立て",
+    "fits": {
+      "slim": "スリム（ハイウエスト）",
+      "normal": "ノーマル"
+    },
+    "size": "サイズ",
+    "sizeRow": "#{code}",
+    "sizePending": "モデルと仕立てを選ぶとサイズが表示されます。",
+    "mfrLogo": "メーカーロゴ",
+    "mfrLogoPlacements": {
+      "neck": "衿のみ",
+      "breast_neck": "右胸＋衿"
+    },
+    "embroidery": "刺繍（任意）",
+    "embroideryPlaceholder": "なし",
+    "embroiderySubtitle": "刺繍 — 最大4箇所",
+    "threadColorTitle": "糸の色（1文字あたりの価格）",
+    "perChar": "／文字",
+    "threadNeedsText": "少なくとも1箇所に文字を入力するか、糸の色を解除してください。",
+    "threadColors": {
+      "golden_brown": "金茶（オレンジ)",
+      "red": "赤",
+      "white": "白",
+      "silver_grey": "銀ネズ（グレー)",
+      "gold": "純金",
+      "silver": "純銀"
+    },
+    "threadColorsShort": {
+      "golden_brown": "金茶",
+      "red": "赤",
+      "white": "白",
+      "silver_grey": "銀ネズ",
+      "gold": "純金",
+      "silver": "純銀"
+    },
+    "embroideryFields": {
+      "lapel": "上衣の衿",
+      "shoulder": "左肩",
+      "chest": "胸",
+      "pants": "ズボン"
+    },
+    "adjust": "丈の調整（任意）",
+    "adjustNote": "調整は短くするのみです。希望の仕上がり寸法（cm）を入力してください。表示されたサイズ表の上限未満である必要があります。",
+    "adjustC": "袖丈（C）",
+    "adjustH": "股下丈（H）",
+    "adjustPendingPlaceholder": "先にサイズを選択",
+    "adjustTooLong": "サイズ表の寸法より短い値を入力してください。",
+    "shrinkage": "縮み",
+    "shrinkageOptions": {
+      "accounted": "考慮済み",
+      "to_add": "ヒロタで加える"
+    },
+    "shrinkageRequired": "続けるには縮みの選択をしてください。",
+    "label": "ラベル",
+    "labelSpecNote": "ラベルをご指定ください。特に指定がない場合は「Hirota」をお選びください。",
+    "giLine": "空手衣",
+    "figureAlt": "空手衣の図",
+    "startPromptModel": "価格を表示するには、モデル・仕立て・サイズを選択してください。",
+    "startPromptFit": "価格を表示するには、仕立てとサイズを選択してください。",
+    "startPromptSize": "価格を表示するには、サイズを選択してください。",
+    "subtotal": "商品合計",
+    "addToCart": "カートに追加",
+    "added": "追加しました"
   },
   "About": {
     "title": "ヒロタ",

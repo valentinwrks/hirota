@@ -6,7 +6,7 @@ export async function AboutColumn() {
   const t = await getTranslations("About");
 
   return (
-    <section className="basis-[22%] shrink-0 border-r border-line overflow-y-auto overscroll-contain scrollbar-none">
+    <section className="basis-[22%] 2xl:basis-[20%] shrink-0 border-r border-line overflow-y-auto overscroll-contain scrollbar-none">
       {/* sticky section header */}
       <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-line text-sm leading-none backdrop-blur-xs bg-paper-30">
         {t("title")}

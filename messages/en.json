@@ -37,9 +37,11 @@
   },
   "Cart": {
     "title": "cart",
-    "empty": "Your cart is empty :(",
+    "empty": "Your cart is currently empty :(",
     "subtotal": "SUBTOTAL",
     "remove": "remove",
+    "size": "size",
+    "color": "color",
     "qty": "qty",
     "increase": "increase quantity",
     "decrease": "decrease quantity",
@@ -62,7 +64,8 @@
     "noEmbroideryNote": "Colored belts cannot be embroidered.",
     "threadNeedsText": "Enter text in at least one end, or clear the thread color.",
     "endA": "End A (label side)",
-    "endAShort": "End A",
+    "endAShort": "embr. A",
+    "endBShort": "embr. B",
     "endB": "End B",
     "endAPlaceholder": "name?",
     "endBPlaceholder": "style/association?",
@@ -91,11 +94,10 @@
     "startPromptMaterial": "Select material, width & size to see the price.",
     "startPromptWidth": "Select width & size to see the price.",
     "startPromptSize": "Select size to see the price.",
-    "subtotal": "SUBTOTAL",
+    "subtotal": "ITEM TOTAL",
     "addToCart": "ADD TO CART",
     "added": "ADDED",
     "colorGroups": {
-      "dan": "dan grades",
       "competition": "shiai / competition use",
       "kyu": "kyu grades"
     },
@@ -133,8 +135,8 @@
       "yohachi": "special cotton",
       "silk": "silk"
     },
-    "widthShortNormal": "normal (4cm)",
-    "widthShortSpecial": "special (4.5cm)",
+    "widthShortNormal": "4cm width",
+    "widthShortSpecial": "4.5cm width",
     "materialType": {
       "nami": "nami, 100% cotton",
       "shushi": "shushi, satin outer",
@@ -155,6 +157,72 @@
       "normal": "This is a 4 cm wide belt. It is relatively easy to tie and becomes supple with use. It is often used by first-time black belts and kumite athletes.",
       "special": "This is a 4.5 cm wide belt with an extra layer of komi (core), giving it a thicker and more substantial feel. It is stable and makes the wearer look bigger. It is widely used by kata competitors and instructors, and is also commonly purchased as a gift."
     }
+  },
+  "GiStandard": {
+    "model": "Model",
+    "fit": "Fit",
+    "fits": {
+      "slim": "Slim (high-waist)",
+      "normal": "Normal"
+    },
+    "size": "Size",
+    "sizeRow": "#{code}",
+    "sizePending": "Select a model and fit to see sizes.",
+    "mfrLogo": "Manufacturer's logo",
+    "mfrLogoPlacements": {
+      "neck": "Neck only",
+      "breast_neck": "Right breast & neck"
+    },
+    "embroidery": "Embroidery (optional)",
+    "embroideryPlaceholder": "none",
+    "embroiderySubtitle": "embroidery — up to four fields",
+    "threadColorTitle": "thread color (prices per character)",
+    "perChar": "per char.",
+    "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
+    "threadColors": {
+      "golden_brown": "金茶（オレンジ) Golden Brown",
+      "red": "赤 Red",
+      "white": "白 White",
+      "silver_grey": "銀ネズ（グレー) Silver gray",
+      "gold": "純金 Gold",
+      "silver": "純銀 Silver"
+    },
+    "threadColorsShort": {
+      "golden_brown": "golden brown",
+      "red": "red",
+      "white": "white",
+      "silver_grey": "silver gray",
+      "gold": "gold",
+      "silver": "silver"
+    },
+    "embroideryFields": {
+      "lapel": "Jacket lapel",
+      "shoulder": "Left shoulder",
+      "chest": "Chest",
+      "pants": "Pants"
+    },
+    "adjust": "Adjust length (optional)",
+    "adjustNote": "Adjustments only shorten. Enter the desired final measurement in cm; it must be under the size-chart limit shown.",
+    "adjustC": "Sleeve length (C)",
+    "adjustH": "Pant length (H)",
+    "adjustPendingPlaceholder": "select size first",
+    "adjustTooLong": "The value must be shorter than the size-chart measurement.",
+    "shrinkage": "Shrinkage",
+    "shrinkageOptions": {
+      "accounted": "Already accounted for",
+      "to_add": "To be added by HIROTA"
+    },
+    "shrinkageRequired": "Select a shrinkage option to continue.",
+    "label": "Label",
+    "labelSpecNote": "Please specify the label. If there is no particular specification, select ‘Hirota.’",
+    "giLine": "Gi",
+    "figureAlt": "karate-gi figure",
+    "startPromptModel": "Please select a model, fit & size to see the price.",
+    "startPromptFit": "Select a fit & size to see the price.",
+    "startPromptSize": "Select a size to see the price.",
+    "subtotal": "ITEM TOTAL",
+    "addToCart": "ADD TO CART",
+    "added": "ADDED"
   },
   "About": {
     "title": "hirota",

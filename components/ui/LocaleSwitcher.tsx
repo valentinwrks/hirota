@@ -38,7 +38,7 @@ export function LocaleSwitcher({ label }: { label: string }) {
     <div className="flex items-center gap-0.5" aria-label={label}>
       {LOCALE_ORDER.map(({ locale, label: code }, i) => (
         <span key={locale} className="flex items-center gap-0.5">
-          {i > 0 && <span className="text-line-soft">·</span>}
+          {i > 0 && <span className="text-ink-40">·</span>}
           <button
             type="button"
             onClick={() => select(locale)}

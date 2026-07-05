@@ -8,6 +8,7 @@ import { ProductGrid } from "@/components/catalog/ProductGrid";
 import { ConfiguratorPlaceholder } from "@/components/catalog/ConfiguratorPlaceholder";
 import { CategorySubHeader } from "@/components/catalog/CategorySubHeader";
 import { ObiConfiguratorSection } from "@/components/obi/ObiConfiguratorSection";
+import { GiStandardConfiguratorSection } from "@/components/gi-standard/GiStandardConfiguratorSection";
 
 // Pre-render the four category routes per locale.
 export function generateStaticParams() {
@@ -43,6 +44,8 @@ export default async function CatalogCategoryPage({
         />
       ) : category === "obi" ? (
         <ObiConfiguratorSection />
+      ) : category === "karate-gi-standard" ? (
+        <GiStandardConfiguratorSection />
       ) : (
         <ConfiguratorPlaceholder />
       )}

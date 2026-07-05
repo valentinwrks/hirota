@@ -24,7 +24,7 @@ describe('gi standard', () => {
         fit: 'normal',
         sizeCode: '0',
         embroidery: { lapel: { chars: 3, thread: 'standard' } },
-        adjustSleeveC: true,
+        sleeveCcm: 40,
         shrinkage: 'accounted',
       },
       data,
@@ -51,7 +51,7 @@ describe('gi standard', () => {
       modelSlug: 'mh-12',
       fit: 'normal',
       sizeCode: '0',
-      adjustPantH: true,
+      pantHcm: 40,
       shrinkage: 'accounted',
     }
     expect(() => priceLineItem(config, data)).toThrow(PricingError)
@@ -63,7 +63,49 @@ describe('gi standard', () => {
       modelSlug: 'mh-10',
       fit: 'normal',
       sizeCode: '0',
-      adjustSleeveC: true,
+      sleeveCcm: 40,
+    }
+    expect(validateConfig(config, data).ok).toBe(false)
+  })
+
+  it('accepts a C/H shortening strictly under the size-chart value', () => {
+    // tsubasa slim #7: size-chart C = 53.5, H = 119.
+    const b = priceLineItem(
+      {
+        kind: 'gi_standard',
+        modelSlug: 'tsubasa',
+        fit: 'slim',
+        sizeCode: '7',
+        sleeveCcm: 50,
+        pantHcm: 115,
+        shrinkage: 'accounted',
+      },
+      data,
+    )
+    expect(b.totalJpy).toBe(22330 + 1100 + 1100)
+  })
+
+  it('rejects a C value not strictly shorter than the size chart (equal is invalid)', () => {
+    const config: LineItemConfig = {
+      kind: 'gi_standard',
+      modelSlug: 'tsubasa',
+      fit: 'slim',
+      sizeCode: '7',
+      sleeveCcm: 53.5, // equals the chart C → invalid (shortens only)
+      shrinkage: 'accounted',
+    }
+    expect(validateConfig(config, data).ok).toBe(false)
+    expect(() => priceLineItem(config, data)).toThrow(PricingError)
+  })
+
+  it('rejects an H value longer than the size chart', () => {
+    const config: LineItemConfig = {
+      kind: 'gi_standard',
+      modelSlug: 'tsubasa',
+      fit: 'slim',
+      sizeCode: '7',
+      pantHcm: 120, // chart H = 119
+      shrinkage: 'accounted',
     }
     expect(validateConfig(config, data).ok).toBe(false)
   })

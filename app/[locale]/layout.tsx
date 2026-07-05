@@ -7,6 +7,7 @@ import { getUsdPerJpy } from "@/lib/currency/fx";
 import { CurrencyProvider } from "@/lib/currency/CurrencyProvider";
 import { CartProvider } from "@/lib/cart/CartProvider";
 import { TopBar } from "@/components/chrome/TopBar";
+import { LogoColumn } from "@/components/chrome/LogoColumn";
 import { AboutColumn } from "@/components/chrome/AboutColumn";
 import { ShopColumn } from "@/components/chrome/ShopColumn";
 import { CartColumn } from "@/components/chrome/CartColumn";
@@ -53,9 +54,13 @@ export default async function LocaleLayout({
             <CartProvider>
               {/* Fixed 26px top bar. */}
               <TopBar />
-              {/* Three-region grid below the bar, filling the viewport. */}
+              {/* Column layout below the bar, filling the viewport.
+                  Default (< 2xl): three regions — 22% / 56% / 22%.
+                  2xl+: four regions like the legacy UI — a 7.5% vertical-logo
+                  band appears and widths shift to 7.5 / 20 / 45 / 27.5. Shop is
+                  flex-1, so it absorbs the remainder in both layouts. */}
               <main className="mt-[26px] h-[calc(100vh-26px)] flex overflow-hidden">
-                {/* About = narrowest, Shop = widest, Cart = medium. */}
+                <LogoColumn />
                 <AboutColumn />
                 <ShopColumn>{children}</ShopColumn>
                 <CartColumn />

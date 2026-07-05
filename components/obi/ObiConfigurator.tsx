@@ -93,40 +93,26 @@ const OBI_MATERIAL_ROMAJI: Record<ObiMaterial, string> = {
   silk: "Silk",
 };
 
-// Builds the obi title for a given locale from the current axes. Progressive:
-// needs at least a color; width/size append when present. EN adds the romaji
-// reading. Shared by the live panel title and the cart card name (both locales).
+// Builds the obi product name for a given locale: kanji name (material + color
+// + 帯), plus the romaji reading in EN. Needs at least a color. Width and size
+// are intentionally NOT part of the name — they live in the feature description
+// and the cart line. Shared by the live panel title and the cart card name.
 function buildObiTitle(
   loc: string,
   color: ObiColor | undefined,
   material: ObiMaterial | undefined,
-  widthCm: ObiWidth | undefined,
-  sizeCode: number | undefined,
 ): string | null {
   if (color == null) return null;
   const kanjiName =
     (material != null ? OBI_MATERIAL_KANJI[material] : "") +
     OBI_COLOR_KANJI[color] +
     "帯";
-  const widthPart =
-    widthCm != null
-      ? ` · ${
-          loc === "ja"
-            ? widthCm === 4
-              ? "並仕立て"
-              : "特別仕立て"
-            : widthCm === 4
-              ? "normal"
-              : "special"
-        }`
-      : "";
-  const sizePart = sizeCode != null ? ` · #${sizeCode}` : "";
-  if (loc === "ja") return `${kanjiName}${widthPart}${sizePart}`;
+  if (loc === "ja") return kanjiName;
   const romaji =
     (material != null ? OBI_MATERIAL_ROMAJI[material] + " " : "") +
     OBI_COLOR_ROMAJI[color] +
     " Obi";
-  return `${kanjiName} ${romaji}${widthPart}${sizePart}`;
+  return `${kanjiName} ${romaji}`;
 }
 
 export function ObiConfigurator({
@@ -336,16 +322,11 @@ export function ObiConfigurator({
   const widthShort = (w: ObiWidth) =>
     w === 4 ? t("widthShortNormal") : t("widthShortSpecial");
 
-  // Obi title below the figure. Builds progressively from the first select
-  // (color) and grows as each axis is added: kanji product name (+ romaji in
-  // EN), then · width, then · #size. Present as soon as a color is chosen.
-  const obiTitle = buildObiTitle(
-    locale,
-    state.color,
-    state.material,
-    state.widthCm,
-    state.sizeCode,
-  );
+  // Obi title below the figure: kanji product name (+ romaji in EN) only.
+  // Width and size are deliberately omitted here — they're already spelled out
+  // in the feature description right below, so repeating them is redundant.
+  // Present as soon as a color is chosen.
+  const obiTitle = buildObiTitle(locale, state.color, state.material);
 
   // Per-size price for display (a direct lookup of a stored cell — not math).
   const sizePrice = (sizeCode: number): number | null => {
@@ -385,7 +366,7 @@ export function ObiConfigurator({
     if (state.widthCm != null) parts.push(widthShort(state.widthCm));
     if (state.sizeCode != null) parts.push(`#${state.sizeCode}`);
     features.push({
-      label: `${t("obiLine")}: ${parts.join(" · ")}`,
+      label: `${t("obiLine").toLowerCase()}: ${parts.join(" · ")}`,
       amountJpy: breakdown?.lines[0]?.amountJpy,
     });
   }
@@ -396,7 +377,7 @@ export function ObiConfigurator({
     let i = 1;
     // "End X: <text>, <thread color>". Thread is always set when an end has text.
     const threadSuffix =
-      state.threadColor != null ? `, ${t(`threadColorsShort.${state.threadColor}`)}` : "";
+      state.threadColor != null ? ` (${t(`threadColorsShort.${state.threadColor}`)})` : "";
     if (endAChars > 0) {
       features.push({
         label: `${t("endAShort")}: ${state.endAText.trim()}${threadSuffix}`,
@@ -405,11 +386,11 @@ export function ObiConfigurator({
     }
     if (endBChars > 0) {
       features.push({
-        label: `${t("endB")}: ${state.endBText.trim()}${threadSuffix}`,
+        label: `${t("endBShort")}: ${state.endBText.trim()}${threadSuffix}`,
         amountJpy: breakdown.lines[i++]?.amountJpy,
       });
     }
-    features.push({ label: `${t("label")}: ${labelName}` });
+    features.push({ label: `${t("label").toLowerCase()}: ${labelName}` });
   }
 
   function handleAdd() {
@@ -420,8 +401,8 @@ export function ObiConfigurator({
       // Cart card title: color + material only (width & size are already named in
       // the summary lines below, so we don't repeat them here).
       name: {
-        en: buildObiTitle("en", state.color, state.material, undefined, undefined) ?? "Obi",
-        ja: buildObiTitle("ja", state.color, state.material, undefined, undefined) ?? "帯",
+        en: buildObiTitle("en", state.color, state.material) ?? "Obi",
+        ja: buildObiTitle("ja", state.color, state.material) ?? "帯",
       },
       unitPriceJpy: breakdown.unitSubtotalJpy,
       config: {
@@ -452,15 +433,17 @@ export function ObiConfigurator({
       {/* ---------------------------------------------------------------- */}
       {/* LEFT — the dependency chain + options                            */}
       {/* ---------------------------------------------------------------- */}
-      <div className="basis-[55%] pt-2 px-2.5 pb-10 leading-tight">
+      <div className="basis-[60%] pt-2 px-2.5 pb-10 leading-tight">
         {/* Color — no upstream: always selectable. Grouped by grade/use, each
             group captioned like the legacy "jacket/pants measurements" subtitles. */}
-        <p className="text-lg font-bold mb-1">{t("color")}</p>
+        <p className="text-lg font-bold mb-1.5">{t("color")}</p>
         {OBI_COLOR_GROUPS.map((group, gi) => (
-          <div key={group.titleKey}>
-            <p className={"text-xs mb-1 text-ink-50 " + (gi === 0 ? "" : "pt-2")}>
-              {t(`colorGroups.${group.titleKey}`)}
-            </p>
+          <div key={group.colors[0]}>
+            {group.titleKey && (
+              <p className={"text-xs mb-1 text-ink-50 " + (gi === 0 ? "" : "pt-2")}>
+                {t(`colorGroups.${group.titleKey}`)}
+              </p>
+            )}
             <OptionTable>
               {group.colors.map((c) => (
                 <OptionRow
@@ -478,7 +461,7 @@ export function ObiConfigurator({
 
         {/* Material — depends on color; incompatible materials mute once a
             color is chosen. */}
-        <p className="text-lg font-bold pt-5 mb-2">{t("material")}</p>
+        <p className="text-lg font-bold pt-5 mb-1.5">{t("material")}</p>
         <OptionTable>
           {OBI_MATERIALS.map((m) => {
             const valid = colorReady && COLOR_MATERIALS[state.color!].includes(m);
@@ -497,7 +480,7 @@ export function ObiConfigurator({
         </OptionTable>
 
         {/* Width — depends on material; e.g. Nami mutes 4.5cm. */}
-        <p className="text-lg font-bold pt-5 mb-2">{t("width")}</p>
+        <p className="text-lg font-bold pt-5 mb-1.5">{t("width")}</p>
         <OptionTable>
           {OBI_WIDTHS.map((w) => {
             const valid = materialReady && MATERIAL_WIDTHS[state.material!].includes(w);
@@ -519,7 +502,7 @@ export function ObiConfigurator({
 
         {/* Size — all #0–#13 with cm always shown. Not selectable until color +
             material + width are set; then prices appear, unavailable sizes mute. */}
-        <p className="text-lg font-bold pt-5 mb-2">{t("size")}</p>
+        <p className="text-lg font-bold pt-5 mb-1.5">{t("size")}</p>
         <OptionTable>
           {allSizes.map(([code, lengthCm]) => {
             const valid = availableSizes.has(code);
@@ -542,7 +525,7 @@ export function ObiConfigurator({
         {/* Embroidery (optional). One thread color is chosen globally for both
             ends; metallic mutes until an eligible belt is picked. Colored belts
             (white–brown) cannot be embroidered — the whole section blocks. */}
-        <p className="text-lg font-bold pt-5 mb-1">{t("embroidery")}</p>
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
         {!embroideryAllowed && (
           <p className="text-[11px] italic text-ink-40 mb-1">{t("noEmbroideryNote")}</p>
         )}
@@ -602,7 +585,7 @@ export function ObiConfigurator({
 
         {/* Label — free, defaults to Hirota. Always available. HIROTA's standard
             label-specification note sits under the heading (localized). */}
-        <p className="text-lg font-bold pt-5 mb-1">{t("label")}</p>
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
         <p className="text-xs text-ink-50 leading-tight mb-2">{t("labelSpecNote")}</p>
         <OptionTable>
           {labels.map((l) => (
@@ -621,7 +604,7 @@ export function ObiConfigurator({
       {/* ---------------------------------------------------------------- */}
       {/* RIGHT — figure placeholder, material blurb, live features + CTA  */}
       {/* ---------------------------------------------------------------- */}
-      <div className="basis-[45%] flex flex-col mt-8 mb-5 mx-8 min-w-0">
+      <div className="basis-[40%] flex flex-col mt-8 mb-5 mx-8 min-w-0">
         {/* Obi figure (mirrors the karate-gi figure in the legacy UI). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -633,7 +616,7 @@ export function ObiConfigurator({
         {/* Obi title — appears with the first select (color) and grows with each
             axis. Legacy "gi-model" name styling. */}
         {obiTitle && (
-          <p className="text-lg font-bold leading-tight mb-1 mt-6">{obiTitle}</p>
+          <p className="text-lg font-bold leading-tight mb-1.5 mt-6">{obiTitle}</p>
         )}
 
         {/* Type + description for the selected material and width (legacy
@@ -644,7 +627,7 @@ export function ObiConfigurator({
             {/* grouped per axis: material (type + description), then width
                 (type + description). Width block appears once width is chosen.
                 Each type carries the legacy mb-1.5 gap before its description. */}
-            <p className="text-[11px] italic leading-tight mb-1.5 text-ink-35">
+            <p className="text-[11px] italic leading-tight mb-0.5 text-ink-35">
               {t(`materialType.${state.material}`)}
             </p>
             <p className="text-xs leading-tight">
@@ -652,7 +635,7 @@ export function ObiConfigurator({
             </p>
             {state.widthCm != null && (
               <>
-                <p className="text-[11px] italic leading-tight mb-1.5 mt-3 text-ink-35">
+                <p className="text-[11px] italic leading-tight mb-0.5 mt-2 text-ink-35">
                   {t(`widthType.${state.widthCm === 4 ? "normal" : "special"}`)}
                 </p>
                 <p className="text-xs leading-tight">
@@ -666,7 +649,7 @@ export function ObiConfigurator({
         {/* Live selected features. The config builds up progressively; the
             "choose…" prompt stays until size resolves the panel, at which point
             it's replaced by the subtotal + CTA (§ render timing). */}
-        <div className="flex flex-col mt-4 gap-0.5 leading-tight text-[11px] text-ink-40">
+        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-ink-40">
           {features.map((f, idx) => (
             <div key={idx} className="flex justify-between gap-2">
               <p className="min-w-0">{f.label}</p>
@@ -675,12 +658,12 @@ export function ObiConfigurator({
               )}
             </div>
           ))}
-          {/* mt-3.5 + the container's gap-0.5 (2px) = 16px, matching the mt-4
+          {/* mt-2.5 + the container's gap-0.5 (2px) = 12px, matching the mt-3
               that separates this block from the description above it. */}
           {!configured && (
             <p
               className={
-                "italic mt-3.5 " +
+                "italic mt-2.5 " +
                 // only the initial (nothing-selected) prompt is centered
                 (state.color == null ? "text-center" : "")
               }
@@ -693,9 +676,9 @@ export function ObiConfigurator({
         {/* Subtotal + CTA — only once fully configured (size chosen). */}
         {configured && (
           <>
-            <div className="flex justify-between mt-2.5">
-              <p className="text-lg font-bold leading-tight">{t("subtotal")}</p>
-              <p className="text-lg font-bold leading-tight">
+            <div className="flex justify-between mt-3">
+              <p className="text-base font-bold leading-tight">{t("subtotal")}</p>
+              <p className="text-base font-bold leading-tight">
                 {breakdown?.unitSubtotalJpy != null
                   ? format(breakdown.unitSubtotalJpy)
                   : "—"}

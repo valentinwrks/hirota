@@ -28,8 +28,8 @@ export const OBI_COLORS: readonly ObiColor[] = [
 
 /** A titled group of colors, shown as a captioned sub-table in the picker. */
 export interface ObiColorGroup {
-  /** i18n key under `Obi.colorGroups`. */
-  titleKey: string
+  /** i18n key under `Obi.colorGroups`. Omit to render the group without a caption. */
+  titleKey?: string
   colors: readonly ObiColor[]
 }
 
@@ -38,7 +38,7 @@ export interface ObiColorGroup {
  * grouping of `OBI_COLORS`; flattening these yields the same nine colors.
  */
 export const OBI_COLOR_GROUPS: readonly ObiColorGroup[] = [
-  { titleKey: 'dan', colors: ['black'] },
+  { colors: ['black'] },
   { titleKey: 'competition', colors: ['blue', 'red'] },
   { titleKey: 'kyu', colors: ['white', 'green', 'yellow', 'purple', 'orange', 'brown'] },
 ] as const

@@ -32,6 +32,10 @@ import type {
   ValidationError,
   ValidationResult,
 } from './types'
+import {
+  STANDARD_MFR_LOGO_MODELS,
+  standardAllowsAdjustCH,
+} from '../gi-standard/model'
 
 /** Purchase-unit multipliers, applied to the custom BASE price only. Note that
  *  jacket (0.6) + pants (0.5) = 1.1 > set (1.0): parts do not sum to the set,
@@ -52,9 +56,6 @@ const OPT = {
   adjustSleeveC: 'adjust_sleeve_c',
   adjustPantH: 'adjust_pant_h',
 } as const
-
-/** Standard gi models that may take the manufacturer's logo (AGENTS §8.2). */
-const STANDARD_MFR_LOGO_MODELS = new Set(['tsubasa', 'pinac-kumite'])
 
 /** Thrown by `priceLineItem` when asked to price a config that fails validation. */
 export class PricingError extends Error {
@@ -188,15 +189,32 @@ function validateGiStandard(config: GiStandardConfig, data: PricingData): Valida
       ),
     )
   }
+  const adjustingC = config.sleeveCcm != null
+  const adjustingH = config.pantHcm != null
   // mh-12 does not allow C/H shortening.
-  if (config.modelSlug === 'mh-12' && (config.adjustSleeveC || config.adjustPantH)) {
-    errors.push(err('adjust_not_allowed', 'mh-12 does not allow C/H adjustment', 'adjustSleeveC'))
+  if (!standardAllowsAdjustCH(config.modelSlug) && (adjustingC || adjustingH)) {
+    errors.push(err('adjust_not_allowed', `${config.modelSlug} does not allow C/H adjustment`, 'sleeveCcm'))
   }
   // Entering shortened measurements requires a shrinkage decision.
-  if ((config.adjustSleeveC || config.adjustPantH) && !config.shrinkage) {
+  if ((adjustingC || adjustingH) && !config.shrinkage) {
     errors.push(
       err('shrinkage_required', 'a shrinkage selection is required when adjusting C/H', 'shrinkage'),
     )
+  }
+  // Adjustment only ever REMOVES material: the entered value must be strictly
+  // shorter than the size chart's C (resp. H) for the resolved fit + size.
+  const chart = data.sizeCharts.get(sizeChartKey(config.fit, config.sizeCode))
+  if (chart) {
+    if (adjustingC && !(config.sleeveCcm! < chart.c)) {
+      errors.push(
+        err('adjust_c_too_long', `sleeve ${config.sleeveCcm} must be shorter than ${chart.c}`, 'sleeveCcm'),
+      )
+    }
+    if (adjustingH && !(config.pantHcm! < chart.h)) {
+      errors.push(
+        err('adjust_h_too_long', `pant length ${config.pantHcm} must be shorter than ${chart.h}`, 'pantHcm'),
+      )
+    }
   }
   return errors
 }
@@ -400,10 +418,10 @@ function priceGiStandard(config: GiStandardConfig, data: PricingData): PriceBrea
   // Standard gi: full set, so all four embroidery fields are in scope.
   lines.push(...giEmbroideryLines(config.embroidery, data, () => true))
 
-  if (config.adjustSleeveC) {
+  if (config.sleeveCcm != null) {
     lines.push({ label: 'Sleeve shortening (C)', amountJpy: data.options.get(OPT.adjustSleeveC)?.price ?? 0 })
   }
-  if (config.adjustPantH) {
+  if (config.pantHcm != null) {
     lines.push({ label: 'Pant-length shortening (H)', amountJpy: data.options.get(OPT.adjustPantH)?.price ?? 0 })
   }
 

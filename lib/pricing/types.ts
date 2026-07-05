@@ -97,10 +97,14 @@ export interface GiStandardConfig {
   /** Only tsubasa & pinac-kumite may take the manufacturer's logo in standard. */
   mfrLogo?: MfrLogo | null
   embroidery?: GiEmbroidery
-  /** Sleeve (C) shortening, +1100. Not offered on mh-12. */
-  adjustSleeveC?: boolean
-  /** Pant-length (H) shortening, +1100. Not offered on mh-12. */
-  adjustPantH?: boolean
+  /** Sleeve (C) shortening — the desired shorter final cm, +1100. Present ⇒
+   *  adjustment active. Must be strictly shorter than the size chart's C. Not
+   *  offered on mh-12. */
+  sleeveCcm?: number
+  /** Pant-length (H) shortening — the desired shorter final cm, +1100. Present ⇒
+   *  adjustment active. Must be strictly shorter than the size chart's H. Not
+   *  offered on mh-12. */
+  pantHcm?: number
   /** Required when C and/or H is adjusted (free selection). */
   shrinkage?: Shrinkage
 }
