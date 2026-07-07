@@ -14,6 +14,7 @@ export function CartColumn() {
   const t = useTranslations("Cart");
   const tObi = useTranslations("Obi");
   const tGi = useTranslations("GiStandard");
+  const tGiC = useTranslations("GiCustom");
   const locale = useLocale() as Locale;
   const { items, removeItem, setQuantity, subtotalJpy, hydrated, count } =
     useCart();
@@ -114,6 +115,66 @@ export function CartColumn() {
     return lines;
   }
 
+  // The configured custom-gi description, mirroring the configurator's
+  // right-panel summary: model · purchase unit · band, then the key option flags
+  // (collar, ties, hem, high waist, elastic, embroidery, mfr-logo, shrinkage) and
+  // the label. The full spec (measurements, body data) lives in the snapshot.
+  function giCustomLines(s: {
+    modelSlug: string;
+    purchaseUnit: string;
+    bandCode: string;
+    collar?: string;
+    sideTies: boolean;
+    chestTies: boolean;
+    elasticWaist: boolean;
+    mfrLogo?: string;
+    hem?: { widthCm: number; thickness: string };
+    highWaistCm?: number;
+    threadColorKey?: string;
+    embroidery: { field: string; chars: number; text: string }[];
+    shrinkage?: string;
+    labelName: string;
+  }): string[] {
+    const modelPart = s.modelSlug ? `${tGiC(`modelShort.${s.modelSlug}`)} · ` : "";
+    const lines = [
+      `${tGiC("giLine").toLowerCase()}: ${modelPart}${tGiC(`purchaseUnitsShort.${s.purchaseUnit}`)} · ${tGiC(`bandsShort.${s.bandCode}`)}`,
+    ];
+    if (s.collar) {
+      lines.push(tGiC(`collarOptions.${s.collar}`).toLowerCase());
+    }
+    if (s.sideTies) lines.push(tGiC("sideTies").toLowerCase());
+    if (s.chestTies) lines.push(tGiC("chestTies").toLowerCase());
+    if (s.hem) {
+      lines.push(
+        `${tGiC("hems").toLowerCase()}: ${tGiC(`hemOptions.${s.hem.widthCm}-${s.hem.thickness}`)}`,
+      );
+    }
+    if (s.highWaistCm != null) {
+      lines.push(`${tGiC("highWaist").toLowerCase()}: ${s.highWaistCm}cm`);
+    }
+    if (s.elasticWaist) lines.push(tGiC("elasticWaist").toLowerCase());
+    const threadSuffix = s.threadColorKey
+      ? ` (${tGiC(`threadColorsShort.${s.threadColorKey}`)})`
+      : "";
+    for (const f of s.embroidery) {
+      lines.push(
+        `${tGiC(`embroideryFieldsShort.${f.field}`).toLowerCase()}: ${f.text}${threadSuffix}`,
+      );
+    }
+    if (s.mfrLogo) {
+      lines.push(
+        `${tGiC("mfrLogo").toLowerCase()}: ${tGiC(`mfrLogoPlacementsShort.${s.mfrLogo}`)}`,
+      );
+    }
+    if (s.shrinkage) {
+      lines.push(
+        `${tGiC("shrinkage").toLowerCase()}: ${tGiC(`shrinkageOptions.${s.shrinkage}`)}`,
+      );
+    }
+    lines.push(`${tGiC("label").toLowerCase()}: ${s.labelName}`);
+    return lines;
+  }
+
   return (
     <section className="basis-[22%] 2xl:basis-[27.5%] shrink-0 flex flex-col overflow-hidden">
       <div className="shrink-0 h-[26px] flex items-center px-1.5 border-b border-line text-sm leading-none bg-paper-30">
@@ -147,7 +208,9 @@ export function CartColumn() {
                       ? obiLines(item.config.summary)
                       : item.config.kind === "gi_standard"
                         ? giStandardLines(item.config.summary)
-                        : [""];
+                        : item.config.kind === "gi_custom"
+                          ? giCustomLines(item.config.summary)
+                          : [""];
                 return (
                 <tr key={item.lineId} className="align-top">
                   <td className="px-2 py-1 border border-line">

@@ -311,5 +311,197 @@
     "visitP3": "If you visit without a reservation or during busy periods with many appointments, we may not be able to assist you. Please make sure to book your visit in advance.",
     "copyright": "© {year} HIROTA CO., LTD. All Rights Reserved.",
     "disclaimer": "Self-initiated concept build. Not commissioned or endorsed by HIROTA."
+  },
+  "GiCustom": {
+    "model": "Karate-gi model",
+    "modelNames": {
+      "tsubasa": "Tsubasa (ツバサ)",
+      "kuu": "Kū (クウ)",
+      "pinac-kumite": "Pinac Kumite (ピナック組手用)",
+      "takumi": "Takumi (タクミ)",
+      "pinac-kata": "Pinac Kata (ピナック形用)",
+      "mh-10": "MH-10",
+      "mh-11": "MH-11"
+    },
+    "modelComposition": {
+      "tsubasa": "95% polyester, 5% elastane",
+      "kuu": "65% cotton, 35% polyester",
+      "pinac-kumite": "70% cotton / 30% polyester, 11 oz.",
+      "takumi": "65% polyester, 35% cotton",
+      "pinac-kata": "70% cotton, 30% polyester",
+      "mh-10": "100% cotton, 14 oz.",
+      "mh-11": "100% cotton, 12 oz."
+    },
+    "modelCategory": {
+      "tsubasa": "kumite karate-gi",
+      "kuu": "kumite karate-gi",
+      "pinac-kumite": "kumite karate-gi",
+      "takumi": "kata karate-gi",
+      "pinac-kata": "kata karate-gi",
+      "mh-10": "kata karate-gi",
+      "mh-11": "kata karate-gi"
+    },
+    "modelDescription": {
+      "tsubasa": "An ultra-lightweight material that surpasses conventional standards! A special weaving method creates an uneven inner texture, reducing friction and preventing the fabric from sticking to the skin. Additionally, the material provides approximately 5% stretch, increasing ease of movement.",
+      "kuu": "A cotton-rich kumite gi with a soft hand and quick recovery — light enough for fast footwork while keeping a natural cotton feel. A comfortable all-round choice for daily training and competition.",
+      "pinac-kumite": "This best-selling karate uniform is the core of all Hirota products. Lightweight and easy to move in, it is an all-purpose garment favoured by many athletes and instructors, made to measure here in the custom line.",
+      "takumi": "A polyester-rich kata gi engineered for a crisp, resonant snap. The fabric holds its shape and delivers a sharp sound on technique, making it a strong choice for kata competitors.",
+      "pinac-kata": "The kata cut of the Pinac line: a 70/30 cotton–polyester weave tuned for a little more weight and a clean, deliberate snap in kata, while keeping the comfort the Pinac line is known for.",
+      "mh-10": "This karate uniform is made of thick No. 10 canvas (woven with high-quality combed yarn). The thickness of the fabric makes it ideal for kata. It is also recommended for those who find light or medium-weight fabrics insufficient.",
+      "mh-11": "This is a medium-weight karate uniform made from No. 11 canvas (woven with high-quality combed yarn). Because the fabric is medium-weight, it can be used for both kata and kumite."
+    },
+    "purchaseUnit": "Purchase unit",
+    "purchaseUnitNote": "Jacket and pants are priced separately; buying both as a set is the best value.",
+    "purchaseUnits": {
+      "set": "Full set (jacket + pants)",
+      "jacket": "Jacket only",
+      "pants": "Pants only"
+    },
+    "purchaseUnitsShort": {
+      "set": "full set",
+      "jacket": "jacket",
+      "pants": "pants"
+    },
+    "band": "Size band (base price)",
+    "bandNote": "Choose the size band that contains your size — it sets the base price.",
+    "bands": {
+      "up_to_2_5": "Up to 2½",
+      "3_to_5_5": "3 to 5½",
+      "6_to_8": "6 to 8",
+      "above_8": "Above 8"
+    },
+    "bandsShort": {
+      "up_to_2_5": "up to 2½",
+      "3_to_5_5": "3 to 5½",
+      "6_to_8": "6 to 8",
+      "above_8": "above 8"
+    },
+    "quoteOnRequest": "quote",
+    "quoteExplainer": "Sizes above 8 are made to a custom quote. Please contact HIROTA for pricing on this size.",
+    "quoteCta": "QUOTE ON REQUEST",
+    "measurements": "Measurements",
+    "measurementsNote": "Enter the final garment measurements in cm. They are validated against the top of the selected band; F is recorded but does not affect sizing.",
+    "measurementsNoteQuote": "This band is quote-on-request; measurements are recorded but not validated here.",
+    "measureLabels": {
+      "a": "A — jacket length",
+      "b": "B — shoulder width",
+      "c": "C — sleeve length",
+      "d": "D — sleeve width",
+      "e": "E — cuff width",
+      "f": "F — skirt slit depth",
+      "g": "G — pant waist",
+      "h": "H — pant length",
+      "i": "I — thigh width",
+      "j": "J — pant hem width"
+    },
+    "measurePlaceholder": "value",
+    "measureExceeds": "{letter} must be at most {max}cm (size {size}).",
+    "measureNeedsAll": "Enter all measurements to continue.",
+    "collar": "Collar thickness (optional)",
+    "collarNote": "Available on kata models only. Not offered on kumite models.",
+    "collarOptions": {
+      "thick": "Thick collar",
+      "extra_thick": "Extra-thick collar"
+    },
+    "ties": "Ties (optional)",
+    "sideTies": "Side ties (waki)",
+    "chestTies": "Chest ties (mune)",
+    "free": "free",
+    "hems": "Hems (optional)",
+    "hemsNote": "One width & thickness applied to the whole garment. 4cm normal is the free default; kumite models allow normal thickness only.",
+    "hemOptions": {
+      "4-normal": "4cm, normal (default)",
+      "4-thick": "4cm, thick",
+      "4-ultra": "4cm, ultra-thick",
+      "5-normal": "5cm, normal",
+      "5-thick": "5cm, thick",
+      "5-ultra": "5cm, ultra-thick"
+    },
+    "highWaist": "High waist (optional)",
+    "highWaistNote": "Enter the exact high-waist height in cm (up to 13cm). The price comes from the band it falls into.",
+    "highWaistToggle": "Add a high waist",
+    "highWaistLabel": "High waist",
+    "highWaistTooBig": "High waist must be 13cm or less.",
+    "highWaistNeedsValue": "Enter a high-waist height (1–13cm) to continue.",
+    "elasticWaistTitle": "Elastic waist (optional)",
+    "elasticNote": "Available on Tsubasa only. Can be combined with a high waist.",
+    "elasticWaist": "Elastic waist",
+    "mfrLogo": "logo",
+    "mfrLogoTitle": "Manufacturer's logo (optional)",
+    "mfrLogoNote": "Hirota logo can be embroidered on the jacket. No logo is added by default.",
+    "mfrLogoPlacements": {
+      "neck": "Neck only",
+      "breast_neck": "Right chest & neck"
+    },
+    "mfrLogoPlacementsShort": {
+      "neck": "neck",
+      "breast_neck": "chest & neck"
+    },
+    "embroidery": "Embroidery (optional)",
+    "threadColorTitle": "thread color (prices per character)",
+    "perChar": "per char.",
+    "embroiderySubtitle": "embroideries — up to four fields",
+    "embroideryPlaceholder": "none",
+    "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
+    "threadColors": {
+      "golden_brown": "Golden Brown (金茶)",
+      "red": "Red (赤)",
+      "white": "White (白)",
+      "silver_grey": "Silver gray (銀ネズ)",
+      "gold": "Gold (純金)",
+      "silver": "Silver (純銀)"
+    },
+    "threadColorsShort": {
+      "golden_brown": "golden brown",
+      "red": "red",
+      "white": "white",
+      "silver_grey": "silver gray",
+      "gold": "gold",
+      "silver": "silver"
+    },
+    "embroideryFields": {
+      "lapel": "Jacket lapel",
+      "shoulder": "Left shoulder",
+      "chest": "Left chest",
+      "pants": "Pants"
+    },
+    "embroideryFieldsShort": {
+      "lapel": "embr. lapel",
+      "shoulder": "embr. shoulder",
+      "chest": "embr. chest",
+      "pants": "embr. pants"
+    },
+    "shrinkage": "Shrinkage",
+    "shrinkageNote": "Required — the garment is measured to order.",
+    "shrinkageOptions": {
+      "accounted": "Already accounted for",
+      "to_add": "To be added by HIROTA"
+    },
+    "shrinkageRequired": "Select a shrinkage option to continue.",
+    "bodyData": "Body data",
+    "bodyNote": "Required sanity-check fields — stored on the order, not used to build the garment.",
+    "bodyHeight": "Height",
+    "bodyWeight": "Weight",
+    "bodyWaist": "Waist",
+    "bodyNeedsAll": "Enter height, weight and waist to continue.",
+    "label": "Label",
+    "labelSpecNote": "Please specify the label. If there is no particular specification, select ‘Hirota.’",
+    "giLine": "custom gi",
+    "modelShort": {
+      "tsubasa": "tsubasa",
+      "kuu": "kū",
+      "pinac-kumite": "pinac kumite",
+      "takumi": "takumi",
+      "pinac-kata": "pinac kata",
+      "mh-10": "MH-10",
+      "mh-11": "MH-11"
+    },
+    "figureAlt": "karate-gi figure",
+    "startPromptModel": "Please select a model, purchase unit & size band to see the price.",
+    "startPromptUnit": "Select a purchase unit & size band to see the price.",
+    "startPromptBand": "Select a size band to see the price.",
+    "subtotal": "ITEM TOTAL",
+    "addToCart": "ADD TO CART",
+    "added": "ADDED"
   }
 }

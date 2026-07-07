@@ -1,8 +1,14 @@
 import type { LocalizedText } from "../i18n/localized";
 import type {
+  GiCustomConfig,
+  GiMeasurements,
   GiStandardConfig,
+  HemSelection,
+  MfrLogo,
   ObiConfig,
   PriceBreakdown,
+  PurchaseUnit,
+  Shrinkage,
 } from "../pricing/types";
 
 // Cart line items are a discriminated union on `kind`. Only `simple` is used
@@ -108,9 +114,56 @@ export type GiStandardConfiguredSnapshot = {
   summary: GiStandardCartSummary;
 };
 
+// A concise, display-ready summary of a configured CUSTOM gi (Pattern C). The
+// FULL resolved spec (incl. every measurement + body data) lives in `config`;
+// this holds what the cart panel renders as compact lines. The model name lives
+// on the cart line's localized `name`. Per §7 the snapshot must let the admin
+// later render the COMPLETE spec — so nothing here is lossy relative to `config`.
+export type GiCustomCartSummary = {
+  /** Model slug (e.g. 'takumi'), for the localized short model name in the line. */
+  modelSlug: string;
+  /** 'set' | 'jacket' | 'pants'. */
+  purchaseUnit: PurchaseUnit;
+  /** Base-price band code (e.g. '3_to_5_5'), for the localized band label. */
+  bandCode: string;
+  /** Every entered measurement A–J (fulfilment; F is collected but unvalidated). */
+  measurements: GiMeasurements;
+  /** Collar thickness ('thick' | 'extra_thick'), when chosen (jacket, kata only). */
+  collar?: "thick" | "extra_thick";
+  /** Free jacket toggles. */
+  sideTies: boolean;
+  chestTies: boolean;
+  /** Pants, Tsubasa-only. */
+  elasticWaist: boolean;
+  /** Manufacturer's-logo placement key ('neck' | 'breast_neck') when present. */
+  mfrLogo?: MfrLogo;
+  /** Non-default hem selection (uniform); absent ⇒ the free 4cm/normal default. */
+  hem?: HemSelection;
+  /** Exact high-waist cm, when added (pants). */
+  highWaistCm?: number;
+  /** Chosen embroidery thread color (fulfilment detail); absent if no embroidery. */
+  threadColorKey?: string;
+  embroidery: GiEmbroiderySummaryField[];
+  /** 'accounted' | 'to_add' — always present (real measurements are entered). */
+  shrinkage?: Shrinkage;
+  /** Sanity-check body data (stored, never priced). */
+  bodyHeightCm?: number;
+  bodyWeightKg?: number;
+  bodyWaistCm?: number;
+  labelName: string;
+};
+
+export type GiCustomConfiguredSnapshot = {
+  kind: "gi_custom";
+  config: GiCustomConfig;
+  breakdown: PriceBreakdown;
+  summary: GiCustomCartSummary;
+};
+
 export type ConfiguredSnapshot =
   | ObiConfiguredSnapshot
-  | GiStandardConfiguredSnapshot;
+  | GiStandardConfiguredSnapshot
+  | GiCustomConfiguredSnapshot;
 
 // The configurator output: a resolved spec + itemized breakdown snapshot. The
 // line's `unitPriceJpy` mirrors `config.breakdown.unitSubtotalJpy` at add time.
