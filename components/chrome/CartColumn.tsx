@@ -68,6 +68,7 @@ export function CartColumn() {
   // right-panel summary: fit · #size, then mfr-logo, embroidered fields, C/H
   // shortening (with shrinkage), and the label.
   function giStandardLines(s: {
+    modelSlug: string;
     fit: string;
     sizeCode: string;
     mfrLogo?: string;
@@ -78,31 +79,35 @@ export function CartColumn() {
     shrinkage?: string;
     labelName: string;
   }): string[] {
+    // Numeric sizes get a "#"; the small "S" sizes (S5–S7) are shown as-is.
+    const sizeLabel = s.sizeCode.startsWith("S") ? s.sizeCode : `#${s.sizeCode}`;
+    // Guard the model against stale cart items saved before modelSlug existed.
+    const modelPart = s.modelSlug ? `${tGi(`modelShort.${s.modelSlug}`)} · ` : "";
     const lines = [
-      `${tGi("giLine").toLowerCase()}: ${tGi(`fits.${s.fit}`)} · #${s.sizeCode}`,
+      `${tGi("giLine").toLowerCase()}: ${modelPart}${tGi(`fitsShort.${s.fit}`)} · ${sizeLabel}`,
     ];
-    if (s.mfrLogo) {
-      lines.push(
-        `${tGi("mfrLogo").toLowerCase()}: ${tGi(`mfrLogoPlacements.${s.mfrLogo}`)}`,
-      );
-    }
     const threadSuffix = s.threadColorKey
-      ? `, ${tGi(`threadColorsShort.${s.threadColorKey}`)}`
+      ? ` (${tGi(`threadColorsShort.${s.threadColorKey}`)})`
       : "";
     for (const f of s.embroidery) {
       lines.push(
-        `${tGi(`embroideryFields.${f.field}`).toLowerCase()}: ${f.text}${threadSuffix}`,
+        `${tGi(`embroideryFieldsShort.${f.field}`).toLowerCase()}: ${f.text}${threadSuffix}`,
       );
     }
     if (s.sleeveCcm != null) {
-      lines.push(`${tGi("adjustC").toLowerCase()}: < ${s.sleeveCcm}cm`);
+      lines.push(`${tGi("adjustCShort")}: ${s.sleeveCcm}cm`);
     }
     if (s.pantHcm != null) {
-      lines.push(`${tGi("adjustH").toLowerCase()}: < ${s.pantHcm}cm`);
+      lines.push(`${tGi("adjustHShort")}: ${s.pantHcm}cm`);
     }
     if (s.shrinkage) {
       lines.push(
         `${tGi("shrinkage").toLowerCase()}: ${tGi(`shrinkageOptions.${s.shrinkage}`)}`,
+      );
+    }
+    if (s.mfrLogo) {
+      lines.push(
+        `${tGi("mfrLogo").toLowerCase()}: ${tGi(`mfrLogoPlacementsShort.${s.mfrLogo}`)}`,
       );
     }
     lines.push(`${tGi("label").toLowerCase()}: ${s.labelName}`);
@@ -158,7 +163,7 @@ export function CartColumn() {
 
                     {/* Config summary — one line for simple products, several
                         for a configured obi. A blank line reserves height. */}
-                    <div className="mt-px">
+                    <div className="mt-0">
                     {summaryLines.map((line, i) => (
                       <p key={i} className="text-ink-40">
                         {line || " "}

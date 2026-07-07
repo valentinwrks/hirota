@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import {
@@ -64,7 +64,11 @@ interface GiState {
   shoulderText: string;
   chestText: string;
   pantsText: string;
-  /** Desired shorter sleeve (C) / pant-length (H), as raw input strings. */
+  /** Whether the sleeve (C) / pant-length (H) adjustment radio is toggled on.
+   *  The radio carries the price; the input below it holds the new length. */
+  adjustCOn: boolean;
+  adjustHOn: boolean;
+  /** Desired shorter sleeve (C) / pant-length (H) final length, as raw strings. */
   adjustCText: string;
   adjustHText: string;
   shrinkage?: Shrinkage;
@@ -99,7 +103,6 @@ export function GiStandardConfigurator({
   labels: LabelOption[];
 }) {
   const t = useTranslations("GiStandard");
-  const locale = useLocale();
   const { format } = useCurrency();
   const { addItem } = useCart();
 
@@ -139,6 +142,8 @@ export function GiStandardConfigurator({
     shoulderText: "",
     chestText: "",
     pantsText: "",
+    adjustCOn: false,
+    adjustHOn: false,
     adjustCText: "",
     adjustHText: "",
     labelId: defaultLabelId,
@@ -152,15 +157,21 @@ export function GiStandardConfigurator({
   const reconcile = useCallback(
     (s: GiState): GiState => {
       const def = s.modelSlug ? modelBySlug.get(s.modelSlug) : undefined;
-      let { fit, sizeCode, mfrLogo, adjustCText, adjustHText, shrinkage } = s;
+      let {
+        fit,
+        sizeCode,
+        mfrLogo,
+        adjustCOn,
+        adjustHOn,
+        adjustCText,
+        adjustHText,
+        shrinkage,
+      } = s;
 
-      // Fit: fixed for single-fit models; a real choice only for pinac-kumite.
-      if (!def) {
+      // Fit: never auto-selected — the user must click it (even single-fit
+      // models). Only clear a fit the new model doesn't offer.
+      if (!def || (fit != null && !def.fits.includes(fit))) {
         fit = undefined;
-      } else if (def.hasFitChoice) {
-        if (fit != null && !def.fits.includes(fit)) fit = undefined;
-      } else {
-        fit = def.fits[0];
       }
 
       // Size: must be offered for the resolved (model, fit).
@@ -178,15 +189,33 @@ export function GiStandardConfigurator({
       // Manufacturer's logo: dropped when the new model doesn't offer it.
       if (!def || !def.mfrLogo) mfrLogo = undefined;
 
-      // C/H shortening: when the new model disallows it (mh-12), clear the raw
-      // input strings AND the now-orphaned shrinkage selection.
-      if (!def || !def.adjustCH) {
+      // C/H shortening depends on both the model allowing it (not mh-12) AND a
+      // resolved size (the ceiling comes from the size chart). If either is
+      // missing, reset the toggles, their raw inputs AND the orphaned shrinkage.
+      if (!def || !def.adjustCH || sizeCode == null) {
+        adjustCOn = false;
+        adjustHOn = false;
         adjustCText = "";
         adjustHText = "";
         shrinkage = undefined;
       }
 
-      return { ...s, fit, sizeCode, mfrLogo, adjustCText, adjustHText, shrinkage };
+      // Shrinkage and the C/H adjustments go hand in hand: with no adjustment
+      // active there can be no shrinkage selection, so clear it (e.g. the user
+      // unchecks the last adjustment that was still on).
+      if (!adjustCOn && !adjustHOn) shrinkage = undefined;
+
+      return {
+        ...s,
+        fit,
+        sizeCode,
+        mfrLogo,
+        adjustCOn,
+        adjustHOn,
+        adjustCText,
+        adjustHText,
+        shrinkage,
+      };
     },
     [data, modelBySlug],
   );
@@ -225,6 +254,12 @@ export function GiStandardConfigurator({
       : undefined;
   const cCeil = chartRow?.c;
   const hCeil = chartRow?.h;
+  // Size label for messages, matching the size table: numeric sizes get a "#",
+  // the small "S" sizes (S5–S7) are shown as-is.
+  const sizeLabel =
+    state.sizeCode == null || state.sizeCode.startsWith("S")
+      ? (state.sizeCode ?? "")
+      : `#${state.sizeCode}`;
 
   // Core = model + fit + size chosen. Optionals stay pending (inert) until then.
   const coreReady =
@@ -245,27 +280,37 @@ export function GiStandardConfigurator({
 
   const thread = state.threadColor != null ? giThreadCategory(state.threadColor) : null;
 
-  // C/H shortening. Each entered value must be a real number, strictly shorter
-  // than the size-chart ceiling. It is only folded into the (always-valid)
-  // engine config once it's valid AND a shrinkage has been chosen.
+  // C/H shortening. The radio (adjustCOn/adjustHOn) is the intent; the length is
+  // typed in the input below it. A typed value must be a real number, strictly
+  // shorter than the size-chart ceiling. It is folded into the (always-valid)
+  // engine config only once it's valid AND a shrinkage has been chosen.
   const cVal = parseNum(state.adjustCText);
   const hVal = parseNum(state.adjustHText);
-  const cActive = cVal !== undefined;
-  const hActive = hVal !== undefined;
+  const cEntered = state.adjustCOn && state.adjustCText.trim() !== "";
+  const hEntered = state.adjustHOn && state.adjustHText.trim() !== "";
   const cValid =
-    cActive && cCeil != null && Number.isFinite(cVal) && (cVal as number) > 0 && (cVal as number) < cCeil;
+    cEntered && cCeil != null && Number.isFinite(cVal) && (cVal as number) > 0 && (cVal as number) < cCeil;
   const hValid =
-    hActive && hCeil != null && Number.isFinite(hVal) && (hVal as number) > 0 && (hVal as number) < hCeil;
-  const cError = cActive && !cValid;
-  const hError = hActive && !hValid;
+    hEntered && hCeil != null && Number.isFinite(hVal) && (hVal as number) > 0 && (hVal as number) < hCeil;
+  // A typed-but-invalid length shows the "too long" hint; a toggled-on adjustment
+  // that isn't yet valid (empty or invalid) blocks add-to-cart.
+  const cError = cEntered && !cValid;
+  const hError = hEntered && !hValid;
+  const cNeedsValue = state.adjustCOn && !cValid;
+  const hNeedsValue = state.adjustHOn && !hValid;
+  // Shrinkage is enabled/required only once a VALID length is actually entered —
+  // not merely when an adjustment radio is toggled on. The two go hand in hand,
+  // but a checked adjustment with no measurement yet doesn't unlock shrinkage.
   const shrinkageRequired = cValid || hValid;
   const includeC = cValid && state.shrinkage != null;
   const includeH = hValid && state.shrinkage != null;
 
   // Resolved engine config, kept ALWAYS engine-valid (invalid/incomplete C/H are
   // simply omitted); the extra gates below block add-to-cart until they resolve.
-  // Memoized so the live-price useMemo doesn't recompute on unrelated renders.
-  const config = useMemo<GiStandardConfig | null>(() => {
+  // Resolved engine config. Kept a plain computed value (not a manual useMemo):
+  // the React Compiler memoizes it automatically, and its inputs include the
+  // parsed C/H values which the compiler can't accept in a manual dep array.
+  const config: GiStandardConfig | null = ((): GiStandardConfig | null => {
     if (!state.modelSlug || !state.fit || !state.sizeCode) return null;
     let embroidery: GiEmbroidery | undefined;
     if (thread != null) {
@@ -288,30 +333,12 @@ export function GiStandardConfigurator({
       pantHcm: includeH ? (hVal as number) : undefined,
       shrinkage: includeC || includeH ? state.shrinkage : undefined,
     };
-  }, [
-    state.modelSlug,
-    state.fit,
-    state.sizeCode,
-    state.labelId,
-    state.mfrLogo,
-    thread,
-    state.lapelText,
-    state.shoulderText,
-    state.chestText,
-    state.pantsText,
-    includeC,
-    includeH,
-    cVal,
-    hVal,
-    state.shrinkage,
-  ]);
+  })();
 
-  // Live itemized breakdown from the pure engine (never recomputed in JSX).
-  const breakdown = useMemo(() => {
-    if (!config) return null;
-    if (!validateConfig(config, data).ok) return null;
-    return priceLineItem(config, data);
-  }, [config, data]);
+  // Live itemized breakdown from the pure engine (never recomputed in JSX; the
+  // React Compiler memoizes this too).
+  const breakdown =
+    config && validateConfig(config, data).ok ? priceLineItem(config, data) : null;
 
   // A thread color with no text in any field is a meaningless selection.
   const threadWithoutText =
@@ -322,21 +349,33 @@ export function GiStandardConfigurator({
     config != null &&
     breakdown != null &&
     !breakdown.quote &&
-    !cError &&
-    !hError &&
+    !cNeedsValue &&
+    !hNeedsValue &&
     (!shrinkageRequired || state.shrinkage != null) &&
     !threadWithoutText;
 
+  // Hints explaining what's still missing to enable add-to-cart. Surfaced BELOW
+  // the button rather than inline in the form. Only meaningful once the core is
+  // configured (the button itself only renders then).
+  const blockingHints: string[] = [];
+  if (coreReady) {
+    if (threadWithoutText) blockingHints.push(t("threadNeedsText"));
+    // Adjustment toggled on but no length typed yet (per part).
+    if (state.adjustCOn && !cEntered) blockingHints.push(t("sleeveNeedsLength"));
+    if (state.adjustHOn && !hEntered) blockingHints.push(t("pantsNeedsLength"));
+    if (shrinkageRequired && state.shrinkage == null) {
+      blockingHints.push(t("shrinkageRequired"));
+    }
+  }
+
   const labelName = labels.find((l) => l.id === state.labelId)?.name ?? "Hirota";
-  const modelName = modelDef
-    ? locale === "ja"
-      ? modelDef.nameJa
-      : modelDef.nameEn
-    : null;
+  // The bilingual model label (e.g. "ツバサ Tsubasa"), shared by the model cell
+  // and the right-panel title so they always read identically.
+  const modelName = modelDef ? t(`modelNames.${modelDef.slug}`) : null;
 
   const fitLabel = (f: GiFit) => t(`fits.${f}`);
   const threadColorSuffix =
-    state.threadColor != null ? `, ${t(`threadColorsShort.${state.threadColor}`)}` : "";
+    state.threadColor != null ? ` (${t(`threadColorsShort.${state.threadColor}`)})` : "";
 
   // Per-size base price (a direct lookup of a stored cell — not math).
   const sizePrice = (sizeCode: string): number | null => {
@@ -361,40 +400,61 @@ export function GiStandardConfigurator({
   // then C, then H — matching priceGiStandard's line order).
   const features: { label: string; amountJpy?: number }[] = [];
   if (coreReady && breakdown && state.fit && state.sizeCode) {
+    // Amounts are read in the ENGINE's emission order (base, mfr-logo, embroidery
+    // lapel/shoulder/chest/pants, then C, then H — see priceGiStandard) so we can
+    // display them in a DIFFERENT order below (the logo after the cut).
     let i = 0;
-    features.push({
-      label: `${t("giLine").toLowerCase()}: ${fitLabel(state.fit)} · #${state.sizeCode}`,
-      amountJpy: breakdown.lines[i++]?.amountJpy,
-    });
-    if (state.mfrLogo) {
-      features.push({
-        label: `${t("mfrLogo").toLowerCase()}: ${t(`mfrLogoPlacements.${state.mfrLogo}`)}`,
-        amountJpy: breakdown.lines[i++]?.amountJpy,
-      });
+    const baseAmt = breakdown.lines[i++]?.amountJpy;
+    const logoAmt = state.mfrLogo ? breakdown.lines[i++]?.amountJpy : undefined;
+    const embAmt: Partial<Record<GiEmbroideryFieldKey, number | undefined>> = {};
+    for (const f of embFields) {
+      if (charCount(f.text) > 0 && thread != null) {
+        embAmt[f.key] = breakdown.lines[i++]?.amountJpy;
+      }
     }
+    const cAmt = includeC ? breakdown.lines[i++]?.amountJpy : undefined;
+    const hAmt = includeH ? breakdown.lines[i++]?.amountJpy : undefined;
+
+    // Display order mirrors the form: base, embroidery, sleeve & pants cut
+    // (C, H, shrinkage), manufacturer's logo, label.
+    features.push({
+      label: `${t("giLine").toLowerCase()}: ${t(`modelShort.${state.modelSlug!}`)} · ${t(`fitsShort.${state.fit}`)} · ${sizeLabel}`,
+      amountJpy: baseAmt,
+    });
     for (const f of embFields) {
       if (charCount(f.text) > 0 && thread != null) {
         features.push({
-          label: `${t(`embroideryFields.${f.key}`).toLowerCase()}: ${f.text.trim()}${threadColorSuffix}`,
-          amountJpy: breakdown.lines[i++]?.amountJpy,
+          label: `${t(`embroideryFieldsShort.${f.key}`).toLowerCase()}: ${f.text.trim()}${threadColorSuffix}`,
+          amountJpy: embAmt[f.key],
         });
       }
     }
-    if (includeC) {
+    // The adjustment appears in the config as soon as its radio is toggled on
+    // ("new length C: ?"), before any measurement or shrinkage. The "?" becomes
+    // the entered number once typed; the +price only lands (via cAmt/hAmt) once
+    // the value is valid AND shrinkage is chosen (that's when the engine prices
+    // it into the subtotal).
+    if (state.adjustCOn) {
       features.push({
-        label: `${t("adjustC").toLowerCase()}: < ${cVal}cm`,
-        amountJpy: breakdown.lines[i++]?.amountJpy,
+        label: `${t("adjustCShort")}: ${Number.isFinite(cVal) ? `${cVal}cm` : "?"}`,
+        amountJpy: cAmt,
       });
     }
-    if (includeH) {
+    if (state.adjustHOn) {
       features.push({
-        label: `${t("adjustH").toLowerCase()}: < ${hVal}cm`,
-        amountJpy: breakdown.lines[i++]?.amountJpy,
+        label: `${t("adjustHShort")}: ${Number.isFinite(hVal) ? `${hVal}cm` : "?"}`,
+        amountJpy: hAmt,
       });
     }
     if (shrinkageRequired && state.shrinkage) {
       features.push({
         label: `${t("shrinkage").toLowerCase()}: ${t(`shrinkageOptions.${state.shrinkage}`)}`,
+      });
+    }
+    if (state.mfrLogo) {
+      features.push({
+        label: `${t("mfrLogo").toLowerCase()}: ${t(`mfrLogoPlacementsShort.${state.mfrLogo}`)}`,
+        amountJpy: logoAmt,
       });
     }
     features.push({ label: `${t("label").toLowerCase()}: ${labelName}` });
@@ -420,16 +480,26 @@ export function GiStandardConfigurator({
     addItem({
       kind: "configured",
       productId: 0, // configured, not a `products` row; 0 = sentinel.
-      name: {
-        en: modelDef?.nameEn ?? "Karate-gi",
-        ja: modelDef?.nameJa ?? "空手衣",
-      },
+      // Cart title = the same bilingual model label as `modelNames` (e.g. EN
+      // "ピナック組手用 Pinac Kumite", JA "ピナック組手用"), so it re-localizes on
+      // the currency/locale toggle. Rebuilt from the DB names: kanji + romaji,
+      // collapsed to one when they match (the MH-* codes).
+      name: modelDef
+        ? {
+            en:
+              modelDef.nameJa === modelDef.nameEn
+                ? modelDef.nameEn
+                : `${modelDef.nameEn} (${modelDef.nameJa})`,
+            ja: modelDef.nameJa,
+          }
+        : { en: "Karate-gi", ja: "空手衣" },
       unitPriceJpy: breakdown.unitSubtotalJpy,
       config: {
         kind: "gi_standard",
         config,
         breakdown,
         summary: {
+          modelSlug: config.modelSlug,
           fit: config.fit,
           sizeCode: config.sizeCode,
           mfrLogo: config.mfrLogo ?? undefined,
@@ -464,15 +534,16 @@ export function GiStandardConfigurator({
                 update({ modelSlug: state.modelSlug === m.slug ? undefined : m.slug })
               }
             >
-              {locale === "ja" ? m.nameJa : m.nameEn}
+              {t(`modelNames.${m.slug}`)}
             </OptionRow>
           ))}
         </OptionTable>
 
         {/* Fit — always shown (both slim & normal). A model that isn't sold in a
-            fit renders it blocked; a single-fit model has its one fit auto-set
-            (selected) with the other blocked; only pinac-kumite is a real choice. */}
-        <p className="text-lg font-bold pt-5 mb-1.5">{t("fit")}</p>
+            fit renders it blocked; the offered fit(s) are selectable and the user
+            must click one (no auto-selection), even for single-fit models. */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("fit")}</p>
+        <p className="text-xs text-ink-50 leading-tight mb-2">{t("fitNote")}</p>
         <OptionTable>
           {Fits.map((f) => {
             const offered = modelDef?.fits.includes(f) ?? false;
@@ -519,28 +590,6 @@ export function GiStandardConfigurator({
           })}
         </OptionTable>
 
-        {/* Manufacturer's logo — always shown. Only tsubasa & pinac-kumite offer
-            it; every other model renders both placements blocked. */}
-        <p className="text-lg font-bold pt-5 mb-1.5">{t("mfrLogo")}</p>
-        <OptionTable>
-          {MfrLogoPlacements.map((placement) => (
-            <OptionRow
-              key={placement}
-              selected={state.mfrLogo === placement}
-              selectable={coreReady && !mfrExcluded}
-              blocked={mfrExcluded}
-              price={`+ ${format(mfrLogoPrice)}`}
-              onClick={() =>
-                update({
-                  mfrLogo: state.mfrLogo === placement ? undefined : placement,
-                })
-              }
-            >
-              {t(`mfrLogoPlacements.${placement}`)}
-            </OptionRow>
-          ))}
-        </OptionTable>
-
         {/* Embroidery (optional). One thread color is chosen globally for all
             four fields; the per-character rate follows the thread's category. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
@@ -574,45 +623,74 @@ export function GiStandardConfigurator({
             />
           ))}
         </OptionTable>
-        {threadWithoutText && (
-          <p className="text-[11px] italic text-ink-40 mt-1">{t("threadNeedsText")}</p>
-        )}
-
-        {/* Adjust C/H — always shown. Sleeve length C and pant-hem length H only
-            ever shorten: each entry must be under the size-chart ceiling. mh-12
-            renders both inputs blocked; otherwise they stay pending (no ceiling)
-            until a size resolves, then show the "< N" ceiling. */}
+        {/* Sleeve & pants cut — always shown. Each part is a radio (carrying the
+            +price) that only ever SHORTENS; toggling it on reveals the length
+            input below. mh-12 renders the radios blocked; otherwise they're
+            pending until a size resolves (the input needs the chart ceiling). */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("adjust")}</p>
         <p className="text-xs text-ink-50 leading-tight mb-2">{t("adjustNote")}</p>
         <OptionTable>
-          <MeasureInputRow
-            label={t("adjustC")}
-            text={state.adjustCText}
-            onText={(v) => update({ adjustCText: v })}
-            placeholder={
-              coreReady && cCeil != null ? `< ${cCeil}` : t("adjustPendingPlaceholder")
-            }
-            suffix={`+ ${format(adjustCPrice)}`}
-            pending={!coreReady && !adjustExcluded}
+          <OptionRow
+            selected={state.adjustCOn}
+            selectable={coreReady && !adjustExcluded}
             blocked={adjustExcluded}
-            error={cError}
-          />
-          <MeasureInputRow
-            label={t("adjustH")}
-            text={state.adjustHText}
-            onText={(v) => update({ adjustHText: v })}
-            placeholder={
-              coreReady && hCeil != null ? `< ${hCeil}` : t("adjustPendingPlaceholder")
+            price={`+ ${format(adjustCPrice)}`}
+            onClick={() =>
+              update(
+                state.adjustCOn
+                  ? { adjustCOn: false, adjustCText: "" }
+                  : { adjustCOn: true },
+              )
             }
-            suffix={`+ ${format(adjustHPrice)}`}
-            pending={!coreReady && !adjustExcluded}
+          >
+            {t("sleeveAdjust")}
+          </OptionRow>
+          {state.adjustCOn && (
+            <MeasureInputRow
+              label={t("adjustC")}
+              text={state.adjustCText}
+              onText={(v) => update({ adjustCText: v })}
+              placeholder={t("adjustLengthPlaceholder")}
+              unit="cm"
+              error={cError}
+            />
+          )}
+          <OptionRow
+            selected={state.adjustHOn}
+            selectable={coreReady && !adjustExcluded}
             blocked={adjustExcluded}
-            error={hError}
-          />
+            price={`+ ${format(adjustHPrice)}`}
+            onClick={() =>
+              update(
+                state.adjustHOn
+                  ? { adjustHOn: false, adjustHText: "" }
+                  : { adjustHOn: true },
+              )
+            }
+          >
+            {t("pantsAdjust")}
+          </OptionRow>
+          {state.adjustHOn && (
+            <MeasureInputRow
+              label={t("adjustH")}
+              text={state.adjustHText}
+              onText={(v) => update({ adjustHText: v })}
+              placeholder={t("adjustLengthPlaceholder")}
+              unit="cm"
+              error={hError}
+            />
+          )}
         </OptionTable>
-        {(cError || hError) && (
-          <p className="text-[11px] italic font-bold text-ink-60 mt-1">
-            {t("adjustTooLong")}
+        {/* Field-level errors: the entered length exceeds the selected size's
+            chart measurement. Stays inline (next to the inputs), not below CTA. */}
+        {cError && cCeil != null && (
+          <p className="text-[11px] italic text-red-400 mt-1">
+            {t("adjustTooLongC", { max: cCeil, size: sizeLabel })}
+          </p>
+        )}
+        {hError && hCeil != null && (
+          <p className="text-[11px] italic text-red-400 mt-1">
+            {t("adjustTooLongH", { max: hCeil, size: sizeLabel })}
           </p>
         )}
 
@@ -635,11 +713,29 @@ export function GiStandardConfigurator({
             </OptionRow>
           ))}
         </OptionTable>
-        {shrinkageRequired && state.shrinkage == null && (
-          <p className="text-[11px] italic text-ink-40 mt-1">
-            {t("shrinkageRequired")}
-          </p>
-        )}
+
+        {/* Manufacturer's logo — always shown. Only tsubasa & pinac-kumite offer
+            it; every other model renders both placements blocked. */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("mfrLogoTitle")}</p>
+        <p className="text-xs text-ink-50 leading-tight mb-2">{t("mfrLogoNote")}</p>
+        <OptionTable>
+          {MfrLogoPlacements.map((placement) => (
+            <OptionRow
+              key={placement}
+              selected={state.mfrLogo === placement}
+              selectable={coreReady && !mfrExcluded}
+              blocked={mfrExcluded}
+              price={`+ ${format(mfrLogoPrice)}`}
+              onClick={() =>
+                update({
+                  mfrLogo: state.mfrLogo === placement ? undefined : placement,
+                })
+              }
+            >
+              {t(`mfrLogoPlacements.${placement}`)}
+            </OptionRow>
+          ))}
+        </OptionTable>
 
         {/* Label — free, defaults to Hirota. Selectable once the core resolves. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
@@ -675,9 +771,25 @@ export function GiStandardConfigurator({
           <p className="text-lg font-bold leading-tight mb-1 mt-6">{modelName}</p>
         )}
 
+        {/* Model info — two italic "type" lines (fabric + category) then the
+            description, mirroring the obi material/width type + description. */}
+        {modelDef && (
+          <div className={modelName ? "" : "mt-6"}>
+            <p className="text-[11px] italic leading-tight text-ink-35">
+              {t(`modelComposition.${modelDef.slug}`)}
+            </p>
+            <p className="text-[11px] italic leading-tight mb-1.5 text-ink-35">
+              {t(`modelCategory.${modelDef.slug}`)}
+            </p>
+            <p className="text-xs leading-tight">
+              {t(`modelDescription.${modelDef.slug}`)}
+            </p>
+          </div>
+        )}
+
         {/* Live selected features. The "choose…" prompt stays until the core
             resolves, at which point it's replaced by the subtotal + CTA. */}
-        <div className="flex flex-col mt-4 gap-0.5 leading-tight text-[11px] text-ink-40">
+        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-ink-40">
           {features.map((f, idx) => (
             <div key={idx} className="flex justify-between gap-2">
               <p className="min-w-0">{f.label}</p>
@@ -700,7 +812,7 @@ export function GiStandardConfigurator({
         {/* Subtotal + CTA — only once fully configured (size chosen). */}
         {coreReady && (
           <>
-            <div className="flex justify-between mt-2.5">
+            <div className="flex justify-between mt-3">
               <p className="text-base font-bold leading-tight">{t("subtotal")}</p>
               <p className="text-base font-bold leading-tight">
                 {breakdown?.unitSubtotalJpy != null
@@ -714,14 +826,30 @@ export function GiStandardConfigurator({
               onClick={handleAdd}
               disabled={!canAdd}
               className={
-                "mt-2.5 text-xs font-bold bg-transparent border tracking-wide py-1 " +
-                (canAdd
-                  ? "text-ink-50 border-line hover:bg-ink-10 cursor-pointer"
-                  : "text-ink-25 border-line-soft")
+                "mt-2.5 text-xs font-bold border tracking-wide py-1 " +
+                // While showing "ADDED", hold the selected fill; it reverts when
+                // the label goes back to "ADD TO CART".
+                (justAdded
+                  ? "bg-ink-60 text-paper border-line cursor-pointer"
+                  : canAdd
+                    ? "bg-transparent text-ink-50 border-line hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
+                    : "bg-transparent text-ink-25 border-line-soft")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
             </button>
+
+            {/* What's still missing to enable the button — surfaced here rather
+                than inline in the form. */}
+            {blockingHints.length > 0 && (
+              <div className="mt-2.5 flex flex-col gap-0.5">
+                {blockingHints.map((hint, i) => (
+                  <p key={i} className="text-[11px] italic text-ink-40">
+                    {hint}
+                  </p>
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -852,59 +980,60 @@ function TextInputRow({
   );
 }
 
-// A numeric measurement input (C/H shortening). Shows the "< N" ceiling as its
-// placeholder once a size resolves; a solid dark border while the entry is
-// invalid (not strictly shorter than the ceiling); and a blocked (muted, struck-
-// through, inert) look when the model disallows adjustment (mh-12). Mirrors the
-// OptionRow's pending/blocked/error states.
+// A numeric measurement input (the new C/H length), shown below its adjustment
+// radio. Legacy-ui style: a label, a right-aligned numeric field, and a trailing
+// unit ("cm"). Never carries a price (that lives on the radio). Once the buyer
+// leaves the field with a valid value, the cell adopts the "selected" fill
+// (bg-ink-60), mirroring the embroidery input's completed state. A solid dark
+// border signals an invalid entry (not strictly shorter than the size chart).
 function MeasureInputRow({
   label,
   text,
   onText,
   placeholder,
-  suffix,
-  pending = false,
-  blocked = false,
+  unit,
   error = false,
 }: {
   label: string;
   text: string;
   onText: (v: string) => void;
   placeholder: string;
-  suffix?: string;
-  pending?: boolean;
-  blocked?: boolean;
+  unit?: string;
   error?: boolean;
 }) {
-  const inert = pending || blocked;
-  const cellState = inert
-    ? "text-ink-40 cursor-default"
+  const [focused, setFocused] = useState(false);
+  // "completed" only after the buyer leaves the field (blur) with a valid value.
+  // An invalid entry (error) never takes the selected fill; the border is left
+  // unchanged — the error is signalled by the red hint below the inputs.
+  const completed = !focused && text.trim().length > 0 && !error;
+  const cellState = completed
+    ? "bg-ink-60 text-paper"
     : "hover:bg-ink-10 focus-within:bg-ink-10";
-  // Error signals with a solid, dark ink border (the palette is monochrome — no
-  // red token); pending/blocked soften to the pending tone.
-  const borderClass = error
-    ? "border-ink-60"
-    : inert
-      ? "border-line-pending"
-      : "border-line";
 
   return (
     <tr>
-      <td className={"px-2 py-1 border " + borderClass + " " + cellState}>
+      <td className={"px-2 py-1 border border-line " + cellState}>
         <div className="flex items-center gap-1.5">
-          <span className={blocked ? "line-through" : ""}>{label}</span>
+          <span>{label}</span>
           <input
             type="text"
             inputMode="decimal"
-            value={blocked ? "" : text}
-            placeholder={blocked ? "" : placeholder}
-            disabled={inert}
+            value={text}
+            placeholder={placeholder}
             onChange={(e) => onText(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
             aria-label={label}
-            className="flex-1 min-w-0 text-right bg-transparent focus:outline-none disabled:cursor-default"
+            className="flex-1 min-w-0 text-right bg-transparent focus:outline-none"
           />
-          {suffix && !blocked && (
-            <span className="whitespace-nowrap text-ink-40">{suffix}</span>
+          {unit && (
+            <span
+              className={
+                "whitespace-nowrap " + (completed ? "text-paper" : "text-ink-40")
+              }
+            >
+              {unit}
+            </span>
           )}
         </div>
       </td>

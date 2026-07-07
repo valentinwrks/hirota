@@ -49,13 +49,13 @@
     "checkoutComing": "checkout coming"
   },
   "Obi": {
-    "color": "Color",
+    "color": "Obi color",
     "material": "Material",
     "width": "Tailoring — Width",
     "size": "Size",
     "sizeRow": "#{code} · {length}cm",
-    "widthNormal": "並仕立て Normal tailoring — 4cm width",
-    "widthSpecial": "特別仕立て Special tailoring — 4.5cm width",
+    "widthNormal": "Normal tailoring (並仕立て) — 4cm width",
+    "widthSpecial": "Special tailoring (特別仕立て) — 4.5cm width",
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
     "embroiderySubtitle": "embroidery",
@@ -71,12 +71,12 @@
     "endBPlaceholder": "style/association?",
     "chars": "chars",
     "threadColors": {
-      "golden_brown": "金茶（オレンジ) Golden Brown",
-      "red": "赤 Red",
-      "white": "白 White",
-      "silver_grey": "銀ネズ（グレー) Silver gray",
-      "gold": "純金 Gold",
-      "silver": "純銀 Silver"
+      "golden_brown": "Golden Brown (金茶)",
+      "red": "Red (赤)",
+      "white": "White (白)",
+      "silver_grey": "Silver gray (銀ネズ)",
+      "gold": "Gold (純金)",
+      "silver": "Silver (純銀)"
     },
     "threadColorsShort": {
       "golden_brown": "golden brown",
@@ -102,21 +102,21 @@
       "kyu": "kyu grades"
     },
     "colors": {
-      "black": "黒帯 Kuro obi — black",
-      "blue": "青帯 Ao obi — blue",
-      "red": "赤帯 Aka obi — red",
-      "white": "白帯 Shiro obi — white",
-      "green": "緑帯 Midori obi — green",
-      "yellow": "黄帯 Ki obi — yellow",
-      "purple": "紫帯 Murasaki obi — purple",
-      "orange": "橙帯 Daidai obi — orange",
-      "brown": "茶帯 Cha obi — brown"
+      "black": "Kuro obi (黒帯) — black",
+      "blue": "Ao obi (青帯) — blue",
+      "red": "Aka obi (赤帯) — red",
+      "white": "Shiro obi (白帯) — white",
+      "green": "Midori obi (緑帯) — green",
+      "yellow": "Ki obi (黄帯) — yellow",
+      "purple": "Murasaki obi (紫帯) — purple",
+      "orange": "Daidai obi (橙帯) — orange",
+      "brown": "Cha obi (茶帯) — brown"
     },
     "materials": {
-      "nami": "並 Nami — normal cotton",
-      "shushi": "朱子 Shushi — satin",
-      "yohachi": "洋八 Yōhachi — special cotton",
-      "silk": "本絹 Silk"
+      "nami": "Nami (並) — normal cotton",
+      "shushi": "Shushi (朱子) — satin",
+      "yohachi": "Yōhachi (洋八) — special cotton",
+      "silk": "Silk (本絹)"
     },
     "colorsShort": {
       "black": "black",
@@ -159,33 +159,68 @@
     }
   },
   "GiStandard": {
-    "model": "Model",
+    "model": "Karate-gi model",
+    "modelNames": {
+      "tsubasa": "Tsubasa (ツバサ)",
+      "pinac-kumite": "Pinac Kumite (ピナック組手用)",
+      "mh-10": "MH-10",
+      "mh-11": "MH-11",
+      "mh-12": "MH-12"
+    },
+    "modelComposition": {
+      "tsubasa": "95% polyester, 5% elasthan",
+      "pinac-kumite": "70% cotton / 30% polyester, 11 oz.",
+      "mh-10": "100% cotton, 14 oz.",
+      "mh-11": "100% cotton, 12 oz.",
+      "mh-12": "100% cotton, 7.9 oz."
+    },
+    "modelCategory": {
+      "tsubasa": "kumite karate-gi",
+      "pinac-kumite": "kumite karate-gi",
+      "mh-10": "kata karate-gi",
+      "mh-11": "all-purpose karate-gi",
+      "mh-12": "beginners karate-gi"
+    },
+    "modelDescription": {
+      "tsubasa": "An ultra-lightweight material that surpasses conventional standards! A special weaving method creates an uneven inner texture, reducing friction and preventing the fabric from sticking to the skin. Additionally, the material provides approximately 5% stretch, increasing ease of movement.",
+      "pinac-kumite": "This best-selling karate uniform is the core of all Hirota products. It was a groundbreaking product that made a splash in an era when there was no distinction between karate uniforms for kata and kumite. In this day and age when lighter karate uniforms are being developed, it may not be specifically designed for kumite, but it is lightweight and easy to move in, making it an all-purpose garment that can be used for extreme fighting. It is a favorite of many athletes and instructors.",
+      "mh-10": "This karate uniform is made of thick No. 10 canvas (woven with high-quality combed yarn). The thickness of the fabric makes it ideal for kata. It is also recommended for those who find light or medium-weight fabrics insufficient.",
+      "mh-11": "This is a medium-weight karate uniform made from No. 11 canvas (woven with high-quality combed yarn). Because the fabric is medium-weight, it can be used for both kata and kumite. This is a standard fabric among ready-made products.",
+      "mh-12": "This karate uniform is made from fabric that is about 50% the thickness of No. 10 canvas. We are able to offer it at an affordable price. It is recommended for beginners and children who grow quickly."
+    },
     "fit": "Fit",
+    "fitNote": "Slim cut is only available for Tsubasa and Pinac Kumite models.",
     "fits": {
-      "slim": "Slim (high-waist)",
+      "slim": "Slim (with high-waist)",
       "normal": "Normal"
     },
     "size": "Size",
     "sizeRow": "#{code}",
     "sizePending": "Select a model and fit to see sizes.",
-    "mfrLogo": "Manufacturer's logo",
+    "mfrLogo": "logo",
+    "mfrLogoTitle": "Manufacturer's logo (optional)",
+    "mfrLogoNote": "Hirota logo can be embroidered on the karate-gi. No logo is added by default.",
     "mfrLogoPlacements": {
       "neck": "Neck only",
-      "breast_neck": "Right breast & neck"
+      "breast_neck": "Right chest & neck"
+    },
+    "mfrLogoPlacementsShort": {
+      "neck": "neck",
+      "breast_neck": "chest & neck"
     },
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
-    "embroiderySubtitle": "embroidery — up to four fields",
+    "embroiderySubtitle": "embroideries — up to four fields",
     "threadColorTitle": "thread color (prices per character)",
     "perChar": "per char.",
     "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
     "threadColors": {
-      "golden_brown": "金茶（オレンジ) Golden Brown",
-      "red": "赤 Red",
-      "white": "白 White",
-      "silver_grey": "銀ネズ（グレー) Silver gray",
-      "gold": "純金 Gold",
-      "silver": "純銀 Silver"
+      "golden_brown": "Golden Brown (金茶)",
+      "red": "Red (赤)",
+      "white": "White (白)",
+      "silver_grey": "Silver gray (銀ネズ)",
+      "gold": "Gold (純金)",
+      "silver": "Silver (純銀)"
     },
     "threadColorsShort": {
       "golden_brown": "golden brown",
@@ -198,15 +233,28 @@
     "embroideryFields": {
       "lapel": "Jacket lapel",
       "shoulder": "Left shoulder",
-      "chest": "Chest",
+      "chest": "Left chest",
       "pants": "Pants"
     },
-    "adjust": "Adjust length (optional)",
-    "adjustNote": "Adjustments only shorten. Enter the desired final measurement in cm; it must be under the size-chart limit shown.",
-    "adjustC": "Sleeve length (C)",
-    "adjustH": "Pant length (H)",
-    "adjustPendingPlaceholder": "select size first",
-    "adjustTooLong": "The value must be shorter than the size-chart measurement.",
+    "embroideryFieldsShort": {
+      "lapel": "embr. lapel",
+      "shoulder": "embr. shoulder",
+      "chest": "embr. chest",
+      "pants": "embr. pants"
+    },
+    "adjust": "Sleeve & Pants cut (optional)",
+    "adjustNote": "Shorten sleeves and/or pants from the selected standard size. Both lengths can only be reduced.",
+    "sleeveAdjust": "Sleeve length adjustment",
+    "pantsAdjust": "Pants length adjustment",
+    "adjustC": "New length (C)",
+    "adjustH": "New length (H)",
+    "adjustCShort": "new length (C)",
+    "adjustHShort": "new length (H)",
+    "adjustLengthPlaceholder": "length",
+    "sleeveNeedsLength": "Add new sleeve length (C) to continue.",
+    "pantsNeedsLength": "Add new pant length (H) to continue.",
+    "adjustTooLongC": "New C value must be shorter than {max}cm for size {size}.",
+    "adjustTooLongH": "New H value must be shorter than {max}cm for size {size}.",
     "shrinkage": "Shrinkage",
     "shrinkageOptions": {
       "accounted": "Already accounted for",
@@ -215,7 +263,18 @@
     "shrinkageRequired": "Select a shrinkage option to continue.",
     "label": "Label",
     "labelSpecNote": "Please specify the label. If there is no particular specification, select ‘Hirota.’",
-    "giLine": "Gi",
+    "giLine": "dogi",
+    "modelShort": {
+      "tsubasa": "tsubasa",
+      "pinac-kumite": "pinac kumite",
+      "mh-10": "MH-10",
+      "mh-11": "MH-11",
+      "mh-12": "MH-12"
+    },
+    "fitsShort": {
+      "slim": "slim cut",
+      "normal": "normal cut"
+    },
     "figureAlt": "karate-gi figure",
     "startPromptModel": "Please select a model, fit & size to see the price.",
     "startPromptFit": "Select a fit & size to see the price.",

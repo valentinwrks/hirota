@@ -82,6 +82,8 @@ export type GiEmbroiderySummaryField = {
 // resolved spec lives in `config`; the model name lives on the cart line's
 // localized `name`, so this holds only the option lines the cart panel renders.
 export type GiStandardCartSummary = {
+  /** Model slug (e.g. 'mh-11'), for the localized short model name in the line. */
+  modelSlug: string;
   /** 'slim' | 'normal'. */
   fit: string;
   sizeCode: string;

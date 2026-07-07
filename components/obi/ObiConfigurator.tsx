@@ -112,7 +112,8 @@ function buildObiTitle(
     (material != null ? OBI_MATERIAL_ROMAJI[material] + " " : "") +
     OBI_COLOR_ROMAJI[color] +
     " Obi";
-  return `${kanjiName} ${romaji}`;
+  // Romaji first, the kanji name trailing in parentheses (e.g. "Nami Kuro Obi (並黒帯)").
+  return `${romaji} (${kanjiName})`;
 }
 
 export function ObiConfigurator({
@@ -690,10 +691,14 @@ export function ObiConfigurator({
               onClick={handleAdd}
               disabled={!canAdd}
               className={
-                "mt-2.5 text-xs font-bold bg-transparent border tracking-wide py-1 " +
-                (canAdd
-                  ? "text-ink-50 border-line hover:bg-ink-10 cursor-pointer"
-                  : "text-ink-25 border-line-soft")
+                "mt-2.5 text-xs font-bold border tracking-wide py-1 " +
+                // While showing "ADDED", hold the selected fill; it reverts when
+                // the label goes back to "ADD TO CART".
+                (justAdded
+                  ? "bg-ink-60 text-paper border-line cursor-pointer"
+                  : canAdd
+                    ? "bg-transparent text-ink-50 border-line hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
+                    : "bg-transparent text-ink-25 border-line-soft")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
