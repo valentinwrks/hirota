@@ -39,6 +39,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       gi_custom_base_prices: {
         Row: {
           band_code: string
@@ -509,7 +524,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_order: {
+        Args: { items_data: Json; order_data: Json }
+        Returns: {
+          id: string
+          order_number: number
+        }[]
+      }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       currency: "JPY" | "USD"

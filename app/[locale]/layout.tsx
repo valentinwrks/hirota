@@ -3,14 +3,6 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/lib/i18n/routing";
-import { getUsdPerJpy } from "@/lib/currency/fx";
-import { CurrencyProvider } from "@/lib/currency/CurrencyProvider";
-import { CartProvider } from "@/lib/cart/CartProvider";
-import { TopBar } from "@/components/chrome/TopBar";
-import { LogoColumn } from "@/components/chrome/LogoColumn";
-import { AboutColumn } from "@/components/chrome/AboutColumn";
-import { ShopColumn } from "@/components/chrome/ShopColumn";
-import { CartColumn } from "@/components/chrome/CartColumn";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -24,6 +16,11 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+// Root locale layout — deliberately MINIMAL: <html>/<body>, the intl provider,
+// and the background gradient (globals.css). It is the common ancestor of BOTH
+// the store and the admin panel, so it must NOT carry store-only chrome
+// (TopBar, columns, cart). Those live in (store)/layout.tsx; the admin panel
+// brings its own shell. Route groups — (store) and admin — don't affect URLs.
 export default async function LocaleLayout({
   children,
   params,
@@ -38,35 +35,16 @@ export default async function LocaleLayout({
   // Enables static rendering for this locale segment (next-intl).
   setRequestLocale(locale);
 
-  // FX is fetched server-side and cached (see fx.ts); injected into the client
-  // CurrencyProvider once. JPY is the source of truth, USD display-only.
-  const [messages, usdPerJpy] = await Promise.all([
-    getMessages(),
-    getUsdPerJpy(),
-  ]);
+  // Store client components read chrome strings from this provider. Admin is
+  // hardcoded English and doesn't depend on messages.
+  const messages = await getMessages();
 
   return (
     <html lang={locale} className="h-full antialiased">
       {/* NOTE: body background gradient is applied in globals.css — do not touch. */}
       <body className="min-h-full">
         <NextIntlClientProvider messages={messages}>
-          <CurrencyProvider rate={usdPerJpy}>
-            <CartProvider>
-              {/* Fixed 26px top bar. */}
-              <TopBar />
-              {/* Column layout below the bar, filling the viewport.
-                  Default (< 2xl): three regions — 22% / 56% / 22%.
-                  2xl+: four regions like the legacy UI — a 7.5% vertical-logo
-                  band appears and widths shift to 7.5 / 20 / 45 / 27.5. Shop is
-                  flex-1, so it absorbs the remainder in both layouts. */}
-              <main className="mt-[26px] h-[calc(100vh-26px)] flex overflow-hidden">
-                <LogoColumn />
-                <AboutColumn />
-                <ShopColumn>{children}</ShopColumn>
-                <CartColumn />
-              </main>
-            </CartProvider>
-          </CurrencyProvider>
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>

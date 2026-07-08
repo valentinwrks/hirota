@@ -182,11 +182,11 @@
       "mh-12": "beginners karate-gi"
     },
     "modelDescription": {
-      "tsubasa": "An ultra-lightweight material that surpasses conventional standards! A special weaving method creates an uneven inner texture, reducing friction and preventing the fabric from sticking to the skin. Additionally, the material provides approximately 5% stretch, increasing ease of movement.",
-      "pinac-kumite": "This best-selling karate uniform is the core of all Hirota products. It was a groundbreaking product that made a splash in an era when there was no distinction between karate uniforms for kata and kumite. In this day and age when lighter karate uniforms are being developed, it may not be specifically designed for kumite, but it is lightweight and easy to move in, making it an all-purpose garment that can be used for extreme fighting. It is a favorite of many athletes and instructors.",
-      "mh-10": "This karate uniform is made of thick No. 10 canvas (woven with high-quality combed yarn). The thickness of the fabric makes it ideal for kata. It is also recommended for those who find light or medium-weight fabrics insufficient.",
-      "mh-11": "This is a medium-weight karate uniform made from No. 11 canvas (woven with high-quality combed yarn). Because the fabric is medium-weight, it can be used for both kata and kumite. This is a standard fabric among ready-made products.",
-      "mh-12": "This karate uniform is made from fabric that is about 50% the thickness of No. 10 canvas. We are able to offer it at an affordable price. It is recommended for beginners and children who grow quickly."
+      "tsubasa": "An ultra-lightweight material that surpasses conventional standards. A special weaving method creates a textured inner surface, reducing friction and preventing the fabric from sticking to the skin. With the addition of elastane, the material provides approximately 5% stretch for greater ease of movement.",
+      "pinac-kumite": "This best-selling karate uniform is at the core of all HIROTA products. It was a groundbreaking model that made a strong impression in an era when there was no clear distinction between kata and kumite uniforms. While it may not be specifically designed for kumite by today’s standards, especially as lighter uniforms continue to be developed, it remains lightweight, easy to move in, and versatile enough for a wide range of training situations. It is a favorite among many athletes and instructors.",
+      "mh-10": "Made from thick No. 10 canvas woven with high-quality combed yarn, this karate uniform offers the weight and structure ideal for kata. It is also recommended for practitioners who find lightweight or medium-weight uniforms too light.",
+      "mh-11": "Made from No. 11 canvas woven with high-quality combed yarn, this medium-weight karate uniform offers a balanced feel suitable for both kata and kumite.",
+      "mh-12": "Made from a fabric approximately half the thickness of No. 10 canvas, this karate uniform offers an affordable option for beginners and fast-growing children."
     },
     "fit": "Fit",
     "fitNote": "Slim cut is only available for Tsubasa and Pinac Kumite models.",
@@ -325,10 +325,10 @@
     },
     "modelComposition": {
       "tsubasa": "95% polyester, 5% elastane",
-      "kuu": "65% cotton, 35% polyester",
+      "kuu": "65% cotton / 35% polyester, 7.5 oz.",
       "pinac-kumite": "70% cotton / 30% polyester, 11 oz.",
-      "takumi": "65% polyester, 35% cotton",
-      "pinac-kata": "70% cotton, 30% polyester",
+      "takumi": "65% polyester / 35% cotton, 12 oz.",
+      "pinac-kata": "70% cotton / 30% polyester, 13 oz.",
       "mh-10": "100% cotton, 14 oz.",
       "mh-11": "100% cotton, 12 oz."
     },
@@ -339,16 +339,16 @@
       "takumi": "kata karate-gi",
       "pinac-kata": "kata karate-gi",
       "mh-10": "kata karate-gi",
-      "mh-11": "kata karate-gi"
+      "mh-11": "all-purpose karate-gi"
     },
     "modelDescription": {
-      "tsubasa": "An ultra-lightweight material that surpasses conventional standards! A special weaving method creates an uneven inner texture, reducing friction and preventing the fabric from sticking to the skin. Additionally, the material provides approximately 5% stretch, increasing ease of movement.",
-      "kuu": "A cotton-rich kumite gi with a soft hand and quick recovery — light enough for fast footwork while keeping a natural cotton feel. A comfortable all-round choice for daily training and competition.",
-      "pinac-kumite": "This best-selling karate uniform is the core of all Hirota products. Lightweight and easy to move in, it is an all-purpose garment favoured by many athletes and instructors, made to measure here in the custom line.",
-      "takumi": "A polyester-rich kata gi engineered for a crisp, resonant snap. The fabric holds its shape and delivers a sharp sound on technique, making it a strong choice for kata competitors.",
-      "pinac-kata": "The kata cut of the Pinac line: a 70/30 cotton–polyester weave tuned for a little more weight and a clean, deliberate snap in kata, while keeping the comfort the Pinac line is known for.",
-      "mh-10": "This karate uniform is made of thick No. 10 canvas (woven with high-quality combed yarn). The thickness of the fabric makes it ideal for kata. It is also recommended for those who find light or medium-weight fabrics insufficient.",
-      "mh-11": "This is a medium-weight karate uniform made from No. 11 canvas (woven with high-quality combed yarn). Because the fabric is medium-weight, it can be used for both kata and kumite."
+      "tsubasa": "An ultra-lightweight material that surpasses conventional standards. A special weaving method creates a textured inner surface, reducing friction and preventing the fabric from sticking to the skin. With the addition of elastane, the material provides approximately 5% stretch for greater ease of movement.",
+      "kuu": "Even lighter than the Pinac Kumite, this ultra-lightweight fabric is thin, exceptionally soft, and compact, making it easy to carry.",
+      "pinac-kumite": "This best-selling karate uniform is at the core of all HIROTA products. It was a groundbreaking model that made a strong impression in an era when there was no clear distinction between kata and kumite uniforms. While it may not be specifically designed for kumite by today’s standards, especially as lighter uniforms continue to be developed, it remains lightweight, easy to move in, and versatile enough for a wide range of training situations. It is a favorite among many athletes and instructors.",
+      "takumi": "Made from the same threads used in Pinac Kumite, this fabric is woven at an extremely high density to achieve a firm, crisp finish. Thin yet structured, it offers excellent mobility and delivers exceptional snap. It is one of HIROTA’s most popular garments, favored by everyone from children to top athletes.",
+      "pinac-kata": "Made with a thicker thread than Pinac Kumite, this medium-weight fabric is neither too light nor too heavy, making it a stable and versatile garment.",
+      "mh-10": "Made from thick No. 10 canvas woven with high-quality combed yarn, this karate uniform offers the weight and structure ideal for kata. It is also recommended for practitioners who find lightweight or medium-weight uniforms too light.",
+      "mh-11": "Made from No. 11 canvas woven with high-quality combed yarn, this medium-weight karate uniform offers a balanced feel suitable for both kata and kumite."
     },
     "purchaseUnit": "Purchase unit",
     "purchaseUnitNote": "Jacket and pants are priced separately; buying both as a set is the best value.",
@@ -503,5 +503,41 @@
     "subtotal": "ITEM TOTAL",
     "addToCart": "ADD TO CART",
     "added": "ADDED"
+  },
+  "Checkout": {
+    "title": "checkout",
+    "orderForm": "order form",
+    "summary": "order summary",
+    "total": "TOTAL",
+    "contactHeading": "contact",
+    "name": "full name",
+    "email": "email",
+    "phone": "phone (optional)",
+    "shippingHeading": "shipping address",
+    "recipient": "recipient",
+    "line1": "address line 1",
+    "line2": "address line 2 (optional)",
+    "city": "city",
+    "state": "state / prefecture (optional)",
+    "postalCode": "postal code",
+    "country": "country",
+    "note": "order note (optional)",
+    "notePlaceholder": "anything HIROTA should know",
+    "required": "required",
+    "invalidEmail": "enter a valid email",
+    "paymentHeading": "payment",
+    "simulationNotice": "This is a SIMULATED payment — no card details are collected and no real payment is processed. Submitting places a demo order.",
+    "pay": "Simulate payment",
+    "processing": "processing…",
+    "close": "close",
+    "confirmTitle": "order received",
+    "confirmBody": "Thank you — your order #{number} has been placed.",
+    "emailStub": "You'll receive email updates about your order. (Demo: no email is actually sent.)",
+    "continue": "continue shopping",
+    "errorEmpty": "Your cart is empty.",
+    "errorInvalidInput": "Please complete the required fields.",
+    "errorInvalidConfig": "One of your items is no longer available as configured. Please review your cart.",
+    "errorInsufficientStock": "One of your items just went out of stock. Please adjust your cart and try again.",
+    "errorGeneric": "Something went wrong placing your order. Please try again."
   }
 }
