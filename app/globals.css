@@ -142,6 +142,16 @@ body::-webkit-scrollbar {
   color: var(--paper);
 }
 
+/* Deterrent against casually saving imagery: block drag-to-desktop and text
+   selection on every image/SVG. The context-menu block lives in ImageGuard
+   (client). Not real protection — DevTools/Network can still fetch the asset. */
+img,
+svg {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* Utility: hide scrollbars on the scrolling columns (design language). */
 .scrollbar-none::-webkit-scrollbar {
   display: none;

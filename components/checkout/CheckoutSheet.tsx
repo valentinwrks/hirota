@@ -144,19 +144,24 @@ export function CheckoutSheet() {
         type="button"
         aria-label={t("close")}
         onClick={handleClose}
-        className="absolute inset-0 bg-ink/40 backdrop-blur-sm cursor-default"
+        className="fixed inset-0 bg-ink/[17.5%] backdrop-blur-sm cursor-default"
       />
 
       {/* White paper sheet. */}
-      <div className="relative w-full max-w-lg my-8 mx-4 bg-paper border border-line text-xs leading-tight">
+      <div className="relative w-full max-w-2xl my-8 mx-4 bg-paper text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)]">
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between px-3 h-[26px] border-b border-line bg-paper text-sm">
-          <span>{t("title")}</span>
+        <div className="flex items-center justify-between px-3 h-[30px] border-b border-line bg-ink-60 text-paper text-sm">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/hirota/logo-checkout.png"
+            alt="HIROTA"
+            className="h-[25px] w-auto object-contain object-center"
+          />
           <button
             type="button"
             onClick={handleClose}
             aria-label={t("close")}
-            className="text-ink-40 hover:text-ink-70 cursor-pointer leading-none"
+            className="text-paper/70 hover:text-paper cursor-pointer leading-none"
           >
             ✕
           </button>
@@ -172,7 +177,7 @@ export function CheckoutSheet() {
           <div className="p-3 space-y-4">
             {/* ---- Order summary (read-only) ---- */}
             <section>
-              <h3 className="text-ink-40 uppercase tracking-wide mb-1.5">
+              <h3 className="text-sm font-normal uppercase mb-1.5">
                 {t("summary")}
               </h3>
               <table className="w-full border-separate border-spacing-x-0 border-spacing-y-2.5 -mt-2.5 -mb-2.5">
@@ -182,15 +187,15 @@ export function CheckoutSheet() {
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-between pt-2.5 mt-2.5 border-t border-line-soft">
-                <span className="text-base font-bold">{t("total")}</span>
-                <span className="text-base font-bold">{format(subtotalJpy)}</span>
+              <div className="flex justify-between pt-[5px] mt-2.5 border-t border-line-soft">
+                <span className="text-sm font-bold">{t("total")}</span>
+                <span className="text-sm font-bold">{format(subtotalJpy)}</span>
               </div>
             </section>
 
             {/* ---- Contact ---- */}
             <section className="space-y-2">
-              <h3 className="text-ink-40 uppercase tracking-wide">
+              <h3 className="text-sm font-normal uppercase">
                 {t("contactHeading")}
               </h3>
               <Field
@@ -223,7 +228,7 @@ export function CheckoutSheet() {
 
             {/* ---- Shipping ---- */}
             <section className="space-y-2">
-              <h3 className="text-ink-40 uppercase tracking-wide">
+              <h3 className="text-sm font-normal uppercase">
                 {t("shippingHeading")}
               </h3>
               <Field
@@ -295,7 +300,7 @@ export function CheckoutSheet() {
 
             {/* ---- Simulated payment ---- */}
             <section className="space-y-2">
-              <h3 className="text-ink-40 uppercase tracking-wide">
+              <h3 className="text-sm font-normal uppercase">
                 {t("paymentHeading")}
               </h3>
               <p className="text-[11px] italic text-ink-40 border border-line-soft bg-ink-04 px-2 py-1.5">
@@ -313,7 +318,7 @@ export function CheckoutSheet() {
                 onClick={handleSubmit}
                 disabled={!isValid || submitting}
                 className={
-                  "w-full text-xs font-bold bg-transparent border tracking-wide py-1.5 " +
+                  "w-full text-xs font-bold uppercase bg-transparent border tracking-wide py-1.5 " +
                   (isValid && !submitting
                     ? "text-ink-50 border-line hover:bg-ink-10 cursor-pointer"
                     : "text-ink-25 border-line-soft cursor-default")
@@ -396,7 +401,9 @@ function Field({
     <label className="block">
       <span className="flex items-baseline gap-1.5 mb-0.5">
         <span className="text-ink-50">{label}</span>
-        {required && <span className="text-[10px] text-ink-35">{t("required")}</span>}
+        <span className="text-[10px] text-ink-35">
+          {required ? t("required") : t("optional")}
+        </span>
         {hint && <span className="text-[10px] italic text-ink-40">{hint}</span>}
       </span>
       <input

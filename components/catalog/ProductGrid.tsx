@@ -17,8 +17,11 @@ export async function ProductGrid({
     return <p className="p-2.5 text-xs text-ink-40">{t("empty")}</p>;
   }
 
+  // One product per row: a stack of horizontal cards, each individually bordered
+  // and spaced 10px apart — matching the cart column's item padding/gap
+  // (mx-2.5 edges, border-spacing-y-2.5 between items).
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 p-2.5">
+    <div className="p-2.5 flex flex-col gap-2.5">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} locale={locale} />
       ))}
