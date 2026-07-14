@@ -144,13 +144,13 @@ export function CheckoutSheet() {
         type="button"
         aria-label={t("close")}
         onClick={handleClose}
-        className="fixed inset-0 bg-ink/[17.5%] backdrop-blur-sm cursor-default"
+        className="fixed inset-0 bg-foreground-strong/[17.5%] backdrop-blur-sm cursor-default"
       />
 
       {/* White paper sheet. */}
-      <div className="relative w-full max-w-2xl my-8 mx-4 bg-paper text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)]">
+      <div className="relative w-full max-w-2xl my-8 mx-4 bg-background text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)]">
         {/* Header */}
-        <div className="flex items-center justify-between px-3 h-[30px] border-b border-border bg-ink-60 text-paper text-sm">
+        <div className="flex items-center justify-between px-3 h-[30px] border-b border-border bg-foreground-selected text-background text-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hirota/logo-checkout.png"
@@ -161,7 +161,7 @@ export function CheckoutSheet() {
             type="button"
             onClick={handleClose}
             aria-label={t("close")}
-            className="text-paper/70 hover:text-paper cursor-pointer leading-none"
+            className="text-background/70 hover:text-background cursor-pointer leading-none"
           >
             ✕
           </button>
@@ -303,12 +303,12 @@ export function CheckoutSheet() {
               <h3 className="text-sm font-normal uppercase">
                 {t("paymentHeading")}
               </h3>
-              <p className="text-[11px] italic text-ink-40 border border-border-blocked bg-ink-04 px-2 py-1.5">
+              <p className="text-[11px] italic text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
                 {t("simulationNotice")}
               </p>
 
               {error && (
-                <p className="text-[11px] text-ink-70 border border-border px-2 py-1.5">
+                <p className="text-[11px] text-foreground-input border border-border px-2 py-1.5">
                   {t(errorKey(error))}
                 </p>
               )}
@@ -320,8 +320,8 @@ export function CheckoutSheet() {
                 className={
                   "w-full text-xs font-bold uppercase bg-transparent border tracking-wide py-1.5 " +
                   (isValid && !submitting
-                    ? "text-ink-50 border-border hover:bg-ink-10 cursor-pointer"
-                    : "text-ink-25 border-border-blocked cursor-default")
+                    ? "text-foreground border-border hover:bg-foreground-hover cursor-pointer"
+                    : "text-foreground-disabled border-border-blocked cursor-default")
                 }
               >
                 {submitting ? t("processing") : t("pay")}
@@ -363,13 +363,13 @@ function Confirmation({
     <div className="p-4 space-y-3">
       <h3 className="text-base font-bold">{t("confirmTitle")}</h3>
       <p>{t("confirmBody", { number })}</p>
-      <p className="text-[11px] italic text-ink-40 border border-border-blocked bg-ink-04 px-2 py-1.5">
+      <p className="text-[11px] italic text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
         {t("emailStub")}
       </p>
       <button
         type="button"
         onClick={onContinue}
-        className="w-full text-xs font-bold bg-transparent text-ink-50 border border-border tracking-wide py-1.5 hover:bg-ink-10 cursor-pointer"
+        className="w-full text-xs font-bold bg-transparent text-foreground border border-border tracking-wide py-1.5 hover:bg-foreground-hover cursor-pointer"
       >
         {t("continue")}
       </button>
@@ -400,11 +400,11 @@ function Field({
   return (
     <label className="block">
       <span className="flex items-baseline gap-1.5 mb-0.5">
-        <span className="text-ink-50">{label}</span>
-        <span className="text-[10px] text-ink-35">
+        <span className="text-foreground">{label}</span>
+        <span className="text-[10px] text-foreground-hint">
           {required ? t("required") : t("optional")}
         </span>
-        {hint && <span className="text-[10px] italic text-ink-40">{hint}</span>}
+        {hint && <span className="text-[10px] italic text-foreground-muted">{hint}</span>}
       </span>
       <input
         type={type}
@@ -413,7 +413,7 @@ function Field({
         autoComplete={autoComplete}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-border bg-paper px-2 py-1 text-xs outline-none focus:border-ink-50"
+        className="w-full border border-border bg-background px-2 py-1 text-xs outline-none focus:border-foreground"
       />
     </label>
   );

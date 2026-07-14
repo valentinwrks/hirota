@@ -34,8 +34,8 @@ export default async function AdminProtectedLayout({
   // the admin mirrors that: fixed-height shell, scrollable main.
   return (
     <div className="h-screen overflow-hidden flex text-[13px]">
-      <aside className="w-[220px] shrink-0 border-r border-border bg-paper flex flex-col">
-        <div className="h-[26px] flex items-center px-2 border-b border-border text-sm leading-none text-ink-50">
+      <aside className="w-[220px] shrink-0 border-r border-border bg-background flex flex-col">
+        <div className="h-[26px] flex items-center px-2 border-b border-border text-sm leading-none text-foreground">
           HIROTA / ADMIN
         </div>
         <AdminSidebar locale={locale} />

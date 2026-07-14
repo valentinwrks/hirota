@@ -38,7 +38,7 @@ export function LocaleSwitcher({ label }: { label: string }) {
     <div className="flex items-center gap-0.5" aria-label={label}>
       {LOCALE_ORDER.map(({ locale, label: code }, i) => (
         <span key={locale} className="flex items-center gap-0.5">
-          {i > 0 && <span className="text-ink-40">·</span>}
+          {i > 0 && <span className="text-foreground-muted">·</span>}
           <button
             type="button"
             onClick={() => select(locale)}
@@ -47,8 +47,8 @@ export function LocaleSwitcher({ label }: { label: string }) {
             className={
               "cursor-pointer " +
               (locale === active
-                ? "uppercase text-ink-60"
-                : "uppercase text-ink-40 hover:text-ink-60")
+                ? "uppercase text-foreground-selected"
+                : "uppercase text-foreground-muted hover:text-foreground-selected")
             }
           >
             {code}

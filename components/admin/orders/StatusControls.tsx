@@ -100,12 +100,12 @@ function AxisControl<T extends string>({
 
   return (
     <label className="flex flex-col gap-1 text-[12px]">
-      <span className="text-ink-40 leading-none">{label}</span>
+      <span className="text-foreground-muted leading-none">{label}</span>
       <select
         value={current}
         disabled={pending}
         onChange={(e) => onChange(e.target.value)}
-        className="h-8 px-2 border border-border bg-paper text-ink-70 outline-none focus:border-ink-50 disabled:opacity-50"
+        className="h-8 px-2 border border-border bg-background text-foreground-input outline-none focus:border-foreground disabled:opacity-50"
       >
         {values.map((v) => (
           <option key={v} value={v}>

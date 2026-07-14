@@ -441,7 +441,7 @@ export function ObiConfigurator({
         {OBI_COLOR_GROUPS.map((group, gi) => (
           <div key={group.colors[0]}>
             {group.titleKey && (
-              <p className={"text-xs mb-1 text-ink-50 " + (gi === 0 ? "" : "pt-2")}>
+              <p className={"text-xs mb-1 text-foreground " + (gi === 0 ? "" : "pt-2")}>
                 {t(`colorGroups.${group.titleKey}`)}
               </p>
             )}
@@ -528,14 +528,14 @@ export function ObiConfigurator({
             (white–brown) cannot be embroidered — the whole section blocks. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
         {!embroideryAllowed && (
-          <p className="text-[11px] italic text-ink-40 mb-1">{t("noEmbroideryNote")}</p>
+          <p className="text-[11px] italic text-foreground-muted mb-1">{t("noEmbroideryNote")}</p>
         )}
 
         {/* thread color (single table, prices per character). Every option stays
             pending until a width sets the per-character price; then standard
             colors are selectable and metallic ones mute unless the belt allows
             them. Colored belts block the whole table. */}
-        <p className="text-xs mb-1 text-ink-50">{t("threadColorTitle")}</p>
+        <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
         <OptionTable>
           {OBI_THREAD_COLORS.map((tc) => {
             const isMetallic = threadCategory(tc) === "metallic";
@@ -561,7 +561,7 @@ export function ObiConfigurator({
         </OptionTable>
 
         {/* the two embroidery ends, flush in one table (no per-input thread). */}
-        <p className="text-xs mb-1 text-ink-50 pt-2">{t("embroiderySubtitle")}</p>
+        <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
         <OptionTable>
           <EmbroideryInputRow
             label={t("endA")}
@@ -581,13 +581,13 @@ export function ObiConfigurator({
           />
         </OptionTable>
         {threadWithoutText && (
-          <p className="text-[11px] italic text-ink-40 mt-1">{t("threadNeedsText")}</p>
+          <p className="text-[11px] italic text-foreground-muted mt-1">{t("threadNeedsText")}</p>
         )}
 
         {/* Label — free, defaults to Hirota. Always available. HIROTA's standard
             label-specification note sits under the heading (localized). */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
-        <p className="text-xs text-ink-50 leading-tight mb-2">{t("labelSpecNote")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
         <OptionTable>
           {labels.map((l) => (
             <OptionRow
@@ -628,7 +628,7 @@ export function ObiConfigurator({
             {/* grouped per axis: material (type + description), then width
                 (type + description). Width block appears once width is chosen.
                 Each type carries the legacy mb-1.5 gap before its description. */}
-            <p className="text-[11px] italic leading-tight mb-0.5 text-ink-35">
+            <p className="text-[11px] italic leading-tight mb-0.5 text-foreground-hint">
               {t(`materialType.${state.material}`)}
             </p>
             <p className="text-xs leading-tight">
@@ -636,7 +636,7 @@ export function ObiConfigurator({
             </p>
             {state.widthCm != null && (
               <>
-                <p className="text-[11px] italic leading-tight mb-0.5 mt-2 text-ink-35">
+                <p className="text-[11px] italic leading-tight mb-0.5 mt-2 text-foreground-hint">
                   {t(`widthType.${state.widthCm === 4 ? "normal" : "special"}`)}
                 </p>
                 <p className="text-xs leading-tight">
@@ -650,7 +650,7 @@ export function ObiConfigurator({
         {/* Live selected features. The config builds up progressively; the
             "choose…" prompt stays until size resolves the panel, at which point
             it's replaced by the subtotal + CTA (§ render timing). */}
-        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-ink-40">
+        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-foreground-muted">
           {features.map((f, idx) => (
             <div key={idx} className="flex justify-between gap-2">
               <p className="min-w-0">{f.label}</p>
@@ -695,10 +695,10 @@ export function ObiConfigurator({
                 // While showing "ADDED", hold the selected fill; it reverts when
                 // the label goes back to "ADD TO CART".
                 (justAdded
-                  ? "bg-ink-60 text-paper border-border cursor-pointer"
+                  ? "bg-foreground-selected text-background border-border cursor-pointer"
                   : canAdd
-                    ? "bg-transparent text-ink-50 border-border hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
-                    : "bg-transparent text-ink-25 border-border-blocked")
+                    ? "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer"
+                    : "bg-transparent text-foreground-disabled border-border-blocked")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
@@ -712,7 +712,7 @@ export function ObiConfigurator({
 
 // ---------------------------------------------------------------------------
 // Presentational primitives — the legacy option-table look (circle radios,
-// selected = bg-ink-60 text-paper, hover = bg-ink-10).
+// selected = bg-foreground-selected text-background, hover = bg-foreground-hover).
 // ---------------------------------------------------------------------------
 
 function OptionTable({ children }: { children: React.ReactNode }) {
@@ -724,7 +724,7 @@ function OptionTable({ children }: { children: React.ReactNode }) {
 }
 
 // One option row. Visual states:
-//   • selected  — highlighted (bg-ink-60 text-paper).
+//   • selected  — highlighted (bg-foreground-selected text-background).
 //   • blocked   — excluded by an upstream choice: muted + struck through, inert.
 //   • selectable— upstream ready and valid: neutral, hover, clickable.
 //   • pending   — upstream not chosen yet: neutral-dim, inert (no muting).
@@ -750,12 +750,12 @@ function OptionRow({
   const pending = !selected && !selectable && !blocked;
 
   const cellState = selected
-    ? "bg-ink-60 text-paper cursor-pointer"
+    ? "bg-foreground-selected text-background cursor-pointer"
     : blocked
-      ? "text-ink-40 cursor-default" // pending look; strike-through + no dot added below
+      ? "text-foreground-muted cursor-default" // pending look; strike-through + no dot added below
       : selectable
-        ? "text-ink-50 hover:bg-ink-10 cursor-pointer"
-        : "text-ink-40 cursor-default"; // pending
+        ? "text-foreground hover:bg-foreground-hover cursor-pointer"
+        : "text-foreground-muted cursor-default"; // pending
 
   // Borders track state too: pending & blocked use the line-pending tone (tunable
   // in globals.css) to match their dim text.
@@ -774,14 +774,14 @@ function OptionRow({
                 // Radio border tracks the text opacity: selectable at ink-50,
                 // pending & blocked dimmed to ink-40 to match their text.
                 (selected
-                  ? "border-paper"
+                  ? "border-background"
                   : selectable
-                    ? "border-ink-50"
-                    : "border-ink-40") // pending & blocked
+                    ? "border-foreground"
+                    : "border-foreground-muted") // pending & blocked
               }
             >
               {selected ? (
-                <span className="w-[4px] h-[4px] rounded-full bg-paper" />
+                <span className="w-[4px] h-[4px] rounded-full bg-background" />
               ) : blocked ? null : (
                 // Hovering previews the inner dot (legacy behaviour), dimmed to
                 // match the row's text: selectable at ink-50, pending at ink-40.
@@ -789,7 +789,7 @@ function OptionRow({
                 <span
                   className={
                     "hidden group-hover:block w-[4px] h-[4px] rounded-full " +
-                    (selectable ? "bg-ink-50" : "bg-ink-40")
+                    (selectable ? "bg-foreground" : "bg-foreground-muted")
                   }
                 />
               )}
@@ -803,8 +803,8 @@ function OptionRow({
 
 // One embroidery end as a table row (thread is chosen globally, so no per-input
 // selector). Visual states mirror the legacy input rows:
-//   • completed (has text) → bg-ink-60 with white text.
-//   • otherwise            → hover / focus-within tints bg-ink-10.
+//   • completed (has text) → bg-foreground-selected with white text.
+//   • otherwise            → hover / focus-within tints bg-foreground-hover.
 //   • disabled (colored belt) → muted + not editable.
 function EmbroideryInputRow({
   label,
@@ -828,12 +828,12 @@ function EmbroideryInputRow({
   const completed = !focused && text.trim().length > 0;
   const inert = disabled || pending;
   const cellState = disabled
-    ? "text-ink-20 cursor-default"
+    ? "text-foreground-faint cursor-default"
     : pending
-      ? "text-ink-40 cursor-default"
+      ? "text-foreground-muted cursor-default"
       : completed
-        ? "bg-ink-60 text-paper"
-        : "hover:bg-ink-10 focus-within:bg-ink-10";
+        ? "bg-foreground-selected text-background"
+        : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
   // Match OptionRow: pending rows soften their border to the tunable line-pending.
   const borderClass = pending ? "border-border-pending" : "border-border";
 

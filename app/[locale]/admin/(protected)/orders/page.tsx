@@ -38,7 +38,7 @@ export default async function AdminOrdersPage({
 
   return (
     <div>
-      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-ink-60 sticky top-0 bg-paper-30 backdrop-blur-xs z-10">
+      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-foreground-selected sticky top-0 bg-background-header backdrop-blur-xs z-10">
         Orders
       </div>
 
@@ -47,14 +47,14 @@ export default async function AdminOrdersPage({
       </div>
 
       {orders.length === 0 ? (
-        <div className="p-6 text-[13px] text-ink-40">
+        <div className="p-6 text-[13px] text-foreground-muted">
           No orders match these filters.
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-[12px] border-collapse">
             <thead>
-              <tr className="text-ink-40 text-left">
+              <tr className="text-foreground-muted text-left">
                 <th className="px-3 py-1.5 border-b border-border font-normal">#</th>
                 <th className="px-3 py-1.5 border-b border-border font-normal">Date (UTC)</th>
                 <th className="px-3 py-1.5 border-b border-border font-normal">Customer</th>
@@ -69,25 +69,25 @@ export default async function AdminOrdersPage({
               {orders.map((o) => {
                 const money = orderMoney(o, o.total_jpy);
                 return (
-                  <tr key={o.id} className="hover:bg-ink-04">
+                  <tr key={o.id} className="hover:bg-foreground-hover-subtle">
                     <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums">
                       <Link
                         href={`/admin/orders/${o.order_number}`}
-                        className="text-ink-70 underline underline-offset-2"
+                        className="text-foreground-input underline underline-offset-2"
                       >
                         {o.order_number}
                       </Link>
                     </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-ink-50">
+                    <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground">
                       {fmtDate(o.created_at)}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-ink-70">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-foreground-input">
                       {o.customer_name}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-ink-50">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-foreground">
                       {o.item_count}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-ink-70 whitespace-nowrap">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-foreground-input whitespace-nowrap">
                       {money.display ? `${money.display} · ` : ""}
                       {money.jpy}
                     </td>

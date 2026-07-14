@@ -14,7 +14,7 @@ export function CurrencySwitcher({ label }: { label: string }) {
     <div className="flex items-center gap-0.5" aria-label={label}>
       {CURRENCIES.map((c, i) => (
         <span key={c} className="flex items-center gap-0.5">
-          {i > 0 && <span className="text-ink-40">·</span>}
+          {i > 0 && <span className="text-foreground-muted">·</span>}
           <button
             type="button"
             onClick={() => setCurrency(c)}
@@ -22,8 +22,8 @@ export function CurrencySwitcher({ label }: { label: string }) {
             className={
               "cursor-pointer " +
               (c === currency
-                ? "text-ink-60"
-                : "text-ink-40 hover:text-ink-60")
+                ? "text-foreground-selected"
+                : "text-foreground-muted hover:text-foreground-selected")
             }
           >
             {c}

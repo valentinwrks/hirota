@@ -23,21 +23,21 @@ export async function OrderItemPanel({ item }: { item: OrderItemRow }) {
   const snapshot = parseSnapshot(item.config);
 
   return (
-    <article className="border border-border bg-paper">
+    <article className="border border-border bg-background">
       <header className="flex items-start justify-between gap-3 px-3 py-2 border-b border-border">
         <div className="min-w-0">
-          <h3 className="font-bold text-ink-70 truncate">{item.title}</h3>
-          <p className="text-[11px] text-ink-40 leading-none mt-0.5">
+          <h3 className="font-bold text-foreground-input truncate">{item.title}</h3>
+          <p className="text-[11px] text-foreground-muted leading-none mt-0.5">
             {KIND_LABEL[item.kind]} · qty {item.quantity}
           </p>
         </div>
-        <p className="font-bold text-ink-70 tabular-nums whitespace-nowrap">
+        <p className="font-bold text-foreground-input tabular-nums whitespace-nowrap">
           {jpy(item.line_total_jpy)}
         </p>
       </header>
 
       {snapshot === null ? (
-        <div className="px-3 py-2 text-[12px] text-ink-40">
+        <div className="px-3 py-2 text-[12px] text-foreground-muted">
           Snapshot unavailable — this line could not be read.
         </div>
       ) : (

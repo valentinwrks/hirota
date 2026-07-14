@@ -38,7 +38,7 @@ export default async function ProductPage({
       <div className="p-2.5 max-w-[640px]">
         <Link
           href={`/catalog/${product.category}`}
-          className="text-xs text-ink-40 hover:text-ink-70"
+          className="text-xs text-foreground-muted hover:text-foreground-input"
         >
           {t("back")}
         </Link>
@@ -46,7 +46,7 @@ export default async function ProductPage({
         <div className="mt-3 flex gap-4">
           {/* product image */}
           <div className="basis-[45%] shrink-0">
-            <div className="aspect-square border border-border overflow-hidden bg-paper-20">
+            <div className="aspect-square border border-border overflow-hidden bg-background-media">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={productImage(product.id)}
@@ -60,7 +60,7 @@ export default async function ProductPage({
           <div className="flex-1 min-w-0">
             <p className="text-lg font-bold leading-tight mb-1">{name}</p>
             {product.product_type && (
-              <p className="text-[11px] italic leading-tight mb-1 text-ink-35">
+              <p className="text-[11px] italic leading-tight mb-1 text-foreground-hint">
                 {product.product_type}
               </p>
             )}

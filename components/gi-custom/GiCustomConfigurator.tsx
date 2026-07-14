@@ -672,7 +672,7 @@ export function GiCustomConfigurator({
         {/* Purchase unit — selectable once a model is chosen. Drives which
             measurements are validated and which optionals show. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("purchaseUnit")}</p>
-        <p className="text-xs text-ink-50 leading-tight mb-2">{t("purchaseUnitNote")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("purchaseUnitNote")}</p>
         <OptionTable>
           {PURCHASE_UNITS.map((u) => (
             <OptionRow
@@ -691,7 +691,7 @@ export function GiCustomConfigurator({
         {/* Size band — sets the base price (× the purchase-unit multiplier).
             "above 8" is quote-on-request: selectable, but priced as a quote. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("band")}</p>
-        <p className="text-xs text-ink-50 leading-tight mb-2">{t("bandNote")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("bandNote")}</p>
         <OptionTable>
           {bands.map((b) => {
             const base = bandBaseFor(b, state.purchaseUnit);
@@ -727,7 +727,7 @@ export function GiCustomConfigurator({
         {coreReady && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("measurements")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">
+            <p className="text-xs text-foreground leading-tight mb-2">
               {isQuote ? t("measurementsNoteQuote") : t("measurementsNote")}
             </p>
             <OptionTable>
@@ -768,7 +768,7 @@ export function GiCustomConfigurator({
         {coreReady && jacket && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("collar")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("collarNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("collarNote")}</p>
             <OptionTable>
               {CollarOptions.map((c) => (
                 <OptionRow
@@ -817,7 +817,7 @@ export function GiCustomConfigurator({
         {coreReady && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("hems")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("hemsNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("hemsNote")}</p>
             <OptionTable>
               {HEM_OPTIONS.map((o) => {
                 const allowed = hemAllowedForModel(isKata, o);
@@ -854,7 +854,7 @@ export function GiCustomConfigurator({
         {coreReady && pants && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("highWaist")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("highWaistNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("highWaistNote")}</p>
             <OptionTable>
               <OptionRow
                 selected={state.highWaistOn}
@@ -891,7 +891,7 @@ export function GiCustomConfigurator({
         {coreReady && pants && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("elasticWaistTitle")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("elasticNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("elasticNote")}</p>
             <OptionTable>
               <OptionRow
                 selected={state.elasticWaist}
@@ -910,7 +910,7 @@ export function GiCustomConfigurator({
         {coreReady && jacket && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("mfrLogoTitle")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("mfrLogoNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("mfrLogoNote")}</p>
             <OptionTable>
               {MfrLogoPlacements.map((placement) => (
                 <OptionRow
@@ -933,7 +933,7 @@ export function GiCustomConfigurator({
         {coreReady && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
-            <p className="text-xs mb-1 text-ink-50">{t("threadColorTitle")}</p>
+            <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
             <OptionTable>
               {GI_THREAD_COLORS.map((tc) => (
                 <OptionRow
@@ -949,7 +949,7 @@ export function GiCustomConfigurator({
                 </OptionRow>
               ))}
             </OptionTable>
-            <p className="text-xs mb-1 text-ink-50 pt-2">{t("embroiderySubtitle")}</p>
+            <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
             <OptionTable>
               {embFields
                 .filter((f) => f.show)
@@ -971,7 +971,7 @@ export function GiCustomConfigurator({
         {coreReady && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("shrinkage")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("shrinkageNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("shrinkageNote")}</p>
             <OptionTable>
               {ShrinkageOptions.map((opt) => (
                 <OptionRow
@@ -993,7 +993,7 @@ export function GiCustomConfigurator({
         {coreReady && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("bodyData")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("bodyNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("bodyNote")}</p>
             <OptionTable>
               <MeasureInputRow
                 label={t("bodyHeight")}
@@ -1024,7 +1024,7 @@ export function GiCustomConfigurator({
         {coreReady && (
           <>
             <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
-            <p className="text-xs text-ink-50 leading-tight mb-2">{t("labelSpecNote")}</p>
+            <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
             <OptionTable>
               {labels.map((l) => (
                 <OptionRow
@@ -1056,10 +1056,10 @@ export function GiCustomConfigurator({
 
         {modelDef && (
           <div className={modelName ? "" : "mt-6"}>
-            <p className="text-[11px] italic leading-tight text-ink-35">
+            <p className="text-[11px] italic leading-tight text-foreground-hint">
               {t(`modelComposition.${modelDef.slug}`)}
             </p>
-            <p className="text-[11px] italic leading-tight mb-1.5 text-ink-35">
+            <p className="text-[11px] italic leading-tight mb-1.5 text-foreground-hint">
               {t(`modelCategory.${modelDef.slug}`)}
             </p>
             <p className="text-xs leading-tight">
@@ -1068,7 +1068,7 @@ export function GiCustomConfigurator({
           </div>
         )}
 
-        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-ink-40">
+        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-foreground-muted">
           {features.map((f, idx) => (
             <div key={idx} className="flex justify-between gap-2">
               <p className="min-w-0">{f.label}</p>
@@ -1092,7 +1092,7 @@ export function GiCustomConfigurator({
           <>
             {/* Quote-on-request state for "above 8": no price, add disabled. */}
             {isQuote ? (
-              <p className="mt-3.5 text-xs italic text-ink-50 leading-tight">
+              <p className="mt-3.5 text-xs italic text-foreground leading-tight">
                 {t("quoteExplainer")}
               </p>
             ) : (
@@ -1113,10 +1113,10 @@ export function GiCustomConfigurator({
               className={
                 "mt-2.5 text-xs font-bold border tracking-wide py-1 " +
                 (justAdded
-                  ? "bg-ink-60 text-paper border-border cursor-pointer"
+                  ? "bg-foreground-selected text-background border-border cursor-pointer"
                   : canAdd
-                    ? "bg-transparent text-ink-50 border-border hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
-                    : "bg-transparent text-ink-25 border-border-blocked")
+                    ? "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer"
+                    : "bg-transparent text-foreground-disabled border-border-blocked")
               }
             >
               {justAdded ? t("added") : isQuote ? t("quoteCta") : t("addToCart")}
@@ -1125,7 +1125,7 @@ export function GiCustomConfigurator({
             {!isQuote && blockingHints.length > 0 && (
               <div className="mt-2.5 flex flex-col gap-0.5">
                 {blockingHints.map((hint, i) => (
-                  <p key={i} className="text-[11px] italic text-ink-40">
+                  <p key={i} className="text-[11px] italic text-foreground-muted">
                     {hint}
                   </p>
                 ))}
@@ -1171,12 +1171,12 @@ function OptionRow({
   const pending = !selected && !selectable && !blocked;
 
   const cellState = selected
-    ? "bg-ink-60 text-paper cursor-pointer"
+    ? "bg-foreground-selected text-background cursor-pointer"
     : blocked
-      ? "text-ink-40 cursor-default"
+      ? "text-foreground-muted cursor-default"
       : selectable
-        ? "text-ink-50 hover:bg-ink-10 cursor-pointer"
-        : "text-ink-40 cursor-default";
+        ? "text-foreground hover:bg-foreground-hover cursor-pointer"
+        : "text-foreground-muted cursor-default";
 
   const borderClass = pending || blocked ? "border-border-pending" : "border-border";
 
@@ -1191,19 +1191,19 @@ function OptionRow({
               className={
                 "relative w-[8px] h-[8px] rounded-full border flex items-center justify-center " +
                 (selected
-                  ? "border-paper"
+                  ? "border-background"
                   : selectable
-                    ? "border-ink-50"
-                    : "border-ink-40")
+                    ? "border-foreground"
+                    : "border-foreground-muted")
               }
             >
               {selected ? (
-                <span className="w-[4px] h-[4px] rounded-full bg-paper" />
+                <span className="w-[4px] h-[4px] rounded-full bg-background" />
               ) : blocked ? null : (
                 <span
                   className={
                     "hidden group-hover:block w-[4px] h-[4px] rounded-full " +
-                    (selectable ? "bg-ink-50" : "bg-ink-40")
+                    (selectable ? "bg-foreground" : "bg-foreground-muted")
                   }
                 />
               )}
@@ -1232,10 +1232,10 @@ function TextInputRow({
   const [focused, setFocused] = useState(false);
   const completed = !focused && text.trim().length > 0;
   const cellState = pending
-    ? "text-ink-40 cursor-default"
+    ? "text-foreground-muted cursor-default"
     : completed
-      ? "bg-ink-60 text-paper"
-      : "hover:bg-ink-10 focus-within:bg-ink-10";
+      ? "bg-foreground-selected text-background"
+      : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
   const borderClass = pending ? "border-border-pending" : "border-border";
 
   return (
@@ -1282,8 +1282,8 @@ function MeasureInputRow({
   const [focused, setFocused] = useState(false);
   const completed = !focused && text.trim().length > 0 && !error;
   const cellState = completed
-    ? "bg-ink-60 text-paper"
-    : "hover:bg-ink-10 focus-within:bg-ink-10";
+    ? "bg-foreground-selected text-background"
+    : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
 
   return (
     <tr>
@@ -1304,7 +1304,7 @@ function MeasureInputRow({
           {unit && (
             <span
               className={
-                "whitespace-nowrap " + (completed ? "text-paper" : "text-ink-40")
+                "whitespace-nowrap " + (completed ? "text-background" : "text-foreground-muted")
               }
             >
               {unit}

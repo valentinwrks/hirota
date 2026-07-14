@@ -8,7 +8,7 @@ export async function TopBar() {
   const t = await getTranslations("TopBar");
 
   return (
-    <header className="fixed top-0 left-0 w-full h-[26px] border-y border-border bg-paper z-50 flex items-center justify-between pl-1 pr-2 pb-[1px] select-none">
+    <header className="fixed top-0 left-0 w-full h-[26px] border-y border-border bg-background z-50 flex items-center justify-between pl-1 pr-2 pb-[1px] select-none">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/hirota/logo-空手衣のヒロタ.svg"

@@ -544,7 +544,7 @@ export function GiStandardConfigurator({
             fit renders it blocked; the offered fit(s) are selectable and the user
             must click one (no auto-selection), even for single-fit models. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("fit")}</p>
-        <p className="text-xs text-ink-50 leading-tight mb-2">{t("fitNote")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("fitNote")}</p>
         <OptionTable>
           {Fits.map((f) => {
             const offered = modelDef?.fits.includes(f) ?? false;
@@ -594,7 +594,7 @@ export function GiStandardConfigurator({
         {/* Embroidery (optional). One thread color is chosen globally for all
             four fields; the per-character rate follows the thread's category. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
-        <p className="text-xs mb-1 text-ink-50">{t("threadColorTitle")}</p>
+        <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
         <OptionTable>
           {GI_THREAD_COLORS.map((tc) => (
             <OptionRow
@@ -611,7 +611,7 @@ export function GiStandardConfigurator({
           ))}
         </OptionTable>
 
-        <p className="text-xs mb-1 text-ink-50 pt-2">{t("embroiderySubtitle")}</p>
+        <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
         <OptionTable>
           {embFields.map((f) => (
             <TextInputRow
@@ -629,7 +629,7 @@ export function GiStandardConfigurator({
             input below. mh-12 renders the radios blocked; otherwise they're
             pending until a size resolves (the input needs the chart ceiling). */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("adjust")}</p>
-        <p className="text-xs text-ink-50 leading-tight mb-2">{t("adjustNote")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("adjustNote")}</p>
         <OptionTable>
           <OptionRow
             selected={state.adjustCOn}
@@ -698,7 +698,7 @@ export function GiStandardConfigurator({
         {/* Shrinkage — always shown; mandatory once any C/H value is entered,
             because a new measurement is being requested (§8.2). Blocked on mh-12,
             pending until a C/H value is entered, then selectable. */}
-        <p className="text-xs mb-1 text-ink-50 pt-3">{t("shrinkage")}</p>
+        <p className="text-xs mb-1 text-foreground pt-3">{t("shrinkage")}</p>
         <OptionTable>
           {ShrinkageOptions.map((opt) => (
             <OptionRow
@@ -718,7 +718,7 @@ export function GiStandardConfigurator({
         {/* Manufacturer's logo — always shown. Only tsubasa & pinac-kumite offer
             it; every other model renders both placements blocked. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("mfrLogoTitle")}</p>
-        <p className="text-xs text-ink-50 leading-tight mb-2">{t("mfrLogoNote")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("mfrLogoNote")}</p>
         <OptionTable>
           {MfrLogoPlacements.map((placement) => (
             <OptionRow
@@ -740,7 +740,7 @@ export function GiStandardConfigurator({
 
         {/* Label — free, defaults to Hirota. Selectable once the core resolves. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
-        <p className="text-xs text-ink-50 leading-tight mb-2">{t("labelSpecNote")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
         <OptionTable>
           {labels.map((l) => (
             <OptionRow
@@ -774,10 +774,10 @@ export function GiStandardConfigurator({
             description, mirroring the obi material/width type + description. */}
         {modelDef && (
           <div className={modelName ? "" : "mt-6"}>
-            <p className="text-[11px] italic leading-tight text-ink-35">
+            <p className="text-[11px] italic leading-tight text-foreground-hint">
               {t(`modelComposition.${modelDef.slug}`)}
             </p>
-            <p className="text-[11px] italic leading-tight mb-1.5 text-ink-35">
+            <p className="text-[11px] italic leading-tight mb-1.5 text-foreground-hint">
               {t(`modelCategory.${modelDef.slug}`)}
             </p>
             <p className="text-xs leading-tight">
@@ -788,7 +788,7 @@ export function GiStandardConfigurator({
 
         {/* Live selected features. The "choose…" prompt stays until the core
             resolves, at which point it's replaced by the subtotal + CTA. */}
-        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-ink-40">
+        <div className="flex flex-col mt-3 gap-0.5 leading-tight text-[11px] text-foreground-muted">
           {features.map((f, idx) => (
             <div key={idx} className="flex justify-between gap-2">
               <p className="min-w-0">{f.label}</p>
@@ -829,10 +829,10 @@ export function GiStandardConfigurator({
                 // While showing "ADDED", hold the selected fill; it reverts when
                 // the label goes back to "ADD TO CART".
                 (justAdded
-                  ? "bg-ink-60 text-paper border-border cursor-pointer"
+                  ? "bg-foreground-selected text-background border-border cursor-pointer"
                   : canAdd
-                    ? "bg-transparent text-ink-50 border-border hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
-                    : "bg-transparent text-ink-25 border-border-blocked")
+                    ? "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer"
+                    : "bg-transparent text-foreground-disabled border-border-blocked")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
@@ -843,7 +843,7 @@ export function GiStandardConfigurator({
             {blockingHints.length > 0 && (
               <div className="mt-2.5 flex flex-col gap-0.5">
                 {blockingHints.map((hint, i) => (
-                  <p key={i} className="text-[11px] italic text-ink-40">
+                  <p key={i} className="text-[11px] italic text-foreground-muted">
                     {hint}
                   </p>
                 ))}
@@ -889,12 +889,12 @@ function OptionRow({
   const pending = !selected && !selectable && !blocked;
 
   const cellState = selected
-    ? "bg-ink-60 text-paper cursor-pointer"
+    ? "bg-foreground-selected text-background cursor-pointer"
     : blocked
-      ? "text-ink-40 cursor-default"
+      ? "text-foreground-muted cursor-default"
       : selectable
-        ? "text-ink-50 hover:bg-ink-10 cursor-pointer"
-        : "text-ink-40 cursor-default";
+        ? "text-foreground hover:bg-foreground-hover cursor-pointer"
+        : "text-foreground-muted cursor-default";
 
   const borderClass = pending || blocked ? "border-border-pending" : "border-border";
 
@@ -909,19 +909,19 @@ function OptionRow({
               className={
                 "relative w-[8px] h-[8px] rounded-full border flex items-center justify-center " +
                 (selected
-                  ? "border-paper"
+                  ? "border-background"
                   : selectable
-                    ? "border-ink-50"
-                    : "border-ink-40")
+                    ? "border-foreground"
+                    : "border-foreground-muted")
               }
             >
               {selected ? (
-                <span className="w-[4px] h-[4px] rounded-full bg-paper" />
+                <span className="w-[4px] h-[4px] rounded-full bg-background" />
               ) : blocked ? null : (
                 <span
                   className={
                     "hidden group-hover:block w-[4px] h-[4px] rounded-full " +
-                    (selectable ? "bg-ink-50" : "bg-ink-40")
+                    (selectable ? "bg-foreground" : "bg-foreground-muted")
                   }
                 />
               )}
@@ -951,10 +951,10 @@ function TextInputRow({
   const [focused, setFocused] = useState(false);
   const completed = !focused && text.trim().length > 0;
   const cellState = pending
-    ? "text-ink-40 cursor-default"
+    ? "text-foreground-muted cursor-default"
     : completed
-      ? "bg-ink-60 text-paper"
-      : "hover:bg-ink-10 focus-within:bg-ink-10";
+      ? "bg-foreground-selected text-background"
+      : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
   const borderClass = pending ? "border-border-pending" : "border-border";
 
   return (
@@ -983,7 +983,7 @@ function TextInputRow({
 // radio. Legacy-ui style: a label, a right-aligned numeric field, and a trailing
 // unit ("cm"). Never carries a price (that lives on the radio). Once the buyer
 // leaves the field with a valid value, the cell adopts the "selected" fill
-// (bg-ink-60), mirroring the embroidery input's completed state. A solid dark
+// (bg-foreground-selected), mirroring the embroidery input's completed state. A solid dark
 // border signals an invalid entry (not strictly shorter than the size chart).
 function MeasureInputRow({
   label,
@@ -1006,8 +1006,8 @@ function MeasureInputRow({
   // unchanged — the error is signalled by the red hint below the inputs.
   const completed = !focused && text.trim().length > 0 && !error;
   const cellState = completed
-    ? "bg-ink-60 text-paper"
-    : "hover:bg-ink-10 focus-within:bg-ink-10";
+    ? "bg-foreground-selected text-background"
+    : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
 
   return (
     <tr>
@@ -1028,7 +1028,7 @@ function MeasureInputRow({
           {unit && (
             <span
               className={
-                "whitespace-nowrap " + (completed ? "text-paper" : "text-ink-40")
+                "whitespace-nowrap " + (completed ? "text-background" : "text-foreground-muted")
               }
             >
               {unit}

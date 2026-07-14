@@ -8,7 +8,7 @@ export async function AboutColumn() {
   return (
     <section className="basis-[22%] 2xl:basis-[20%] shrink-0 border-r border-border overflow-y-auto overscroll-contain scrollbar-none">
       {/* sticky section header */}
-      <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none backdrop-blur-xs bg-paper-30">
+      <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none backdrop-blur-xs bg-background-header">
         {t("title")}
       </div>
 

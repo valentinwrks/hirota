@@ -35,12 +35,12 @@ export function ProductCard({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group flex items-stretch border border-border hover:bg-ink-04"
+      className="group flex items-stretch border border-border hover:bg-foreground-hover-subtle"
     >
       {/* image — square thumbnail inset with padding ("air"), centered in its
           cell; no divider, so it shares the card with the info column */}
       <div className="w-[120px] shrink-0 self-stretch p-2 flex items-center justify-center">
-        <div className="w-full aspect-square overflow-hidden bg-paper-20">
+        <div className="w-full aspect-square overflow-hidden bg-background-media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={productImage(product.id)}
@@ -62,26 +62,26 @@ export function ProductCard({
         </div>
 
         {product.product_type && (
-          <p className="text-[11px] italic text-ink-35">
+          <p className="text-[11px] italic text-foreground-hint">
             {product.product_type}
           </p>
         )}
 
         {description && (
-          <p className="text-[11px] text-ink-40 line-clamp-2">{description}</p>
+          <p className="text-[11px] text-foreground-muted line-clamp-2">{description}</p>
         )}
 
         {/* meta footer — subcategory + availability, pushed to the bottom */}
-        <div className="mt-auto flex items-center gap-2 pt-1 text-[10px] uppercase tracking-wide text-ink-35">
+        <div className="mt-auto flex items-center gap-2 pt-1 text-[10px] uppercase tracking-wide text-foreground-hint">
           <span>{subcategoryLabel(product.subcategory)}</span>
           {optionParts.length > 0 && (
             <>
-              <span className="text-ink-20">·</span>
+              <span className="text-foreground-faint">·</span>
               <span>{optionParts.join(" · ")}</span>
             </>
           )}
           {outOfStock && (
-            <span className="ml-auto text-ink-40 not-italic">out of stock</span>
+            <span className="ml-auto text-foreground-muted not-italic">out of stock</span>
           )}
         </div>
       </div>

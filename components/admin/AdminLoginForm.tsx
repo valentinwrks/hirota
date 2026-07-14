@@ -16,24 +16,24 @@ export function AdminLoginForm({ locale }: { locale: string }) {
       <input type="hidden" name="locale" value={locale} />
 
       <label className="flex flex-col gap-1">
-        <span className="text-ink-40 leading-none">Email</span>
+        <span className="text-foreground-muted leading-none">Email</span>
         <input
           type="email"
           name="email"
           autoComplete="username"
           required
-          className="h-8 px-2 border border-border bg-paper text-ink-70 outline-none focus:border-ink-50"
+          className="h-8 px-2 border border-border bg-background text-foreground-input outline-none focus:border-foreground"
         />
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="text-ink-40 leading-none">Password</span>
+        <span className="text-foreground-muted leading-none">Password</span>
         <input
           type="password"
           name="password"
           autoComplete="current-password"
           required
-          className="h-8 px-2 border border-border bg-paper text-ink-70 outline-none focus:border-ink-50"
+          className="h-8 px-2 border border-border bg-background text-foreground-input outline-none focus:border-foreground"
         />
       </label>
 
@@ -44,7 +44,7 @@ export function AdminLoginForm({ locale }: { locale: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="h-8 border border-ink-50 text-ink-70 hover:bg-ink-04 disabled:opacity-50 leading-none"
+        className="h-8 border border-foreground text-foreground-input hover:bg-foreground-hover-subtle disabled:opacity-50 leading-none"
       >
         {pending ? "Signing in…" : "Sign in"}
       </button>

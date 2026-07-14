@@ -39,10 +39,10 @@ export default async function OrderDetailPage({
 
   return (
     <div className="pb-10">
-      <div className="h-[26px] flex items-center gap-3 px-3 border-b border-border text-sm leading-none text-ink-60 sticky top-0 bg-paper-30 backdrop-blur-xs z-10">
+      <div className="h-[26px] flex items-center gap-3 px-3 border-b border-border text-sm leading-none text-foreground-selected sticky top-0 bg-background-header backdrop-blur-xs z-10">
         <Link
           href="/admin/orders"
-          className="text-ink-40 underline underline-offset-2"
+          className="text-foreground-muted underline underline-offset-2"
         >
           ← Orders
         </Link>
@@ -51,8 +51,8 @@ export default async function OrderDetailPage({
 
       <div className="p-3 flex flex-col gap-3 max-w-[900px]">
         {/* Status advancement — the only editable thing on a placed order. */}
-        <div className="border border-border bg-paper p-3">
-          <h3 className="text-[11px] uppercase tracking-wide text-ink-40 mb-2">
+        <div className="border border-border bg-background p-3">
+          <h3 className="text-[11px] uppercase tracking-wide text-foreground-muted mb-2">
             Status
           </h3>
           <StatusControls
@@ -65,7 +65,7 @@ export default async function OrderDetailPage({
         </div>
 
         {/* Meta + contact + shipping */}
-        <div className="border border-border bg-paper">
+        <div className="border border-border bg-background">
           <Section title="Order">
             <Grid>
               <Field label="Number" value={`#${order.order_number}`} />
@@ -107,7 +107,7 @@ export default async function OrderDetailPage({
 
           {order.customer_note ? (
             <Section title="Customer note">
-              <p className="text-[12px] text-ink-70 whitespace-pre-wrap">
+              <p className="text-[12px] text-foreground-input whitespace-pre-wrap">
                 {order.customer_note}
               </p>
             </Section>
@@ -116,7 +116,7 @@ export default async function OrderDetailPage({
 
         {/* Line items — the fax replacement. */}
         <div className="flex flex-col gap-3">
-          <h3 className="text-[11px] uppercase tracking-wide text-ink-40">
+          <h3 className="text-[11px] uppercase tracking-wide text-foreground-muted">
             Line items ({items.length})
           </h3>
           {items.map((item) => (

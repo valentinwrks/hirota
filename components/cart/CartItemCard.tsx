@@ -216,7 +216,7 @@ export function CartItemCard({
             configured obi/gi. A blank line reserves height. */}
         <div className="mt-0">
           {summaryLines.map((line, i) => (
-            <p key={i} className="text-ink-40">
+            <p key={i} className="text-foreground-muted">
               {line || " "}
             </p>
           ))}
@@ -224,19 +224,19 @@ export function CartItemCard({
 
         {readOnly ? (
           /* Checkout: qty is locked — plain text, no stepper, no remove. */
-          <div className="mt-1 text-ink-40">
+          <div className="mt-1 text-foreground-muted">
             {`${t("qty")}: ${item.quantity}`}
           </div>
         ) : (
           /* qty (left) + remove (bottom-right corner) */
           <div className="mt-1 flex items-center justify-between gap-2">
             <div className="flex items-center gap-0">
-              <span className="text-ink-40">{`${t("qty")}: `}</span>
+              <span className="text-foreground-muted">{`${t("qty")}: `}</span>
               <button
                 type="button"
                 onClick={() => setQuantity(item.lineId, item.quantity + 1)}
                 aria-label={t("increase")}
-                className="w-4 h-4 flex items-center justify-center rounded-full leading-none text-ink-60 cursor-pointer"
+                className="w-4 h-4 flex items-center justify-center rounded-full leading-none text-foreground-selected cursor-pointer"
               >
                 +
               </button>
@@ -253,8 +253,8 @@ export function CartItemCard({
                 className={
                   "w-4 h-4 flex items-center justify-center rounded-full leading-none " +
                   (item.quantity <= 1
-                    ? "text-ink-20 cursor-default"
-                    : "text-ink-60 cursor-pointer")
+                    ? "text-foreground-faint cursor-default"
+                    : "text-foreground-selected cursor-pointer")
                 }
               >
                 −
@@ -263,7 +263,7 @@ export function CartItemCard({
             <button
               type="button"
               onClick={() => removeItem(item.lineId)}
-              className="text-ink-40 underline hover:text-ink-70 cursor-pointer"
+              className="text-foreground-muted underline hover:text-foreground-input cursor-pointer"
             >
               {t("remove")}
             </button>

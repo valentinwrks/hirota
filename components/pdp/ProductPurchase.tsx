@@ -96,13 +96,13 @@ export function ProductPurchase({
         />
       )}
       {(offersSize || offersColor) && (
-        <p className="mt-1.5 text-[11px] italic text-ink-35">
+        <p className="mt-1.5 text-[11px] italic text-foreground-hint">
           {t("cosmeticNote")}
         </p>
       )}
 
       {/* stock */}
-      <p className="mt-3 text-xs text-ink-40">
+      <p className="mt-3 text-xs text-foreground-muted">
         {inStock ? t("stockCount", { count: stock }) : t("outOfStock")}
       </p>
 
@@ -116,8 +116,8 @@ export function ProductPurchase({
         className={
           "w-full mt-2.5 text-xs font-bold bg-transparent border tracking-wide py-1 " +
           (canAdd
-            ? "text-ink-50 border-border hover:bg-ink-10 cursor-pointer"
-            : "text-ink-25 border-border-blocked")
+            ? "text-foreground border-border hover:bg-foreground-hover cursor-pointer"
+            : "text-foreground-disabled border-border-blocked")
         }
       >
         {!inStock ? t("outOfStock") : justAdded ? t("added") : t("addToCart")}
@@ -126,8 +126,8 @@ export function ProductPurchase({
   );
 }
 
-// A row of custom-radio-style option chips (selected = bg-ink-60 text-paper,
-// hover = bg-ink-10), matching the prototype's option states.
+// A row of custom-radio-style option chips (selected = bg-foreground-selected text-background,
+// hover = bg-foreground-hover), matching the prototype's option states.
 function VariantGroup({
   label,
   values,
@@ -145,7 +145,7 @@ function VariantGroup({
     <div className="mt-3">
       <div className="flex items-baseline gap-2 mb-1">
         <p className="text-xs">{label}</p>
-        {hint && <p className="text-[11px] italic text-ink-40">{hint}</p>}
+        {hint && <p className="text-[11px] italic text-foreground-muted">{hint}</p>}
       </div>
       <div className="flex flex-wrap gap-1.5">
         {values.map((value) => {
@@ -159,8 +159,8 @@ function VariantGroup({
               className={
                 "px-2 py-1 text-xs border border-border cursor-pointer " +
                 (active
-                  ? "bg-ink-60 text-paper"
-                  : "text-ink-60 hover:bg-ink-10")
+                  ? "bg-foreground-selected text-background"
+                  : "text-foreground-selected hover:bg-foreground-hover")
               }
             >
               {value}

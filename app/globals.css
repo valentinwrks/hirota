@@ -4,33 +4,34 @@
   /* ------------------------------------------------------------------ */
   /* Paleta — ÚNICA fuente de verdad para el color del sitio.            */
   /* CADA color usado en la app (incluidas las opacidades) es su propia  */
-  /* variable. Hoy los tonos de ink/paper se derivan por color-mix del   */
-  /* color base, pero cada nivel es una perilla independiente: podés     */
-  /* reemplazar cualquier línea (p.ej. --ink-40) por un color sólido     */
+  /* variable. Hoy los tonos de foreground/background se derivan por     */
+  /* color-mix del color base, pero cada nivel es una perilla            */
+  /* independiente: podés reemplazar cualquier línea por un color sólido */
   /* distinto sin tocar el resto. Los tokens de @theme de abajo generan  */
   /* las utilidades text-, bg- y border- que usan los componentes.       */
   /* ------------------------------------------------------------------ */
 
   /* --- Colores base (fuente de los tonos derivados) ----------------- */
-  --ink: #000000; /* tinta: texto e iconos */
-  --paper: #ffffff; /* papel: superficies y fondos claros */
+  --foreground-strong: #000000; /* tinta plena: texto fuerte, fills oscuros, bordes marcados */
+  --background: #ffffff; /* papel: superficies, fondos claros y texto invertido */
 
-  /* --- Tinta por nivel (texto y fills) ------------------------------ */
-  /* Nombrados por su opacidad actual. Cada uno es reemplazable por un   */
-  /* color sólido propio el día que dejes de usar opacidades de --ink.   */
-  --ink-70: color-mix(in oklab, var(--ink) 70%, transparent);
-  --ink-60: color-mix(in oklab, var(--ink) 60%, transparent);
-  --ink-50: color-mix(in oklab, var(--ink) 50%, transparent); /* texto general */
-  --ink-40: color-mix(in oklab, var(--ink) 40%, transparent); /* texto muted */
-  --ink-35: color-mix(in oklab, var(--ink) 35%, transparent);
-  --ink-25: color-mix(in oklab, var(--ink) 25%, transparent);
-  --ink-20: color-mix(in oklab, var(--ink) 20%, transparent);
-  --ink-10: color-mix(in oklab, var(--ink) 10%, transparent); /* hover suave */
-  --ink-04: color-mix(in oklab, var(--ink) 4%, transparent); /* hover sutil */
+  /* --- Foreground: texto y fills (por rol) -------------------------- */
+  /* Nombrados por su rol, no por opacidad. Hoy se derivan por color-mix */
+  /* de --foreground-strong, pero cada uno es una perilla independiente: */
+  /* podés reemplazarlo por un color sólido propio sin tocar el resto.   */
+  --foreground-input: color-mix(in oklab, var(--foreground-strong) 70%, transparent); /* texto de inputs y botones */
+  --foreground-selected: color-mix(in oklab, var(--foreground-strong) 60%, transparent); /* fill de celda seleccionada */
+  --foreground: color-mix(in oklab, var(--foreground-strong) 50%, transparent); /* texto de cuerpo por defecto */
+  --foreground-muted: color-mix(in oklab, var(--foreground-strong) 40%, transparent); /* texto secundario */
+  --foreground-hint: color-mix(in oklab, var(--foreground-strong) 35%, transparent); /* hints, prefijos, notas */
+  --foreground-disabled: color-mix(in oklab, var(--foreground-strong) 25%, transparent); /* texto deshabilitado/blocked */
+  --foreground-faint: color-mix(in oklab, var(--foreground-strong) 20%, transparent); /* texto muy tenue, separadores */
+  --foreground-hover: color-mix(in oklab, var(--foreground-strong) 10%, transparent); /* fondo de hover */
+  --foreground-hover-subtle: color-mix(in oklab, var(--foreground-strong) 4%, transparent); /* hover sutil / zebra */
 
-  /* --- Papel por nivel (superficies translúcidas) ------------------- */
-  --paper-30: color-mix(in oklab, var(--paper) 30%, transparent); /* headers */
-  --paper-20: color-mix(in oklab, var(--paper) 20%, transparent); /* imágenes */
+  /* --- Background: superficies translúcidas ------------------------- */
+  --background-header: color-mix(in oklab, var(--background) 30%, transparent); /* headers sticky (con blur) */
+  --background-media: color-mix(in oklab, var(--background) 20%, transparent); /* placeholder de imágenes */
 
   /* --- Líneas / bordes ---------------------------------------------- */
   --border: oklch(62.006% 0.00007 271.152); /* divisores de columnas y bordes de celda por defecto */
@@ -40,10 +41,6 @@
   /* --- Otros -------------------------------------------------------- */
   --sky: #b3e5fc; /* azul del degradé de fondo */
   --selection: #585858; /* resaltado al seleccionar texto */
-
-  /* --- Tokens base del scaffold (se conservan) ---------------------- */
-  --background: var(--paper);
-  --foreground: #171717;
 }
 
 /* Japanese glyphs render poorly in Consolas (a Latin monospace with no CJK/kana
@@ -63,26 +60,24 @@
 }
 
 @theme inline {
-  --color-ink: var(--ink);
-  --color-ink-70: var(--ink-70);
-  --color-ink-60: var(--ink-60);
-  --color-ink-50: var(--ink-50);
-  --color-ink-40: var(--ink-40);
-  --color-ink-35: var(--ink-35);
-  --color-ink-25: var(--ink-25);
-  --color-ink-20: var(--ink-20);
-  --color-ink-10: var(--ink-10);
-  --color-ink-04: var(--ink-04);
-  --color-paper: var(--paper);
-  --color-paper-30: var(--paper-30);
-  --color-paper-20: var(--paper-20);
+  --color-foreground-strong: var(--foreground-strong);
+  --color-foreground-input: var(--foreground-input);
+  --color-foreground-selected: var(--foreground-selected);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-hint: var(--foreground-hint);
+  --color-foreground-disabled: var(--foreground-disabled);
+  --color-foreground-faint: var(--foreground-faint);
+  --color-foreground-hover: var(--foreground-hover);
+  --color-foreground-hover-subtle: var(--foreground-hover-subtle);
+  --color-background: var(--background);
+  --color-background-header: var(--background-header);
+  --color-background-media: var(--background-media);
   --color-border: var(--border);
   --color-border-blocked: var(--border-blocked);
   --color-border-pending: var(--border-pending);
   --color-sky: var(--sky);
   --color-selection: var(--selection);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
 }
 
 
@@ -109,11 +104,11 @@ html::-webkit-scrollbar {
 
 body {
   min-height: 100%;
-  background: linear-gradient(135deg, var(--sky), var(--paper), var(--sky));
+  background: linear-gradient(135deg, var(--sky), var(--background), var(--sky));
   background-size: 300% 300%;
   animation: gradientMove 8s ease-in-out infinite;
-  /* Monospaced "spreadsheet" aesthetic + muted ink-50 text (design language). */
-  color: var(--ink-50);
+  /* Monospaced "spreadsheet" aesthetic + muted body text (design language). */
+  color: var(--foreground);
   font-family: "JP Sans", Consolas, "SF Mono", "Menlo", "Liberation Mono",
     ui-monospace, monospace;
   -ms-overflow-style: none;
@@ -139,7 +134,7 @@ body::-webkit-scrollbar {
 
 ::selection {
   background: var(--selection);
-  color: var(--paper);
+  color: var(--background);
 }
 
 /* Deterrent against casually saving imagery: block drag-to-desktop and text
