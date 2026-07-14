@@ -116,8 +116,8 @@ export function ProductPurchase({
         className={
           "w-full mt-2.5 text-xs font-bold bg-transparent border tracking-wide py-1 " +
           (canAdd
-            ? "text-ink-50 border-line hover:bg-ink-10 cursor-pointer"
-            : "text-ink-25 border-line-soft")
+            ? "text-ink-50 border-border hover:bg-ink-10 cursor-pointer"
+            : "text-ink-25 border-border-blocked")
         }
       >
         {!inStock ? t("outOfStock") : justAdded ? t("added") : t("addToCart")}
@@ -157,7 +157,7 @@ function VariantGroup({
               onClick={() => onSelect(value)}
               aria-pressed={active}
               className={
-                "px-2 py-1 text-xs border border-line cursor-pointer " +
+                "px-2 py-1 text-xs border border-border cursor-pointer " +
                 (active
                   ? "bg-ink-60 text-paper"
                   : "text-ink-60 hover:bg-ink-10")

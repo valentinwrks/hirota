@@ -33,6 +33,7 @@ import {
 } from "@/lib/gi-standard/model";
 import type { GiEmbroiderySummaryField } from "@/lib/cart/types";
 import type { LabelOption } from "@/lib/obi/queries";
+import { KarateGiVector } from "@/components/karate-gi/KarateGiVector";
 
 // The standard (ready-made) karate-gi configurator (Pattern B1). A client
 // component: it runs the PURE pricing engine against the reference data passed
@@ -759,11 +760,9 @@ export function GiStandardConfigurator({
       {/* ---------------------------------------------------------------- */}
       <div className="basis-[40%] flex flex-col mt-8 mb-5 mx-8 min-w-0">
         {/* Karate-gi figure (mirrors the obi figure). */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/karate-gi/karate-gi-vector.svg"
-          alt={t("figureAlt")}
-          className="w-[73%] mx-auto opacity-50 select-none"
+        <KarateGiVector
+          aria-label={t("figureAlt")}
+          className="w-[73%] mx-auto select-none text-border"
         />
 
         {/* Model name — appears once a model is chosen. */}
@@ -830,10 +829,10 @@ export function GiStandardConfigurator({
                 // While showing "ADDED", hold the selected fill; it reverts when
                 // the label goes back to "ADD TO CART".
                 (justAdded
-                  ? "bg-ink-60 text-paper border-line cursor-pointer"
+                  ? "bg-ink-60 text-paper border-border cursor-pointer"
                   : canAdd
-                    ? "bg-transparent text-ink-50 border-line hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
-                    : "bg-transparent text-ink-25 border-line-soft")
+                    ? "bg-transparent text-ink-50 border-border hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
+                    : "bg-transparent text-ink-25 border-border-blocked")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
@@ -897,7 +896,7 @@ function OptionRow({
         ? "text-ink-50 hover:bg-ink-10 cursor-pointer"
         : "text-ink-40 cursor-default";
 
-  const borderClass = pending || blocked ? "border-line-pending" : "border-line";
+  const borderClass = pending || blocked ? "border-border-pending" : "border-border";
 
   return (
     <tr onClick={clickable ? onClick : undefined}>
@@ -956,7 +955,7 @@ function TextInputRow({
     : completed
       ? "bg-ink-60 text-paper"
       : "hover:bg-ink-10 focus-within:bg-ink-10";
-  const borderClass = pending ? "border-line-pending" : "border-line";
+  const borderClass = pending ? "border-border-pending" : "border-border";
 
   return (
     <tr>
@@ -1012,7 +1011,7 @@ function MeasureInputRow({
 
   return (
     <tr>
-      <td className={"px-2 py-1 border border-line " + cellState}>
+      <td className={"px-2 py-1 border border-border " + cellState}>
         <div className="flex items-center gap-1.5">
           <span>{label}</span>
           <input

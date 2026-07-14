@@ -33,9 +33,9 @@
   --paper-20: color-mix(in oklab, var(--paper) 20%, transparent); /* imágenes */
 
   /* --- Líneas / bordes ---------------------------------------------- */
-  --line: oklch(0.708 0 0); /* ex neutral-400 */
-  --line-soft: oklch(0.87 0 0); /* ex neutral-300 — bordes/separadores tenues */
-  --line-pending: oklch(0.78 0 0); /* borde de celdas en estado "pending" (ajustar a gusto) */
+  --border: oklch(62.006% 0.00007 271.152); /* divisores de columnas y bordes de celda por defecto */
+  --border-blocked: oklch(0.87 0 0); 
+  --border-pending: oklch(0.78 0 0); 
 
   /* --- Otros -------------------------------------------------------- */
   --sky: #b3e5fc; /* azul del degradé de fondo */
@@ -76,9 +76,9 @@
   --color-paper: var(--paper);
   --color-paper-30: var(--paper-30);
   --color-paper-20: var(--paper-20);
-  --color-line: var(--line);
-  --color-line-soft: var(--line-soft);
-  --color-line-pending: var(--line-pending);
+  --color-border: var(--border);
+  --color-border-blocked: var(--border-blocked);
+  --color-border-pending: var(--border-pending);
   --color-sky: var(--sky);
   --color-selection: var(--selection);
   --color-background: var(--background);

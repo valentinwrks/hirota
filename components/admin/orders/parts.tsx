@@ -13,7 +13,7 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="border-t border-line">
+    <section className="border-t border-border">
       <h4 className="px-3 py-1 text-[11px] uppercase tracking-wide text-ink-40 leading-none">
         {title}
       </h4>
@@ -50,7 +50,7 @@ export function Field({
   const empty =
     value == null || value === "" || value === false;
   return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-line-soft py-0.5">
+    <div className="flex items-baseline justify-between gap-3 border-b border-border-blocked py-0.5">
       <dt className="text-ink-40 whitespace-nowrap">{label}</dt>
       <dd className="text-ink-70 text-right tabular-nums">
         {empty ? <span className="text-ink-25">—</span> : value}

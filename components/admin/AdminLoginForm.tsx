@@ -22,7 +22,7 @@ export function AdminLoginForm({ locale }: { locale: string }) {
           name="email"
           autoComplete="username"
           required
-          className="h-8 px-2 border border-line bg-paper text-ink-70 outline-none focus:border-ink-50"
+          className="h-8 px-2 border border-border bg-paper text-ink-70 outline-none focus:border-ink-50"
         />
       </label>
 
@@ -33,7 +33,7 @@ export function AdminLoginForm({ locale }: { locale: string }) {
           name="password"
           autoComplete="current-password"
           required
-          className="h-8 px-2 border border-line bg-paper text-ink-70 outline-none focus:border-ink-50"
+          className="h-8 px-2 border border-border bg-paper text-ink-70 outline-none focus:border-ink-50"
         />
       </label>
 

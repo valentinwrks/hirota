@@ -26,7 +26,7 @@ export function PriceBreakdownBlock({
           </div>
         ))}
 
-        <div className="mt-1 flex items-baseline justify-between gap-3 border-t border-line pt-1">
+        <div className="mt-1 flex items-baseline justify-between gap-3 border-t border-border pt-1">
           <span className="text-ink-40">Unit subtotal</span>
           <span className="text-ink-70 tabular-nums">
             {breakdown.unitSubtotalJpy != null ? jpy(breakdown.unitSubtotalJpy) : "—"}

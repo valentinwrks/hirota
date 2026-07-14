@@ -4,7 +4,7 @@ import type { StatusTone } from "@/lib/admin/orders/status-labels";
 // shown as DISTINCT badges — never merged into one "status" — so the admin reads
 // payment / production / shipping independently (§8.6).
 const TONE_CLASS: Record<StatusTone, string> = {
-  idle: "border-line text-ink-40",
+  idle: "border-border text-ink-40",
   active: "border-ink-50 text-ink-70",
   terminal: "border-ink-70 text-ink-70 bg-ink-04",
 };

@@ -39,7 +39,7 @@ export default async function OrderDetailPage({
 
   return (
     <div className="pb-10">
-      <div className="h-[26px] flex items-center gap-3 px-3 border-b border-line text-sm leading-none text-ink-60 sticky top-0 bg-paper-30 backdrop-blur-xs z-10">
+      <div className="h-[26px] flex items-center gap-3 px-3 border-b border-border text-sm leading-none text-ink-60 sticky top-0 bg-paper-30 backdrop-blur-xs z-10">
         <Link
           href="/admin/orders"
           className="text-ink-40 underline underline-offset-2"
@@ -51,7 +51,7 @@ export default async function OrderDetailPage({
 
       <div className="p-3 flex flex-col gap-3 max-w-[900px]">
         {/* Status advancement — the only editable thing on a placed order. */}
-        <div className="border border-line bg-paper p-3">
+        <div className="border border-border bg-paper p-3">
           <h3 className="text-[11px] uppercase tracking-wide text-ink-40 mb-2">
             Status
           </h3>
@@ -65,7 +65,7 @@ export default async function OrderDetailPage({
         </div>
 
         {/* Meta + contact + shipping */}
-        <div className="border border-line bg-paper">
+        <div className="border border-border bg-paper">
           <Section title="Order">
             <Grid>
               <Field label="Number" value={`#${order.order_number}`} />

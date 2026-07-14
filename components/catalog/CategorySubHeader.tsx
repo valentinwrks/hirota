@@ -23,7 +23,7 @@ export async function CategorySubHeader({
   ]);
 
   return (
-    <div className="h-[26px] flex items-center px-1.5 border-b border-line text-sm leading-none">
+    <div className="h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
       {tCatalog("products")} / {tNav(CATEGORY_LABEL_KEY[category])}
     </div>
   );

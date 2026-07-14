@@ -17,8 +17,8 @@ export default async function AdminLoginPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-[320px] border border-line bg-paper">
-        <div className="h-[26px] flex items-center px-2 border-b border-line text-sm leading-none text-ink-50">
+      <div className="w-full max-w-[320px] border border-border bg-paper">
+        <div className="h-[26px] flex items-center px-2 border-b border-border text-sm leading-none text-ink-50">
           HIROTA / ADMIN
         </div>
         <div className="p-4">

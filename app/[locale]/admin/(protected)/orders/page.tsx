@@ -38,11 +38,11 @@ export default async function AdminOrdersPage({
 
   return (
     <div>
-      <div className="h-[26px] flex items-center px-3 border-b border-line text-sm leading-none text-ink-60 sticky top-0 bg-paper-30 backdrop-blur-xs z-10">
+      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-ink-60 sticky top-0 bg-paper-30 backdrop-blur-xs z-10">
         Orders
       </div>
 
-      <div className="p-3 border-b border-line">
+      <div className="p-3 border-b border-border">
         <OrderFiltersUI />
       </div>
 
@@ -55,14 +55,14 @@ export default async function AdminOrdersPage({
           <table className="w-full text-[12px] border-collapse">
             <thead>
               <tr className="text-ink-40 text-left">
-                <th className="px-3 py-1.5 border-b border-line font-normal">#</th>
-                <th className="px-3 py-1.5 border-b border-line font-normal">Date (UTC)</th>
-                <th className="px-3 py-1.5 border-b border-line font-normal">Customer</th>
-                <th className="px-3 py-1.5 border-b border-line font-normal text-right">Items</th>
-                <th className="px-3 py-1.5 border-b border-line font-normal text-right">Total</th>
-                <th className="px-3 py-1.5 border-b border-line font-normal">Payment</th>
-                <th className="px-3 py-1.5 border-b border-line font-normal">Production</th>
-                <th className="px-3 py-1.5 border-b border-line font-normal">Shipping</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal">#</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal">Date (UTC)</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal">Customer</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal text-right">Items</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal text-right">Total</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal">Payment</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal">Production</th>
+                <th className="px-3 py-1.5 border-b border-border font-normal">Shipping</th>
               </tr>
             </thead>
             <tbody>
@@ -70,7 +70,7 @@ export default async function AdminOrdersPage({
                 const money = orderMoney(o, o.total_jpy);
                 return (
                   <tr key={o.id} className="hover:bg-ink-04">
-                    <td className="px-3 py-1.5 border-b border-line-soft tabular-nums">
+                    <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums">
                       <Link
                         href={`/admin/orders/${o.order_number}`}
                         className="text-ink-70 underline underline-offset-2"
@@ -78,32 +78,32 @@ export default async function AdminOrdersPage({
                         {o.order_number}
                       </Link>
                     </td>
-                    <td className="px-3 py-1.5 border-b border-line-soft tabular-nums text-ink-50">
+                    <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-ink-50">
                       {fmtDate(o.created_at)}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-line-soft text-ink-70">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-ink-70">
                       {o.customer_name}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-line-soft text-right tabular-nums text-ink-50">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-ink-50">
                       {o.item_count}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-line-soft text-right tabular-nums text-ink-70 whitespace-nowrap">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-ink-70 whitespace-nowrap">
                       {money.display ? `${money.display} · ` : ""}
                       {money.jpy}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-line-soft">
+                    <td className="px-3 py-1.5 border-b border-border-blocked">
                       <StatusBadge
                         label={PAYMENT_LABELS[o.payment_status]}
                         tone={PAYMENT_TONE[o.payment_status]}
                       />
                     </td>
-                    <td className="px-3 py-1.5 border-b border-line-soft">
+                    <td className="px-3 py-1.5 border-b border-border-blocked">
                       <StatusBadge
                         label={PRODUCTION_LABELS[o.production_status]}
                         tone={PRODUCTION_TONE[o.production_status]}
                       />
                     </td>
-                    <td className="px-3 py-1.5 border-b border-line-soft">
+                    <td className="px-3 py-1.5 border-b border-border-blocked">
                       <StatusBadge
                         label={SHIPPING_LABELS[o.shipping_status]}
                         tone={SHIPPING_TONE[o.shipping_status]}

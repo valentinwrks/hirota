@@ -150,7 +150,7 @@ export function CheckoutSheet() {
       {/* White paper sheet. */}
       <div className="relative w-full max-w-2xl my-8 mx-4 bg-paper text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)]">
         {/* Header */}
-        <div className="flex items-center justify-between px-3 h-[30px] border-b border-line bg-ink-60 text-paper text-sm">
+        <div className="flex items-center justify-between px-3 h-[30px] border-b border-border bg-ink-60 text-paper text-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hirota/logo-checkout.png"
@@ -187,7 +187,7 @@ export function CheckoutSheet() {
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-between pt-[5px] mt-2.5 border-t border-line-soft">
+              <div className="flex justify-between pt-[5px] mt-2.5 border-t border-border-blocked">
                 <span className="text-sm font-bold">{t("total")}</span>
                 <span className="text-sm font-bold">{format(subtotalJpy)}</span>
               </div>
@@ -303,12 +303,12 @@ export function CheckoutSheet() {
               <h3 className="text-sm font-normal uppercase">
                 {t("paymentHeading")}
               </h3>
-              <p className="text-[11px] italic text-ink-40 border border-line-soft bg-ink-04 px-2 py-1.5">
+              <p className="text-[11px] italic text-ink-40 border border-border-blocked bg-ink-04 px-2 py-1.5">
                 {t("simulationNotice")}
               </p>
 
               {error && (
-                <p className="text-[11px] text-ink-70 border border-line px-2 py-1.5">
+                <p className="text-[11px] text-ink-70 border border-border px-2 py-1.5">
                   {t(errorKey(error))}
                 </p>
               )}
@@ -320,8 +320,8 @@ export function CheckoutSheet() {
                 className={
                   "w-full text-xs font-bold uppercase bg-transparent border tracking-wide py-1.5 " +
                   (isValid && !submitting
-                    ? "text-ink-50 border-line hover:bg-ink-10 cursor-pointer"
-                    : "text-ink-25 border-line-soft cursor-default")
+                    ? "text-ink-50 border-border hover:bg-ink-10 cursor-pointer"
+                    : "text-ink-25 border-border-blocked cursor-default")
                 }
               >
                 {submitting ? t("processing") : t("pay")}
@@ -363,13 +363,13 @@ function Confirmation({
     <div className="p-4 space-y-3">
       <h3 className="text-base font-bold">{t("confirmTitle")}</h3>
       <p>{t("confirmBody", { number })}</p>
-      <p className="text-[11px] italic text-ink-40 border border-line-soft bg-ink-04 px-2 py-1.5">
+      <p className="text-[11px] italic text-ink-40 border border-border-blocked bg-ink-04 px-2 py-1.5">
         {t("emailStub")}
       </p>
       <button
         type="button"
         onClick={onContinue}
-        className="w-full text-xs font-bold bg-transparent text-ink-50 border border-line tracking-wide py-1.5 hover:bg-ink-10 cursor-pointer"
+        className="w-full text-xs font-bold bg-transparent text-ink-50 border border-border tracking-wide py-1.5 hover:bg-ink-10 cursor-pointer"
       >
         {t("continue")}
       </button>
@@ -413,7 +413,7 @@ function Field({
         autoComplete={autoComplete}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-line bg-paper px-2 py-1 text-xs outline-none focus:border-ink-50"
+        className="w-full border border-border bg-paper px-2 py-1 text-xs outline-none focus:border-ink-50"
       />
     </label>
   );

@@ -695,10 +695,10 @@ export function ObiConfigurator({
                 // While showing "ADDED", hold the selected fill; it reverts when
                 // the label goes back to "ADD TO CART".
                 (justAdded
-                  ? "bg-ink-60 text-paper border-line cursor-pointer"
+                  ? "bg-ink-60 text-paper border-border cursor-pointer"
                   : canAdd
-                    ? "bg-transparent text-ink-50 border-line hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
-                    : "bg-transparent text-ink-25 border-line-soft")
+                    ? "bg-transparent text-ink-50 border-border hover:bg-ink-10 active:bg-ink-60 active:text-paper cursor-pointer"
+                    : "bg-transparent text-ink-25 border-border-blocked")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
@@ -759,7 +759,7 @@ function OptionRow({
 
   // Borders track state too: pending & blocked use the line-pending tone (tunable
   // in globals.css) to match their dim text.
-  const borderClass = pending || blocked ? "border-line-pending" : "border-line";
+  const borderClass = pending || blocked ? "border-border-pending" : "border-border";
 
   return (
     <tr onClick={clickable ? onClick : undefined}>
@@ -835,7 +835,7 @@ function EmbroideryInputRow({
         ? "bg-ink-60 text-paper"
         : "hover:bg-ink-10 focus-within:bg-ink-10";
   // Match OptionRow: pending rows soften their border to the tunable line-pending.
-  const borderClass = pending ? "border-line-pending" : "border-line";
+  const borderClass = pending ? "border-border-pending" : "border-border";
 
   return (
     <tr>

@@ -17,7 +17,7 @@ export function CartColumn() {
 
   return (
     <section className="basis-[22%] 2xl:basis-[27.5%] shrink-0 flex flex-col overflow-hidden">
-      <div className="shrink-0 h-[26px] flex items-center px-1.5 border-b border-line text-sm leading-none bg-paper-30">
+      <div className="shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none bg-paper-30">
         {t("title")}
         {hydrated && count > 0 ? `(${count})` : ""}
       </div>
@@ -55,7 +55,7 @@ export function CartColumn() {
             <button
               type="button"
               onClick={open}
-              className="w-full mt-2.5 text-xs font-bold bg-transparent text-ink-50 border border-line tracking-wide py-1 hover:bg-ink-10 cursor-pointer"
+              className="w-full mt-2.5 text-xs font-bold bg-transparent text-ink-50 border border-border tracking-wide py-1 hover:bg-ink-10 cursor-pointer"
             >
               {t("checkout")}
             </button>

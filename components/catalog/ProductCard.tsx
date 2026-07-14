@@ -35,7 +35,7 @@ export function ProductCard({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group flex items-stretch border border-line hover:bg-ink-04"
+      className="group flex items-stretch border border-border hover:bg-ink-04"
     >
       {/* image — square thumbnail inset with padding ("air"), centered in its
           cell; no divider, so it shares the card with the info column */}

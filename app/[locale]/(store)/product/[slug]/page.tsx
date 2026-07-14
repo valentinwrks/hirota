@@ -46,7 +46,7 @@ export default async function ProductPage({
         <div className="mt-3 flex gap-4">
           {/* product image */}
           <div className="basis-[45%] shrink-0">
-            <div className="aspect-square border border-line overflow-hidden bg-paper-20">
+            <div className="aspect-square border border-border overflow-hidden bg-paper-20">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={productImage(product.id)}

@@ -201,7 +201,7 @@ export function CartItemCard({
 
   return (
     <tr className="align-top">
-      <td className="px-2 py-1 border border-line">
+      <td className="px-2 py-1 border border-border">
         {/* name + line total */}
         <div className="flex items-start justify-between gap-2">
           <p className="font-bold truncate min-w-0">

@@ -105,7 +105,7 @@ function AxisControl<T extends string>({
         value={current}
         disabled={pending}
         onChange={(e) => onChange(e.target.value)}
-        className="h-8 px-2 border border-line bg-paper text-ink-70 outline-none focus:border-ink-50 disabled:opacity-50"
+        className="h-8 px-2 border border-border bg-paper text-ink-70 outline-none focus:border-ink-50 disabled:opacity-50"
       >
         {values.map((v) => (
           <option key={v} value={v}>
