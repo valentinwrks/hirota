@@ -15,7 +15,7 @@ export async function TopBar() {
         alt={t("logoAlt")}
         className="h-[21px] object-contain object-center"
       />
-      <div className="flex items-center gap-5 text-[13px] leading-none">
+      <div className="flex items-center gap-6 text-[13px] leading-none">
         <LocaleSwitcher label={t("language")} />
         <CurrencySwitcher label={t("currency")} />
       </div>

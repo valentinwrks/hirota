@@ -17,12 +17,12 @@ export default async function AdminLoginPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-[320px] border border-border bg-background">
+      <div className="w-full max-w-md border border-border">
         <div className="h-[26px] flex items-center px-2 border-b border-border text-sm leading-none text-foreground">
-          HIROTA / ADMIN
+          Hirota (ヒロタ) / Admin
         </div>
         <div className="p-4">
-          <h1 className="text-foreground-strong text-[15px] mb-4 leading-none">Sign in</h1>
+          <h1 className="text-foreground-strong text-[18px] font-bold mb-4 leading-none">Sign in</h1>
           <AdminLoginForm locale={locale} />
         </div>
       </div>

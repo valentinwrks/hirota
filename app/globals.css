@@ -23,16 +23,12 @@
   --background-media: rgba(255, 255, 255, 0.2); /* placeholder de imágenes */
 
   /* --- Líneas / bordes ---------------------------------------------- */
-
   --border: rgba(0, 0, 0, 0.4);
   --border-blocked: rgba(0, 0, 0, 0.15);
   --border-pending: rgba(0, 0, 0, 0.275);
 
   /* --- SVG figures -------------------------------------------------- */
-  /* Group opacity for inline line-art SVGs (karate-gi figure, vertical
-     logo). Applied on the isolating <g> wrapper, so solid strokes fade as
-     a whole without accumulating alpha where they cross. */
-  --svg-opacity: 0.45;
+  --svg-opacity: 0.5;
 
   /* --- Otros -------------------------------------------------------- */
   --sky: #b3e5fc; 
@@ -131,8 +127,7 @@ body::-webkit-scrollbar {
 }
 
 ::selection {
-  background: var(--selection);
-  color: var(--background);
+  background: rgb(0 0 0 / 0.1);
 }
 
 /* Deterrent against casually saving imagery: block drag-to-desktop and text
