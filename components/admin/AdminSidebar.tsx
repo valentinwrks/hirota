@@ -21,17 +21,21 @@ export function AdminSidebar({ locale }: { locale: string }) {
 
   return (
     <nav className="flex flex-col p-1.5 gap-0.5">
-      {SECTIONS.map(({ href, label }) => {
+      {SECTIONS.map(({ href, label }, i) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
+        // Orders (index 0) is its own group, offset from the sidebar title; the
+        // catalog mirrors follow after the same gap to signal the hierarchy.
+        const groupGap = i === 0 || i === 1 ? "mt-3 " : "";
         return (
           <Link
             key={href}
             href={href}
             locale={locale}
             className={
-              active
-                ? "px-2 py-1 leading-none bg-foreground-hover text-foreground"
-                : "px-2 py-1 leading-none text-foreground hover:bg-foreground-hover-subtle"
+              groupGap +
+              (active
+                ? "px-2 py-1 leading-none font-bold text-foreground"
+                : "px-2 py-1 leading-none text-foreground hover:bg-foreground-hover-subtle")
             }
           >
             {label}

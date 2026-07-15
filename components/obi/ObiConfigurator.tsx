@@ -608,7 +608,7 @@ export function ObiConfigurator({
         <img
           src="/obi/vector.svg"
           alt={t("figureAlt")}
-          className="w-[80%] mx-auto opacity-50 select-none"
+          className="w-[82.5%] mx-auto opacity-50 select-none"
         />
 
         {/* Obi title — appears with the first select (color) and grows with each

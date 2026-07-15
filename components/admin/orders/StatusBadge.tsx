@@ -20,7 +20,7 @@ export function StatusBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 border px-1.5 py-0.5 leading-none text-[11px] whitespace-nowrap ${TONE_CLASS[tone]}`}
+      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 leading-none text-[11px] whitespace-nowrap ${TONE_CLASS[tone]}`}
     >
       {prefix ? <span className="text-foreground-muted">{prefix}</span> : null}
       {label}

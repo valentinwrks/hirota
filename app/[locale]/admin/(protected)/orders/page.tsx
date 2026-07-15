@@ -1,22 +1,19 @@
-import { Link } from "@/lib/i18n/navigation";
 import { listOrders, type OrderFilters } from "@/lib/admin/orders/queries";
-import { asPayment, asProduction, asShipping } from "@/lib/admin/orders/status";
-import { orderMoney } from "@/lib/admin/orders/money";
+import {
+  asPayment,
+  asProduction,
+  asShipping,
+  PAYMENT_STATUSES,
+  PRODUCTION_STATUSES,
+  SHIPPING_STATUSES,
+} from "@/lib/admin/orders/status";
 import {
   PAYMENT_LABELS,
   PRODUCTION_LABELS,
   SHIPPING_LABELS,
-  PAYMENT_TONE,
-  PRODUCTION_TONE,
-  SHIPPING_TONE,
 } from "@/lib/admin/orders/status-labels";
-import { OrderFilters as OrderFiltersUI } from "@/components/admin/orders/OrderFilters";
-import { StatusBadge } from "@/components/admin/orders/StatusBadge";
-
-// Compact UTC timestamp (admin-facing, deterministic across server render).
-function fmtDate(iso: string): string {
-  return new Date(iso).toISOString().slice(0, 16).replace("T", " ");
-}
+import { OrderColumnFilter } from "@/components/admin/orders/OrderFilters";
+import { OrderRow } from "@/components/admin/orders/OrderRow";
 
 export default async function AdminOrdersPage({
   searchParams,
@@ -38,14 +35,6 @@ export default async function AdminOrdersPage({
 
   return (
     <div>
-      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-foreground-strong sticky top-0 bg-background-header backdrop-blur-xs z-10">
-        Orders
-      </div>
-
-      <div className="p-3 border-b border-border">
-        <OrderFiltersUI />
-      </div>
-
       {orders.length === 0 ? (
         <div className="p-6 text-[13px] text-foreground-muted">
           No orders match these filters.
@@ -54,64 +43,42 @@ export default async function AdminOrdersPage({
         <div className="overflow-x-auto">
           <table className="w-full text-[12px] border-collapse">
             <thead>
-              <tr className="text-foreground-muted text-left">
-                <th className="px-3 py-1.5 border-b border-border font-normal">#</th>
-                <th className="px-3 py-1.5 border-b border-border font-normal">Date (UTC)</th>
-                <th className="px-3 py-1.5 border-b border-border font-normal">Customer</th>
-                <th className="px-3 py-1.5 border-b border-border font-normal text-right">Items</th>
-                <th className="px-3 py-1.5 border-b border-border font-normal text-right">Total</th>
-                <th className="px-3 py-1.5 border-b border-border font-normal">Payment</th>
-                <th className="px-3 py-1.5 border-b border-border font-normal">Production</th>
-                <th className="px-3 py-1.5 border-b border-border font-normal">Shipping</th>
+              <tr className="text-foreground text-left">
+                <th className="px-3 py-1.5 border-b border-border font-bold">#</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">Date (UTC)</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">Customer</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">Items</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">Total</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">
+                  <OrderColumnFilter
+                    label="Payment"
+                    param="payment"
+                    values={PAYMENT_STATUSES}
+                    labels={PAYMENT_LABELS}
+                  />
+                </th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">
+                  <OrderColumnFilter
+                    label="Production"
+                    param="production"
+                    values={PRODUCTION_STATUSES}
+                    labels={PRODUCTION_LABELS}
+                  />
+                </th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">
+                  <OrderColumnFilter
+                    label="Shipping"
+                    param="shipping"
+                    values={SHIPPING_STATUSES}
+                    labels={SHIPPING_LABELS}
+                  />
+                </th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((o) => {
-                const money = orderMoney(o, o.total_jpy);
-                return (
-                  <tr key={o.id} className="hover:bg-foreground-hover-subtle">
-                    <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums">
-                      <Link
-                        href={`/admin/orders/${o.order_number}`}
-                        className="text-foreground underline underline-offset-2"
-                      >
-                        {o.order_number}
-                      </Link>
-                    </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground">
-                      {fmtDate(o.created_at)}
-                    </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-foreground">
-                      {o.customer_name}
-                    </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-foreground">
-                      {o.item_count}
-                    </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-foreground whitespace-nowrap">
-                      {money.display ? `${money.display} · ` : ""}
-                      {money.jpy}
-                    </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked">
-                      <StatusBadge
-                        label={PAYMENT_LABELS[o.payment_status]}
-                        tone={PAYMENT_TONE[o.payment_status]}
-                      />
-                    </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked">
-                      <StatusBadge
-                        label={PRODUCTION_LABELS[o.production_status]}
-                        tone={PRODUCTION_TONE[o.production_status]}
-                      />
-                    </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked">
-                      <StatusBadge
-                        label={SHIPPING_LABELS[o.shipping_status]}
-                        tone={SHIPPING_TONE[o.shipping_status]}
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
+              {orders.map((o) => (
+                <OrderRow key={o.id} order={o} />
+              ))}
             </tbody>
           </table>
         </div>

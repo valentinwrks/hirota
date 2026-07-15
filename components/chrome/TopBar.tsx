@@ -4,7 +4,9 @@ import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
 
 // Fixed 26px top bar: HIROTA logo (left) and the language / currency switches
 // (right — the slot the old theme dots used to occupy). No theme switcher.
-export async function TopBar() {
+// `trailing` is an optional slot rendered in the right group AFTER the currency
+// switch, at the same gap — the admin shell uses it for the Sign-out control.
+export async function TopBar({ trailing }: { trailing?: React.ReactNode }) {
   const t = await getTranslations("TopBar");
 
   return (
@@ -18,6 +20,7 @@ export async function TopBar() {
       <div className="flex items-center gap-6 text-[13px] leading-none">
         <LocaleSwitcher label={t("language")} />
         <CurrencySwitcher label={t("currency")} />
+        {trailing}
       </div>
     </header>
   );

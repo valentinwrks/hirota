@@ -1,5 +1,5 @@
 import { AdminPlaceholder } from "@/components/admin/AdminPlaceholder";
 
 export default function AdminGiCustomPage() {
-  return <AdminPlaceholder title="Karate-gi Fully-tailored" />;
+  return <AdminPlaceholder />;
 }
