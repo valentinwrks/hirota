@@ -14,13 +14,7 @@ export async function AboutColumn() {
 
       <div className="mt-2 mx-1.5 text-xs leading-tight">
         <p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/hirota/logo-unflavored-simp.svg"
-            alt="HIROTA"
-            className="inline opacity-50 h-[18px] align-baseline"
-          />
-          <span className="ml-0.5">{t("intro")}</span>
+          <span className="font-bold">空手衣のヒロタ Hirota Co., Ltd</span> {t("intro")}
         </p>
         <p className="mt-2">{t("history")}</p>
 

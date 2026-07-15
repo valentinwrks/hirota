@@ -25,12 +25,14 @@
   /* --- Líneas / bordes ---------------------------------------------- */
 
   --border: rgba(0, 0, 0, 0.4);
-  --border-blocked: rgba(0, 0, 0, 0.15); 
+  --border-blocked: rgba(0, 0, 0, 0.15);
   --border-pending: rgba(0, 0, 0, 0.275);
 
-  /* --border: oklch(67.64% 0.00008 271.152);
-  --border-blocked: oklch(83.591% 0.0001 271.152); 
-  --border-pending: oklch(75.721% 0.00009 271.152); */
+  /* --- SVG figures -------------------------------------------------- */
+  /* Group opacity for inline line-art SVGs (karate-gi figure, vertical
+     logo). Applied on the isolating <g> wrapper, so solid strokes fade as
+     a whole without accumulating alpha where they cross. */
+  --svg-opacity: 0.45;
 
   /* --- Otros -------------------------------------------------------- */
   --sky: #b3e5fc; 
