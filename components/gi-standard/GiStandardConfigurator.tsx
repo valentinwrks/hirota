@@ -762,7 +762,7 @@ export function GiStandardConfigurator({
         {/* Karate-gi figure (mirrors the obi figure). */}
         <KarateGiVector
           aria-label={t("figureAlt")}
-          className="w-[73%] mx-auto select-none text-black"
+          className="w-[80%] mx-auto select-none text-black"
         />
 
         {/* Model name — appears once a model is chosen. */}
@@ -797,14 +797,10 @@ export function GiStandardConfigurator({
               )}
             </div>
           ))}
-          {!coreReady && (
-            <p
-              className={
-                "italic mt-3.5 " + (state.modelSlug == null ? "text-center" : "")
-              }
-            >
-              {t(startPromptKey)}
-            </p>
+          {/* Suppress the initial nothing-selected prompt; only the
+              progressive prompts (after a model is chosen) are shown. */}
+          {!coreReady && state.modelSlug != null && (
+            <p className="italic mt-3.5">{t(startPromptKey)}</p>
           )}
         </div>
 

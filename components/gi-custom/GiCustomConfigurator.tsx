@@ -100,8 +100,9 @@ interface GiCustomState {
   mfrLogo?: MfrLogo;
   /** Non-default uniform hem selection; undefined ⇒ the free 4cm/normal default. */
   hem?: HemSelection;
-  /** Pants high-waist (exact cm entered; price from the band). */
-  highWaistOn: boolean;
+  /** Pants high-waist: the selected band (min/max cm; price from the band),
+   *  plus the exact cm entered within it. undefined band ⇒ no high waist. */
+  highWaistBand?: { minCm: number; maxCm: number };
   highWaistText: string;
   /** Global thread color for all four embroidery fields. */
   threadColor?: GiThreadColor;
@@ -191,6 +192,11 @@ export function GiCustomConfigurator({
     () => new Map(bands.map((b) => [b.bandCode, b])),
     [bands],
   );
+  // High-waist bands (each a cm range → price), low-to-high for the radio list.
+  const highWaistBands = useMemo(
+    () => [...data.highWaistBands].sort((a, b) => a.minCm - b.minCm),
+    [data.highWaistBands],
+  );
 
   const defaultLabelId =
     labels.find((l) => l.name === "Hirota")?.id ?? labels[0]?.id ?? 1;
@@ -200,7 +206,6 @@ export function GiCustomConfigurator({
     sideTies: false,
     chestTies: false,
     elasticWaist: false,
-    highWaistOn: false,
     highWaistText: "",
     lapelText: "",
     shoulderText: "",
@@ -222,8 +227,17 @@ export function GiCustomConfigurator({
     (s: GiCustomState): GiCustomState => {
       const def = s.modelSlug ? modelBySlug.get(s.modelSlug) : undefined;
       const isKata = def?.isKata ?? false;
-      const jacket = unitIncludesJacket(s.purchaseUnit);
-      const pants = unitIncludesPants(s.purchaseUnit);
+
+      // Cascade: dropping an upstream axis clears the downstream ones so nothing
+      // dangles — a purchase unit with no model, or a size band with no purchase
+      // unit (band selection is only meaningful once a unit sets the multiplier).
+      let purchaseUnit = s.purchaseUnit;
+      let bandCode = s.bandCode;
+      if (!s.modelSlug) purchaseUnit = undefined;
+      if (!purchaseUnit) bandCode = undefined;
+
+      const jacket = unitIncludesJacket(purchaseUnit);
+      const pants = unitIncludesPants(purchaseUnit);
 
       let {
         collar,
@@ -232,7 +246,7 @@ export function GiCustomConfigurator({
         elasticWaist,
         mfrLogo,
         hem,
-        highWaistOn,
+        highWaistBand,
         highWaistText,
         lapelText,
         shoulderText,
@@ -264,7 +278,7 @@ export function GiCustomConfigurator({
       // --- Purchase-unit gating (pants options + G–J measurements) -------
       if (!pants) {
         elasticWaist = false;
-        highWaistOn = false;
+        highWaistBand = undefined;
         highWaistText = "";
         pantsText = "";
         measure = { ...measure };
@@ -273,13 +287,15 @@ export function GiCustomConfigurator({
 
       return {
         ...s,
+        purchaseUnit,
+        bandCode,
         collar,
         sideTies,
         chestTies,
         elasticWaist,
         mfrLogo,
         hem,
-        highWaistOn,
+        highWaistBand,
         highWaistText,
         lapelText,
         shoulderText,
@@ -321,15 +337,18 @@ export function GiCustomConfigurator({
       : undefined;
 
   // High waist — a pants measurement entered as exact cm (1–13; >13 not offered).
+  const hwBand = state.highWaistBand;
   const hwVal = parseNum(state.highWaistText);
-  const hwEntered = state.highWaistOn && state.highWaistText.trim() !== "";
+  const hwEntered = hwBand != null && state.highWaistText.trim() !== "";
+  // The exact cm must fall inside the selected band (its price is the band's).
   const hwValid =
     hwEntered &&
+    hwBand != null &&
     Number.isFinite(hwVal) &&
-    (hwVal as number) > 0 &&
-    (hwVal as number) <= 13;
+    (hwVal as number) >= hwBand.minCm &&
+    (hwVal as number) <= hwBand.maxCm;
   const hwError = hwEntered && !hwValid;
-  const hwNeedsValue = state.highWaistOn && !hwValid;
+  const hwNeedsValue = hwBand != null && !hwValid;
   const effectiveHw = hwValid ? (hwVal as number) : 0;
 
   // Parsed measurements actually entered (finite numbers), included in the config
@@ -423,6 +442,11 @@ export function GiCustomConfigurator({
       : null;
 
   // ---- Per-letter measurement helpers -----------------------------------
+  // Whether a measurement letter belongs to a part in the chosen purchase unit
+  // (jacket A–F / pants G–J). Letters outside the unit render pending.
+  const letterInScope = (l: MeasureLetter) =>
+    JACKET_LETTERS.includes(l as (typeof JACKET_LETTERS)[number]) ? jacket : pants;
+
   const letterState = (l: MeasureLetter) => {
     const raw = state.measure[l];
     const entered = raw.trim() !== "";
@@ -526,26 +550,36 @@ export function GiCustomConfigurator({
       }
     }
 
+    // Push order mirrors the left-hand form top-to-bottom (§9): base line, then
+    // the measurements' shrinkage, then Ties → Elastic waist → High waist →
+    // Collar → Hems → Embroidery → Manufacturer's logo → Label. The amounts were
+    // read above in the ENGINE's line order, so reordering the pushes here is
+    // purely presentational.
     features.push({
       label: `${t("giLine").toLowerCase()}: ${t(`modelShort.${state.modelSlug!}`)} · ${t(`purchaseUnitsShort.${state.purchaseUnit}`)} · ${t(`bandsShort.${band.bandCode}`)}`,
       amountJpy: baseAmt,
     });
-    if (state.collar && jacket) {
-      features.push({ label: `${t(`collarOptions.${state.collar}`).toLowerCase()}`, amountJpy: collarAmt });
+    if (state.shrinkage) {
+      features.push({
+        label: `${t("shrinkage").toLowerCase()}: ${t(`shrinkageOptions.${state.shrinkage}`)}`,
+      });
     }
     if (state.sideTies && jacket) features.push({ label: t("sideTies").toLowerCase() });
     if (state.chestTies && jacket) features.push({ label: t("chestTies").toLowerCase() });
+    if (state.elasticWaist && pants) {
+      features.push({ label: t("elasticWaist").toLowerCase(), amountJpy: elasticAmt });
+    }
+    if (pants && hwValid) {
+      features.push({ label: `${t("highWaist").toLowerCase()}: ${hwVal}cm`, amountJpy: hwAmt });
+    }
+    if (state.collar && jacket) {
+      features.push({ label: `${t(`collarOptions.${state.collar}`).toLowerCase()}`, amountJpy: collarAmt });
+    }
     if (state.hem) {
       features.push({
         label: `${t("hems").toLowerCase()}: ${t(`hemOptions.${hemOptionKey(state.hem)}`)}`,
         amountJpy: hemAmt,
       });
-    }
-    if (pants && hwValid) {
-      features.push({ label: `${t("highWaist").toLowerCase()}: ${hwVal}cm`, amountJpy: hwAmt });
-    }
-    if (state.elasticWaist && pants) {
-      features.push({ label: t("elasticWaist").toLowerCase(), amountJpy: elasticAmt });
     }
     for (const f of embFields) {
       if (f.show && charCount(f.text) > 0 && thread != null) {
@@ -561,21 +595,8 @@ export function GiCustomConfigurator({
         amountJpy: mfrAmt,
       });
     }
-    if (state.shrinkage) {
-      features.push({
-        label: `${t("shrinkage").toLowerCase()}: ${t(`shrinkageOptions.${state.shrinkage}`)}`,
-      });
-    }
     features.push({ label: `${t("label").toLowerCase()}: ${labelName}` });
   }
-
-  // Prompt copy narrows to the first still-missing core axis.
-  const startPromptKey =
-    state.modelSlug == null
-      ? "startPromptModel"
-      : state.purchaseUnit == null
-        ? "startPromptUnit"
-        : "startPromptBand";
 
   // What's still blocking add-to-cart (surfaced below the button).
   const blockingHints: string[] = [];
@@ -717,328 +738,318 @@ export function GiCustomConfigurator({
           })}
         </OptionTable>
 
-        {/* Everything below is pending until the core (model + unit + band) is
-            chosen. When the band is "above 8" the measurements/optionals still
-            render, but add-to-cart is disabled (quote on request). */}
+        {/* Everything below is ALWAYS rendered so the full spec sheet is visible
+            from the start (§9). Rows that aren't yet available — because the core
+            (model + unit + band) is unresolved, or the chosen purchase unit /
+            model doesn't include that part/option — render in the "pending" style
+            (inert, not selectable) rather than disappearing. Model-rule
+            exclusions that ARE decided (kumite collar/hem, non-Tsubasa elastic)
+            still render "blocked" (struck through) once the core is resolved. */}
 
-        {/* Measurements — jacket A–F and/or pants G–J per the purchase unit.
-            Validated against the band's top size (F collected but not size-checked;
-            H/J have the high waist subtracted). */}
-        {coreReady && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("measurements")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">
-              {isQuote ? t("measurementsNoteQuote") : t("measurementsNote")}
-            </p>
-            <OptionTable>
-              {requiredLetters.map((l) => {
-                const ls = letterState(l);
-                return (
-                  <MeasureInputRow
-                    key={l}
-                    label={t(`measureLabels.${l}`)}
-                    text={state.measure[l]}
-                    onText={(v) => setMeasure(l, v)}
-                    placeholder={t("measurePlaceholder")}
-                    unit="cm"
-                    error={ls.error}
-                  />
-                );
+        {/* Measurements — jacket A–F and/or pants G–J. Every letter always shows;
+            the ones outside the chosen purchase unit stay pending. Validated
+            against the band's top size (F collected but not size-checked; H/J have
+            the high waist subtracted). */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("measurements")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">
+          {isQuote ? t("measurementsNoteQuote") : t("measurementsNote")}
+        </p>
+        <OptionTable>
+          {ALL_LETTERS.map((l) => {
+            const inScope = coreReady && letterInScope(l);
+            const ls = letterState(l);
+            return (
+              <MeasureInputRow
+                key={l}
+                label={t(`measureLabels.${l}`)}
+                text={state.measure[l]}
+                onText={(v) => setMeasure(l, v)}
+                placeholder={t("measurePlaceholder")}
+                unit="cm"
+                error={inScope && ls.error}
+                pending={!inScope}
+              />
+            );
+          })}
+        </OptionTable>
+        {/* Per-letter "too large" hints, inline under the inputs. */}
+        {ALL_LETTERS.map((l) => {
+          const inScope = coreReady && letterInScope(l);
+          const ls = letterState(l);
+          const max = letterMax(l);
+          if (!inScope || !ls.exceeds || max == null) return null;
+          return (
+            <p key={l} className="text-[11px] italic text-red-400 mt-1">
+              {t("measureExceeds", {
+                letter: l.toUpperCase(),
+                max,
+                size: band?.topSizeCode ?? "",
               })}
-            </OptionTable>
-            {/* Per-letter "too large" hints, inline under the inputs. */}
-            {requiredLetters.map((l) => {
-              const ls = letterState(l);
-              const max = letterMax(l);
-              if (!ls.exceeds || max == null) return null;
-              return (
-                <p key={l} className="text-[11px] italic text-red-400 mt-1">
-                  {t("measureExceeds", {
-                    letter: l.toUpperCase(),
-                    max,
-                    size: band?.topSizeCode ?? "",
-                  })}
-                </p>
-              );
-            })}
-          </>
-        )}
+            </p>
+          );
+        })}
 
-        {/* Collar thickness — jacket, kata only (kumite renders it blocked). */}
-        {coreReady && jacket && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("collar")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("collarNote")}</p>
-            <OptionTable>
-              {CollarOptions.map((c) => (
-                <OptionRow
-                  key={c}
-                  selected={state.collar === c}
-                  selectable={isKata}
-                  blocked={!isKata}
-                  price={`+ ${format(collarPrice(c))}`}
-                  onClick={() => update({ collar: state.collar === c ? undefined : c })}
-                >
-                  {t(`collarOptions.${c}`)}
-                </OptionRow>
-              ))}
-            </OptionTable>
-          </>
-        )}
+        {/* Shrinkage — part of the measurements: real (final) measurements are
+            being entered, so the buyer must say whether shrinkage is already
+            accounted for or HIROTA should add it (§8.4). No heading of its own;
+            it sits under the measurements like the ready-made cut section. */}
+        <p className="text-xs mb-1 text-foreground pt-3">{t("shrinkage")}</p>
+        <OptionTable>
+          {ShrinkageOptions.map((opt) => (
+            <OptionRow
+              key={opt}
+              selected={state.shrinkage === opt}
+              selectable={coreReady}
+              onClick={() =>
+                update({ shrinkage: state.shrinkage === opt ? undefined : opt })
+              }
+            >
+              {t(`shrinkageOptions.${opt}`)}
+            </OptionRow>
+          ))}
+        </OptionTable>
+
+        {/* Body data — part of the measurements: required sanity-check fields,
+            stored but never priced and not used to build the garment. No heading
+            of its own; it sits under the measurements like shrinkage. */}
+        <p className="text-xs mb-1 text-foreground pt-3">{t("bodyData")}</p>
+        <OptionTable>
+          <MeasureInputRow
+            label={t("bodyHeight")}
+            text={state.heightText}
+            onText={(v) => update({ heightText: v })}
+            placeholder={t("measurePlaceholder")}
+            unit="cm"
+            pending={!coreReady}
+          />
+          <MeasureInputRow
+            label={t("bodyWeight")}
+            text={state.weightText}
+            onText={(v) => update({ weightText: v })}
+            placeholder={t("measurePlaceholder")}
+            unit="kg"
+            pending={!coreReady}
+          />
+          <MeasureInputRow
+            label={t("bodyWaist")}
+            text={state.waistText}
+            onText={(v) => update({ waistText: v })}
+            placeholder={t("measurePlaceholder")}
+            unit="cm"
+            pending={!coreReady}
+          />
+        </OptionTable>
 
         {/* Ties — jacket, free toggles (all models). */}
-        {coreReady && jacket && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("ties")}</p>
-            <OptionTable>
-              <OptionRow
-                selected={state.sideTies}
-                selectable
-                price={t("free")}
-                onClick={() => update({ sideTies: !state.sideTies })}
-              >
-                {t("sideTies")}
-              </OptionRow>
-              <OptionRow
-                selected={state.chestTies}
-                selectable
-                price={t("free")}
-                onClick={() => update({ chestTies: !state.chestTies })}
-              >
-                {t("chestTies")}
-              </OptionRow>
-            </OptionTable>
-          </>
-        )}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("ties")}</p>
+        <OptionTable>
+          <OptionRow
+            selected={jacket && state.sideTies}
+            selectable={coreReady && jacket}
+            price={t("free")}
+            onClick={() => update({ sideTies: !state.sideTies })}
+          >
+            {t("sideTies")}
+          </OptionRow>
+          <OptionRow
+            selected={jacket && state.chestTies}
+            selectable={coreReady && jacket}
+            price={t("free")}
+            onClick={() => update({ chestTies: !state.chestTies })}
+          >
+            {t("chestTies")}
+          </OptionRow>
+        </OptionTable>
 
-        {/* Hems — a single uniform width/thickness applied to the bought part(s);
-            price is the sum of the included parts' rows. Default 4cm/normal is
-            free. kumite models may only use the normal-thickness rows. */}
-        {coreReady && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("hems")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("hemsNote")}</p>
-            <OptionTable>
-              {HEM_OPTIONS.map((o) => {
-                const allowed = hemAllowedForModel(isKata, o);
-                const selected = o.isDefault
-                  ? state.hem == null
-                  : state.hem?.widthCm === o.widthCm && state.hem?.thickness === o.thickness;
-                const price = o.isDefault
-                  ? t("free")
-                  : `+ ${format(hemDisplayPrice(data, state.purchaseUnit!, o))}`;
-                return (
-                  <OptionRow
-                    key={hemOptionKey(o)}
-                    selected={selected}
-                    selectable={allowed}
-                    blocked={!allowed}
-                    price={price}
-                    onClick={() =>
-                      update({
-                        hem: o.isDefault
-                          ? undefined
-                          : { widthCm: o.widthCm, thickness: o.thickness },
-                      })
-                    }
-                  >
-                    {t(`hemOptions.${hemOptionKey(o)}`)}
-                  </OptionRow>
-                );
-              })}
-            </OptionTable>
-          </>
-        )}
+        {/* Elastic waist — pants, Tsubasa only. Pending until the core resolves
+            with pants in scope; blocked for non-Tsubasa. Does not replace the
+            high waist. */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("elasticWaistTitle")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("elasticNote")}</p>
+        <OptionTable>
+          <OptionRow
+            selected={pants && state.elasticWaist}
+            selectable={coreReady && pants && (modelDef?.allowsElasticWaist ?? false)}
+            blocked={coreReady && pants && !(modelDef?.allowsElasticWaist ?? false)}
+            price={`+ ${format(elasticPrice)}`}
+            onClick={() => update({ elasticWaist: !state.elasticWaist })}
+          >
+            {t("elasticWaist")}
+          </OptionRow>
+        </OptionTable>
 
-        {/* High waist — pants; exact cm entered, price from the band. */}
-        {coreReady && pants && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("highWaist")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("highWaistNote")}</p>
-            <OptionTable>
+        {/* High waist — pants; one radio per cm band (price = the band's). Once a
+            band is picked, an input collects the exact cm, validated to fall
+            inside that band. */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("highWaist")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("highWaistNote")}</p>
+        <OptionTable>
+          {highWaistBands.map((b) => {
+            const isSel =
+              pants &&
+              state.highWaistBand?.minCm === b.minCm &&
+              state.highWaistBand?.maxCm === b.maxCm;
+            return (
               <OptionRow
-                selected={state.highWaistOn}
-                selectable
+                key={`${b.minCm}-${b.maxCm}`}
+                selected={isSel}
+                selectable={coreReady && pants}
+                price={`+ ${format(b.price)}`}
                 onClick={() =>
                   update(
-                    state.highWaistOn
-                      ? { highWaistOn: false, highWaistText: "" }
-                      : { highWaistOn: true },
+                    isSel
+                      ? { highWaistBand: undefined, highWaistText: "" }
+                      : { highWaistBand: { minCm: b.minCm, maxCm: b.maxCm }, highWaistText: "" },
                   )
                 }
               >
-                {t("highWaistToggle")}
+                {t("highWaistBand", { min: b.minCm, max: b.maxCm })}
               </OptionRow>
-              {state.highWaistOn && (
-                <MeasureInputRow
-                  label={t("highWaistLabel")}
-                  text={state.highWaistText}
-                  onText={(v) => update({ highWaistText: v })}
-                  placeholder={t("measurePlaceholder")}
-                  unit="cm"
-                  error={hwError}
-                />
-              )}
-            </OptionTable>
-            {hwError && (
-              <p className="text-[11px] italic text-red-400 mt-1">{t("highWaistTooBig")}</p>
-            )}
-          </>
+            );
+          })}
+          {pants && state.highWaistBand && (
+            <MeasureInputRow
+              label={t("highWaistLabel")}
+              text={state.highWaistText}
+              onText={(v) => update({ highWaistText: v })}
+              placeholder={t("measurePlaceholder")}
+              unit="cm"
+              error={hwError}
+            />
+          )}
+        </OptionTable>
+        {pants && hwError && hwBand && (
+          <p className="text-[11px] italic text-red-400 mt-1">
+            {t("highWaistTooBig", { min: hwBand.minCm, max: hwBand.maxCm })}
+          </p>
         )}
 
-        {/* Elastic waist — pants, Tsubasa only (blocked elsewhere). Does not
-            replace the high waist. */}
-        {coreReady && pants && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("elasticWaistTitle")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("elasticNote")}</p>
-            <OptionTable>
+        {/* Collar thickness — jacket, kata only. Pending until the core resolves
+            with a jacket in scope; blocked (struck through) for kumite. */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("collar")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("collarNote")}</p>
+        <OptionTable>
+          {CollarOptions.map((c) => (
+            <OptionRow
+              key={c}
+              selected={jacket && state.collar === c}
+              selectable={coreReady && jacket && isKata}
+              blocked={coreReady && jacket && !isKata}
+              price={`+ ${format(collarPrice(c))}`}
+              onClick={() => update({ collar: state.collar === c ? undefined : c })}
+            >
+              {t(`collarOptions.${c}`)}
+            </OptionRow>
+          ))}
+        </OptionTable>
+
+        {/* Hems — a single uniform width/thickness applied to the bought part(s);
+            price is the sum of the included parts' rows. The free 4cm/normal
+            default is NOT a row (it's the note above); clicking a selected row
+            toggles back to it. kumite models may only use the normal-thickness
+            rows; the rest render blocked for them once the core resolves. */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("hems")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("hemsNote")}</p>
+        <OptionTable>
+          {HEM_OPTIONS.filter((o) => !o.isDefault).map((o) => {
+            const allowed = hemAllowedForModel(isKata, o);
+            const selected =
+              coreReady &&
+              state.hem?.widthCm === o.widthCm &&
+              state.hem?.thickness === o.thickness;
+            const price =
+              state.purchaseUnit != null
+                ? `+ ${format(hemDisplayPrice(data, state.purchaseUnit, o))}`
+                : undefined;
+            return (
               <OptionRow
-                selected={state.elasticWaist}
-                selectable={modelDef?.allowsElasticWaist ?? false}
-                blocked={!(modelDef?.allowsElasticWaist ?? false)}
-                price={`+ ${format(elasticPrice)}`}
-                onClick={() => update({ elasticWaist: !state.elasticWaist })}
+                key={hemOptionKey(o)}
+                selected={selected}
+                selectable={coreReady && allowed}
+                blocked={coreReady && !allowed}
+                price={price}
+                onClick={() =>
+                  update({
+                    hem: selected
+                      ? undefined
+                      : { widthCm: o.widthCm, thickness: o.thickness },
+                  })
+                }
               >
-                {t("elasticWaist")}
+                {t(`hemOptions.${hemOptionKey(o)}`)}
               </OptionRow>
-            </OptionTable>
-          </>
-        )}
+            );
+          })}
+        </OptionTable>
+
+        {/* Embroidery — one global thread color; four fields (per part). All four
+            fields always show; ones outside the purchase unit, or before a thread
+            colour is chosen, stay pending. */}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
+        <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
+        <OptionTable>
+          {GI_THREAD_COLORS.map((tc) => (
+            <OptionRow
+              key={tc}
+              selected={state.threadColor === tc}
+              selectable={coreReady}
+              price={`+ ${format(embroideryRate(tc))} ${t("perChar")}`}
+              onClick={() =>
+                update({ threadColor: state.threadColor === tc ? undefined : tc })
+              }
+            >
+              {t(`threadColors.${tc}`)}
+            </OptionRow>
+          ))}
+        </OptionTable>
+        <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
+        <OptionTable>
+          {embFields.map((f) => (
+            <TextInputRow
+              key={f.key}
+              label={t(`embroideryFields.${f.key}`)}
+              text={f.text}
+              onText={f.set}
+              placeholder={t("embroideryPlaceholder")}
+              pending={!coreReady || !f.show || state.threadColor == null}
+            />
+          ))}
+        </OptionTable>
 
         {/* Manufacturer's logo — jacket, all custom models. */}
-        {coreReady && jacket && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("mfrLogoTitle")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("mfrLogoNote")}</p>
-            <OptionTable>
-              {MfrLogoPlacements.map((placement) => (
-                <OptionRow
-                  key={placement}
-                  selected={state.mfrLogo === placement}
-                  selectable
-                  price={`+ ${format(mfrLogoPrice)}`}
-                  onClick={() =>
-                    update({ mfrLogo: state.mfrLogo === placement ? undefined : placement })
-                  }
-                >
-                  {t(`mfrLogoPlacements.${placement}`)}
-                </OptionRow>
-              ))}
-            </OptionTable>
-          </>
-        )}
-
-        {/* Embroidery — one global thread color; up to four fields (per part). */}
-        {coreReady && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
-            <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
-            <OptionTable>
-              {GI_THREAD_COLORS.map((tc) => (
-                <OptionRow
-                  key={tc}
-                  selected={state.threadColor === tc}
-                  selectable
-                  price={`+ ${format(embroideryRate(tc))} ${t("perChar")}`}
-                  onClick={() =>
-                    update({ threadColor: state.threadColor === tc ? undefined : tc })
-                  }
-                >
-                  {t(`threadColors.${tc}`)}
-                </OptionRow>
-              ))}
-            </OptionTable>
-            <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
-            <OptionTable>
-              {embFields
-                .filter((f) => f.show)
-                .map((f) => (
-                  <TextInputRow
-                    key={f.key}
-                    label={t(`embroideryFields.${f.key}`)}
-                    text={f.text}
-                    onText={f.set}
-                    placeholder={t("embroideryPlaceholder")}
-                    pending={state.threadColor == null}
-                  />
-                ))}
-            </OptionTable>
-          </>
-        )}
-
-        {/* Shrinkage — required (a real garment is being measured to order). */}
-        {coreReady && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("shrinkage")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("shrinkageNote")}</p>
-            <OptionTable>
-              {ShrinkageOptions.map((opt) => (
-                <OptionRow
-                  key={opt}
-                  selected={state.shrinkage === opt}
-                  selectable
-                  onClick={() =>
-                    update({ shrinkage: state.shrinkage === opt ? undefined : opt })
-                  }
-                >
-                  {t(`shrinkageOptions.${opt}`)}
-                </OptionRow>
-              ))}
-            </OptionTable>
-          </>
-        )}
-
-        {/* Body data — required sanity-check fields, stored but never priced. */}
-        {coreReady && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("bodyData")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("bodyNote")}</p>
-            <OptionTable>
-              <MeasureInputRow
-                label={t("bodyHeight")}
-                text={state.heightText}
-                onText={(v) => update({ heightText: v })}
-                placeholder={t("measurePlaceholder")}
-                unit="cm"
-              />
-              <MeasureInputRow
-                label={t("bodyWeight")}
-                text={state.weightText}
-                onText={(v) => update({ weightText: v })}
-                placeholder={t("measurePlaceholder")}
-                unit="kg"
-              />
-              <MeasureInputRow
-                label={t("bodyWaist")}
-                text={state.waistText}
-                onText={(v) => update({ waistText: v })}
-                placeholder={t("measurePlaceholder")}
-                unit="cm"
-              />
-            </OptionTable>
-          </>
-        )}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("mfrLogoTitle")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("mfrLogoNote")}</p>
+        <OptionTable>
+          {MfrLogoPlacements.map((placement) => (
+            <OptionRow
+              key={placement}
+              selected={jacket && state.mfrLogo === placement}
+              selectable={coreReady && jacket}
+              price={`+ ${format(mfrLogoPrice)}`}
+              onClick={() =>
+                update({ mfrLogo: state.mfrLogo === placement ? undefined : placement })
+              }
+            >
+              {t(`mfrLogoPlacements.${placement}`)}
+            </OptionRow>
+          ))}
+        </OptionTable>
 
         {/* Label — free, defaults to Hirota. */}
-        {coreReady && (
-          <>
-            <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
-            <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
-            <OptionTable>
-              {labels.map((l) => (
-                <OptionRow
-                  key={l.id}
-                  selected={state.labelId === l.id}
-                  selectable
-                  onClick={() => update({ labelId: l.id })}
-                >
-                  {l.name}
-                </OptionRow>
-              ))}
-            </OptionTable>
-          </>
-        )}
+        <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
+        <OptionTable>
+          {labels.map((l) => (
+            <OptionRow
+              key={l.id}
+              selected={state.labelId === l.id}
+              selectable={coreReady}
+              onClick={() => update({ labelId: l.id })}
+            >
+              {l.name}
+            </OptionRow>
+          ))}
+        </OptionTable>
       </div>
 
       {/* ---------------------------------------------------------------- */}
@@ -1047,7 +1058,7 @@ export function GiCustomConfigurator({
       <div className="basis-[40%] flex flex-col mt-8 mb-5 mx-8 min-w-0">
         <KarateGiVector
           aria-label={t("figureAlt")}
-          className="w-[73%] mx-auto select-none text-black"
+          className="w-[80%] mx-auto select-none text-black"
         />
 
         {modelName && (
@@ -1077,15 +1088,6 @@ export function GiCustomConfigurator({
               )}
             </div>
           ))}
-          {!coreReady && (
-            <p
-              className={
-                "italic mt-3.5 " + (state.modelSlug == null ? "text-center" : "")
-              }
-            >
-              {t(startPromptKey)}
-            </p>
-          )}
         </div>
 
         {coreReady && (
@@ -1283,7 +1285,8 @@ function TextInputRow({
 // A numeric measurement input. Legacy-ui style: a label, a right-aligned numeric
 // field, and a trailing unit. Never carries a price. Adopts the "selected" fill
 // once a valid value is left in it; `error` marks an invalid/out-of-range entry
-// (the explanatory hint is rendered separately, below the table).
+// (the explanatory hint is rendered separately, below the table). `pending`
+// renders the inert, un-editable style used before the field is in scope.
 function MeasureInputRow({
   label,
   text,
@@ -1291,6 +1294,7 @@ function MeasureInputRow({
   placeholder,
   unit,
   error = false,
+  pending = false,
 }: {
   label: string;
   text: string;
@@ -1298,16 +1302,20 @@ function MeasureInputRow({
   placeholder: string;
   unit?: string;
   error?: boolean;
+  pending?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
-  const completed = !focused && text.trim().length > 0 && !error;
-  const cellState = completed
-    ? "bg-foreground-selected text-background"
-    : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
+  const completed = !pending && !focused && text.trim().length > 0 && !error;
+  const cellState = pending
+    ? "text-foreground-pending cursor-default"
+    : completed
+      ? "bg-foreground-selected text-background"
+      : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
+  const borderClass = pending ? "border-border-pending" : "border-border";
 
   return (
     <tr>
-      <td className={"px-2 py-1 border border-border " + cellState}>
+      <td className={"px-2 py-1 border " + borderClass + " " + cellState}>
         <div className="flex items-center gap-1.5">
           <span>{label}</span>
           <input
@@ -1315,16 +1323,22 @@ function MeasureInputRow({
             inputMode="decimal"
             value={text}
             placeholder={placeholder}
+            disabled={pending}
             onChange={(e) => onText(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             aria-label={label}
-            className="flex-1 min-w-0 text-right bg-transparent focus:outline-none"
+            className="flex-1 min-w-0 text-right bg-transparent focus:outline-none disabled:cursor-default"
           />
           {unit && (
             <span
               className={
-                "whitespace-nowrap " + (completed ? "text-background" : "text-foreground-muted")
+                "whitespace-nowrap " +
+                (completed
+                  ? "text-background"
+                  : pending
+                    ? "text-foreground-pending"
+                    : "text-foreground-muted")
               }
             >
               {unit}

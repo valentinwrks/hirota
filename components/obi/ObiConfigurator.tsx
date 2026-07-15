@@ -580,9 +580,6 @@ export function ObiConfigurator({
             pending={embroideryPending}
           />
         </OptionTable>
-        {threadWithoutText && (
-          <p className="text-[11px] italic text-foreground-muted mt-1">{t("threadNeedsText")}</p>
-        )}
 
         {/* Label — free, defaults to Hirota. Always available. HIROTA's standard
             label-specification note sits under the heading (localized). */}
@@ -611,7 +608,7 @@ export function ObiConfigurator({
         <img
           src="/obi/vector.svg"
           alt={t("figureAlt")}
-          className="w-[75%] mx-auto opacity-50 select-none"
+          className="w-[80%] mx-auto opacity-50 select-none"
         />
 
         {/* Obi title — appears with the first select (color) and grows with each
@@ -661,16 +658,10 @@ export function ObiConfigurator({
           ))}
           {/* mt-2.5 + the container's gap-0.5 (2px) = 12px, matching the mt-3
               that separates this block from the description above it. */}
-          {!configured && (
-            <p
-              className={
-                "italic mt-2.5 " +
-                // only the initial (nothing-selected) prompt is centered
-                (state.color == null ? "text-center" : "")
-              }
-            >
-              {t(startPromptKey)}
-            </p>
+          {/* Suppress the initial nothing-selected prompt; only the
+              progressive prompts (after a color is chosen) are shown. */}
+          {!configured && state.color != null && (
+            <p className="italic mt-2.5">{t(startPromptKey)}</p>
           )}
         </div>
 
@@ -703,6 +694,16 @@ export function ObiConfigurator({
             >
               {justAdded ? t("added") : t("addToCart")}
             </button>
+
+            {/* What's still missing to enable the button — surfaced here rather
+                than inline in the form (mirrors the gi-standard configurator). */}
+            {threadWithoutText && (
+              <div className="mt-2.5 flex flex-col gap-0.5">
+                <p className="text-[11px] italic text-foreground-muted">
+                  {t("threadNeedsText")}
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>
