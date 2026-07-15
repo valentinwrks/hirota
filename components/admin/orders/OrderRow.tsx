@@ -40,13 +40,14 @@ export function OrderRow({ order }: { order: OrderListRow }) {
           #{order.order_number}
         </Link>
       </td>
-      <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground">
+      {/* Date + Items mirror the header's max-md:hidden columns. */}
+      <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground max-md:hidden">
         {fmtDate(order.created_at)}
       </td>
       <td className="px-3 py-1.5 border-b border-border-blocked text-foreground">
         {order.customer_name}
       </td>
-      <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground">
+      <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground max-md:hidden">
         {order.item_count}
       </td>
       <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground whitespace-nowrap">

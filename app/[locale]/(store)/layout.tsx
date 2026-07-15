@@ -8,6 +8,9 @@ import { AboutColumn } from "@/components/chrome/AboutColumn";
 import { ShopColumn } from "@/components/chrome/ShopColumn";
 import { CartColumn } from "@/components/chrome/CartColumn";
 import { CheckoutSheet } from "@/components/checkout/CheckoutSheet";
+import { MobileChromeProvider } from "@/components/chrome/MobileChromeProvider";
+import { MobilePanel } from "@/components/chrome/MobilePanel";
+import { StoreMobileNav } from "@/components/chrome/StoreMobileNav";
 
 // Store chrome layout — the three/four-column "spreadsheet" storefront shell.
 // Lives in the (store) route group so it wraps ONLY the public store, not the
@@ -26,22 +29,31 @@ export default async function StoreLayout({
     <CurrencyProvider rate={usdPerJpy}>
       <CartProvider>
         <CheckoutProvider>
-          {/* Fixed 26px top bar. */}
-          <TopBar />
-          {/* Column layout below the bar, filling the viewport.
-              Default (< 2xl): three regions — 22% / 56% / 22%.
-              2xl+: four regions like the legacy UI — a 7.5% vertical-logo
-              band appears and widths shift to 7.5 / 20 / 45 / 27.5. Shop is
-              flex-1, so it absorbs the remainder in both layouts. */}
-          <main className="mt-[26px] h-[calc(100vh-26px)] flex overflow-hidden">
-            <LogoColumn />
-            <AboutColumn />
-            <ShopColumn>{children}</ShopColumn>
-            <CartColumn />
-          </main>
-          {/* The checkout sheet is a full-screen overlay; it lives outside
-              the column <main> and renders only when opened. */}
-          <CheckoutSheet />
+          <MobileChromeProvider>
+            {/* Fixed 26px top bar. Below md the right group is replaced by the
+                mobile cart + menu controls (StoreMobileNav). */}
+            <TopBar mobile={<StoreMobileNav />} />
+            {/* Column layout below the bar, filling the viewport.
+                Below md: single column — shop inline; about and cart become
+                full-screen overlays (MobilePanel) driven by the mobile menu.
+                md–2xl: three regions — 22% / 56% / 22%.
+                2xl+: four regions like the legacy UI — a 7.5% vertical-logo
+                band appears and widths shift to 7.5 / 20 / 45 / 27.5. Shop is
+                flex-1, so it absorbs the remainder in both layouts. */}
+            <main className="mt-[26px] h-[calc(100dvh-26px)] flex overflow-hidden">
+              <LogoColumn />
+              <MobilePanel view="about">
+                <AboutColumn />
+              </MobilePanel>
+              <ShopColumn>{children}</ShopColumn>
+              <MobilePanel view="cart">
+                <CartColumn />
+              </MobilePanel>
+            </main>
+            {/* The checkout sheet is a full-screen overlay; it lives outside
+                the column <main> and renders only when opened. */}
+            <CheckoutSheet />
+          </MobileChromeProvider>
         </CheckoutProvider>
       </CartProvider>
     </CurrencyProvider>

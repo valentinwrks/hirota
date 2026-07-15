@@ -2,7 +2,9 @@
   "TopBar": {
     "language": "language",
     "currency": "currency",
-    "logoAlt": "HIROTA"
+    "logoAlt": "HIROTA",
+    "menu": "menu",
+    "close": "close"
   },
   "Nav": {
     "shop": "shop",

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createAuthClient } from "@/lib/supabase/auth-server";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
 import { SignOutButton } from "@/components/admin/SignOutButton";
 import { TopBar } from "@/components/chrome/TopBar";
 import { LogoColumn } from "@/components/chrome/LogoColumn";
@@ -48,14 +49,25 @@ export default async function AdminProtectedLayout({
   // divides it from the logo column (whose own border-r sits at the screen edge).
   return (
     <CurrencyProvider rate={usdPerJpy}>
-      {/* Sign-out lives in the shared TopBar's trailing slot (after currency). */}
-      <TopBar trailing={<SignOutButton locale={locale} />} />
-      <div className="mt-[26px] h-[calc(100vh-26px)] overflow-hidden flex text-[13px]">
-        <aside className="w-[220px] shrink-0 border-r border-border flex flex-col">
+      {/* Below md the sidebar is hidden and navigation moves into the TopBar's
+          dropdown menu (AdminMobileNav) — sections, switches, and sign-out. */}
+      <TopBar
+        mobile={
+          <AdminMobileNav
+            locale={locale}
+            signOut={<SignOutButton locale={locale} />}
+          />
+        }
+      />
+      <div className="mt-[26px] h-[calc(100dvh-26px)] overflow-hidden flex text-[13px]">
+        <aside className="hidden md:flex w-[220px] shrink-0 border-r border-border flex-col">
           <p className="px-3.5 pt-3 pb-2 text-sm font-bold leading-none text-foreground-strong">
             HIROTA / ADMIN
           </p>
           <AdminSidebar locale={locale} />
+          <div className="mt-auto p-1.5">
+            <SignOutButton locale={locale} />
+          </div>
         </aside>
         <main className="flex-1 min-w-0 overflow-y-auto scrollbar-none 2xl:border-r 2xl:border-border">
           {children}

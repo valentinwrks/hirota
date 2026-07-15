@@ -45,9 +45,10 @@ export default async function AdminOrdersPage({
             <thead>
               <tr className="text-foreground text-left">
                 <th className="px-3 py-1.5 border-b border-border font-bold">#</th>
-                <th className="px-3 py-1.5 border-b border-border font-bold">Date (UTC)</th>
+                {/* Date + Items are secondary — hidden below md; the detail page has them. */}
+                <th className="px-3 py-1.5 border-b border-border font-bold max-md:hidden">Date (UTC)</th>
                 <th className="px-3 py-1.5 border-b border-border font-bold">Customer</th>
-                <th className="px-3 py-1.5 border-b border-border font-bold">Items</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold max-md:hidden">Items</th>
                 <th className="px-3 py-1.5 border-b border-border font-bold">Total</th>
                 <th className="px-3 py-1.5 border-b border-border font-bold">
                   <OrderColumnFilter

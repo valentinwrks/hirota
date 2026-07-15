@@ -4,8 +4,9 @@ import { Link, usePathname } from "@/lib/i18n/navigation";
 
 // The six admin sections: Orders + the five catalog mirrors. Placeholders this
 // sprint (B adds Orders management, C adds the price/stock editors). English
-// labels are hardcoded — admin content is not localized.
-const SECTIONS = [
+// labels are hardcoded — admin content is not localized. Exported so the
+// mobile dropdown (AdminMobileNav) renders the same list.
+export const SECTIONS = [
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/gi-custom", label: "Karate-gi Fully-tailored" },
   { href: "/admin/gi-standard", label: "Karate-gi Ready-made" },

@@ -1,15 +1,19 @@
 import { getTranslations } from "next-intl/server";
+import { MobileCloseButton } from "./MobileCloseButton";
 
 // Left "about" column: company history, offices, hours, visit policy, footer.
-// Narrowest of the three regions. Static chrome (server component).
+// Narrowest of the three regions. Static chrome (server component). Below md it
+// renders inside a MobilePanel overlay: full width/height, no divider border,
+// and a close ✕ in the header.
 export async function AboutColumn() {
   const t = await getTranslations("About");
 
   return (
-    <section className="basis-[22%] 2xl:basis-[20%] shrink-0 border-r border-border overflow-y-auto overscroll-contain scrollbar-none">
+    <section className="basis-[22%] 2xl:basis-[20%] shrink-0 border-r border-border overflow-y-auto overscroll-contain scrollbar-none max-md:h-full max-md:border-r-0">
       {/* sticky section header */}
       <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none backdrop-blur-xs">
         {t("title")}
+        <MobileCloseButton />
       </div>
 
       <div className="mt-2 mx-1.5 text-xs leading-tight">

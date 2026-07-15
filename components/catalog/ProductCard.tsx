@@ -39,7 +39,7 @@ export function ProductCard({
     >
       {/* image — square thumbnail inset with padding ("air"), centered in its
           cell; no divider, so it shares the card with the info column */}
-      <div className="w-[120px] shrink-0 self-stretch p-2 flex items-center justify-center">
+      <div className="w-[120px] max-md:w-[96px] shrink-0 self-stretch p-2 flex items-center justify-center">
         <div className="w-full aspect-square overflow-hidden bg-background-media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

@@ -430,11 +430,13 @@ export function ObiConfigurator({
   }
 
   return (
-    <div className="flex w-full">
+    // Below md the 60/40 columns stack: dependency chain first, then figure +
+    // summary + CTA — configure top-down, price at the end.
+    <div className="flex w-full max-md:flex-col">
       {/* ---------------------------------------------------------------- */}
       {/* LEFT — the dependency chain + options                            */}
       {/* ---------------------------------------------------------------- */}
-      <div className="basis-[60%] pt-2 px-2.5 pb-10 leading-tight">
+      <div className="basis-[60%] max-md:basis-auto pt-2 px-2.5 pb-10 max-md:pb-0 leading-tight">
         {/* Color — no upstream: always selectable. Grouped by grade/use, each
             group captioned like the legacy "jacket/pants measurements" subtitles. */}
         <p className="text-lg font-bold mb-1.5">{t("color")}</p>
@@ -602,13 +604,13 @@ export function ObiConfigurator({
       {/* ---------------------------------------------------------------- */}
       {/* RIGHT — figure placeholder, material blurb, live features + CTA  */}
       {/* ---------------------------------------------------------------- */}
-      <div className="basis-[40%] flex flex-col mt-8 mb-5 mx-8 min-w-0">
+      <div className="basis-[40%] max-md:basis-auto flex flex-col mt-8 max-md:mt-4 mb-5 max-md:mb-10 mx-8 max-md:mx-2.5 min-w-0">
         {/* Obi figure (mirrors the karate-gi figure in the legacy UI). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/obi/vector.svg"
           alt={t("figureAlt")}
-          className="w-[82.5%] mx-auto opacity-50 select-none"
+          className="w-[82.5%] max-md:w-[65%] mx-auto opacity-50 select-none"
         />
 
         {/* Obi title — appears with the first select (color) and grows with each

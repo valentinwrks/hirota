@@ -43,9 +43,10 @@ export default async function ProductPage({
           {t("back")}
         </Link>
 
-        <div className="mt-3 flex gap-4">
+        {/* Below md the image/info columns stack: full-width image on top. */}
+        <div className="mt-3 flex gap-4 max-md:flex-col">
           {/* product image */}
-          <div className="basis-[45%] shrink-0">
+          <div className="basis-[45%] max-md:basis-auto shrink-0">
             <div className="aspect-square border border-border overflow-hidden bg-background-media">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

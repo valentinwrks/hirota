@@ -5,6 +5,7 @@ import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import { useCheckout } from "@/lib/checkout/CheckoutProvider";
 import { CartItemCard } from "@/components/cart/CartItemCard";
+import { MobileCloseButton } from "@/components/chrome/MobileCloseButton";
 
 // Right "cart" column: medium width. Guest cart with localStorage persistence,
 // rendered from the CartProvider. Line items (via the shared CartItemCard),
@@ -16,10 +17,11 @@ export function CartColumn() {
   const { open } = useCheckout();
 
   return (
-    <section className="basis-[22%] 2xl:basis-[27.5%] shrink-0 flex flex-col overflow-hidden">
+    <section className="basis-[22%] 2xl:basis-[27.5%] shrink-0 flex flex-col overflow-hidden max-md:h-full">
       <div className="shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
         {t("title")}
         {hydrated && count > 0 ? `(${count})` : ""}
+        <MobileCloseButton />
       </div>
 
       {/* Until hydrated we render nothing beyond the header to avoid a flash of

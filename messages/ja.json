@@ -2,7 +2,9 @@
   "TopBar": {
     "language": "言語",
     "currency": "通貨",
-    "logoAlt": "ヒロタ"
+    "logoAlt": "ヒロタ",
+    "menu": "メニュー",
+    "close": "閉じる"
   },
   "Nav": {
     "shop": "ショップ",
