@@ -1047,7 +1047,7 @@ export function GiCustomConfigurator({
       <div className="basis-[40%] flex flex-col mt-8 mb-5 mx-8 min-w-0">
         <KarateGiVector
           aria-label={t("figureAlt")}
-          className="w-[73%] mx-auto select-none text-border"
+          className="w-[73%] mx-auto select-none text-black"
         />
 
         {modelName && (

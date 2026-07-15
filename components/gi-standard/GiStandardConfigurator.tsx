@@ -762,7 +762,7 @@ export function GiStandardConfigurator({
         {/* Karate-gi figure (mirrors the obi figure). */}
         <KarateGiVector
           aria-label={t("figureAlt")}
-          className="w-[73%] mx-auto select-none text-border"
+          className="w-[73%] mx-auto select-none text-black"
         />
 
         {/* Model name — appears once a model is chosen. */}
