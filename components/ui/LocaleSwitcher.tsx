@@ -47,8 +47,8 @@ export function LocaleSwitcher({ label }: { label: string }) {
             className={
               "cursor-pointer " +
               (locale === active
-                ? "uppercase text-foreground-selected"
-                : "uppercase text-foreground-muted hover:text-foreground-selected")
+                ? "uppercase text-foreground-strong"
+                : "uppercase text-foreground-muted hover:text-foreground-strong")
             }
           >
             {code}

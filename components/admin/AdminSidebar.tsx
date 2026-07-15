@@ -30,7 +30,7 @@ export function AdminSidebar({ locale }: { locale: string }) {
             locale={locale}
             className={
               active
-                ? "px-2 py-1 leading-none bg-foreground-hover text-foreground-input"
+                ? "px-2 py-1 leading-none bg-foreground-hover text-foreground"
                 : "px-2 py-1 leading-none text-foreground hover:bg-foreground-hover-subtle"
             }
           >

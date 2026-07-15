@@ -2,46 +2,44 @@
 
 :root {
   /* ------------------------------------------------------------------ */
-  /* Paleta — ÚNICA fuente de verdad para el color del sitio.            */
-  /* CADA color usado en la app (incluidas las opacidades) es su propia  */
-  /* variable. Hoy los tonos de foreground/background se derivan por     */
-  /* color-mix del color base, pero cada nivel es una perilla            */
-  /* independiente: podés reemplazar cualquier línea por un color sólido */
-  /* distinto sin tocar el resto. Los tokens de @theme de abajo generan  */
-  /* las utilidades text-, bg- y border- que usan los componentes.       */
+  /* ---- Paleta — ÚNICA fuente de verdad para el color del sitio. ---- */
   /* ------------------------------------------------------------------ */
 
-  /* --- Colores base (fuente de los tonos derivados) ----------------- */
-  --foreground-strong: #000000; /* tinta plena: texto fuerte, fills oscuros, bordes marcados */
-  --background: #ffffff; /* papel: superficies, fondos claros y texto invertido */
+  /* --- Base ---------------------------------------------------------- */
+  --background: #ffffff;
 
-  /* --- Foreground: texto y fills (por rol) -------------------------- */
-  /* Nombrados por su rol, no por opacidad. Hoy se derivan por color-mix */
-  /* de --foreground-strong, pero cada uno es una perilla independiente: */
-  /* podés reemplazarlo por un color sólido propio sin tocar el resto.   */
-  --foreground-input: color-mix(in oklab, var(--foreground-strong) 70%, transparent); /* texto de inputs y botones */
-  --foreground-selected: color-mix(in oklab, var(--foreground-strong) 60%, transparent); /* fill de celda seleccionada */
-  --foreground: color-mix(in oklab, var(--foreground-strong) 50%, transparent); /* texto de cuerpo por defecto */
-  --foreground-muted: color-mix(in oklab, var(--foreground-strong) 40%, transparent); /* texto secundario */
-  --foreground-hint: color-mix(in oklab, var(--foreground-strong) 35%, transparent); /* hints, prefijos, notas */
-  --foreground-disabled: color-mix(in oklab, var(--foreground-strong) 25%, transparent); /* texto deshabilitado/blocked */
-  --foreground-faint: color-mix(in oklab, var(--foreground-strong) 20%, transparent); /* texto muy tenue, separadores */
-  --foreground-hover: color-mix(in oklab, var(--foreground-strong) 10%, transparent); /* fondo de hover */
-  --foreground-hover-subtle: color-mix(in oklab, var(--foreground-strong) 4%, transparent); /* hover sutil / zebra */
+  /* --- Foreground: negro con transparencia, por rol ----------------- */
+  --foreground: rgba(0, 0, 0, 0.5);
+  --foreground-muted: rgba(0, 0, 0, 0.4);
+  --foreground-strong: rgba(0, 0, 0, 0.6);
+  --foreground-selected: rgba(0, 0, 0, 0.6); 
+  --foreground-pending: rgba(0, 0, 0, 0.35);
+  --foreground-blocked: rgba(0, 0, 0, 0.2);
+  --foreground-hover: rgba(0, 0, 0, 0.1);
+  --foreground-hover-subtle: rgba(0, 0, 0, 0.04);
 
   /* --- Background: superficies translúcidas ------------------------- */
-  --background-header: color-mix(in oklab, var(--background) 30%, transparent); /* headers sticky (con blur) */
-  --background-media: color-mix(in oklab, var(--background) 20%, transparent); /* placeholder de imágenes */
+  --background-header: rgba(255, 255, 255, 0.3); /* headers sticky (con blur) */
+  --background-media: rgba(255, 255, 255, 0.2); /* placeholder de imágenes */
 
   /* --- Líneas / bordes ---------------------------------------------- */
-  --border: oklch(62.006% 0.00007 271.152); /* divisores de columnas y bordes de celda por defecto */
-  --border-blocked: oklch(0.87 0 0); 
-  --border-pending: oklch(0.78 0 0); 
+
+  --border: rgba(0, 0, 0, 0.4);
+  --border-blocked: rgba(0, 0, 0, 0.15); 
+  --border-pending: rgba(0, 0, 0, 0.275);
+
+  /* --border: oklch(67.64% 0.00008 271.152);
+  --border-blocked: oklch(83.591% 0.0001 271.152); 
+  --border-pending: oklch(75.721% 0.00009 271.152); */
 
   /* --- Otros -------------------------------------------------------- */
-  --sky: #b3e5fc; /* azul del degradé de fondo */
-  --selection: #585858; /* resaltado al seleccionar texto */
+  --sky: #b3e5fc; 
+  --selection: #585858; 
+  --red: #ff0000;
 }
+
+
+
 
 /* Japanese glyphs render poorly in Consolas (a Latin monospace with no CJK/kana
    of its own). Map every CJK/kana block to the platform's default sans via
@@ -61,13 +59,11 @@
 
 @theme inline {
   --color-foreground-strong: var(--foreground-strong);
-  --color-foreground-input: var(--foreground-input);
   --color-foreground-selected: var(--foreground-selected);
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
-  --color-foreground-hint: var(--foreground-hint);
-  --color-foreground-disabled: var(--foreground-disabled);
-  --color-foreground-faint: var(--foreground-faint);
+  --color-foreground-pending: var(--foreground-pending);
+  --color-foreground-blocked: var(--foreground-blocked);
   --color-foreground-hover: var(--foreground-hover);
   --color-foreground-hover-subtle: var(--foreground-hover-subtle);
   --color-background: var(--background);

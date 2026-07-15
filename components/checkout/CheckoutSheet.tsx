@@ -144,7 +144,7 @@ export function CheckoutSheet() {
         type="button"
         aria-label={t("close")}
         onClick={handleClose}
-        className="fixed inset-0 bg-foreground-strong/[17.5%] backdrop-blur-sm cursor-default"
+        className="fixed inset-0 bg-black/[17.5%] backdrop-blur-sm cursor-default"
       />
 
       {/* White paper sheet. */}
@@ -308,7 +308,7 @@ export function CheckoutSheet() {
               </p>
 
               {error && (
-                <p className="text-[11px] text-foreground-input border border-border px-2 py-1.5">
+                <p className="text-[11px] text-foreground border border-border px-2 py-1.5">
                   {t(errorKey(error))}
                 </p>
               )}
@@ -321,7 +321,7 @@ export function CheckoutSheet() {
                   "w-full text-xs font-bold uppercase bg-transparent border tracking-wide py-1.5 " +
                   (isValid && !submitting
                     ? "text-foreground border-border hover:bg-foreground-hover cursor-pointer"
-                    : "text-foreground-disabled border-border-blocked cursor-default")
+                    : "text-foreground-blocked border-border-blocked cursor-default")
                 }
               >
                 {submitting ? t("processing") : t("pay")}
@@ -401,7 +401,7 @@ function Field({
     <label className="block">
       <span className="flex items-baseline gap-1.5 mb-0.5">
         <span className="text-foreground">{label}</span>
-        <span className="text-[10px] text-foreground-hint">
+        <span className="text-[10px] text-foreground-muted">
           {required ? t("required") : t("optional")}
         </span>
         {hint && <span className="text-[10px] italic text-foreground-muted">{hint}</span>}

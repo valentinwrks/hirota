@@ -5,8 +5,8 @@ import type { StatusTone } from "@/lib/admin/orders/status-labels";
 // payment / production / shipping independently (§8.6).
 const TONE_CLASS: Record<StatusTone, string> = {
   idle: "border-border text-foreground-muted",
-  active: "border-foreground text-foreground-input",
-  terminal: "border-foreground-input text-foreground-input bg-foreground-hover-subtle",
+  active: "border-foreground text-foreground",
+  terminal: "border-foreground text-foreground bg-foreground-hover-subtle",
 };
 
 export function StatusBadge({
@@ -22,7 +22,7 @@ export function StatusBadge({
     <span
       className={`inline-flex items-center gap-1 border px-1.5 py-0.5 leading-none text-[11px] whitespace-nowrap ${TONE_CLASS[tone]}`}
     >
-      {prefix ? <span className="text-foreground-hint">{prefix}</span> : null}
+      {prefix ? <span className="text-foreground-muted">{prefix}</span> : null}
       {label}
     </span>
   );

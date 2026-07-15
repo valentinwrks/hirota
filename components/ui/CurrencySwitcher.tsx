@@ -22,8 +22,8 @@ export function CurrencySwitcher({ label }: { label: string }) {
             className={
               "cursor-pointer " +
               (c === currency
-                ? "text-foreground-selected"
-                : "text-foreground-muted hover:text-foreground-selected")
+                ? "text-foreground-strong"
+                : "text-foreground-muted hover:text-foreground-strong")
             }
           >
             {c}

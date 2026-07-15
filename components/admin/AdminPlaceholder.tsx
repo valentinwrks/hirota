@@ -3,7 +3,7 @@
 export function AdminPlaceholder({ title }: { title: string }) {
   return (
     <div>
-      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-foreground-selected sticky top-0 bg-background-header backdrop-blur-xs">
+      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-foreground-strong sticky top-0 bg-background-header backdrop-blur-xs">
         {title}
       </div>
       <div className="p-6 text-[13px] text-foreground-muted">

@@ -22,19 +22,19 @@ export function PriceBreakdownBlock({
             className="flex items-baseline justify-between gap-3 py-0.5"
           >
             <span className="text-foreground">{line.label}</span>
-            <span className="text-foreground-input tabular-nums">{jpy(line.amountJpy)}</span>
+            <span className="text-foreground tabular-nums">{jpy(line.amountJpy)}</span>
           </div>
         ))}
 
         <div className="mt-1 flex items-baseline justify-between gap-3 border-t border-border pt-1">
           <span className="text-foreground-muted">Unit subtotal</span>
-          <span className="text-foreground-input tabular-nums">
+          <span className="text-foreground tabular-nums">
             {breakdown.unitSubtotalJpy != null ? jpy(breakdown.unitSubtotalJpy) : "—"}
           </span>
         </div>
         <div className="flex items-baseline justify-between gap-3">
           <span className="text-foreground-muted">× qty {breakdown.quantity}</span>
-          <span className="font-bold text-foreground-input tabular-nums">
+          <span className="font-bold text-foreground tabular-nums">
             {jpy(lineTotalJpy)}
           </span>
         </div>

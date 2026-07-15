@@ -17,7 +17,7 @@ export function CartColumn() {
 
   return (
     <section className="basis-[22%] 2xl:basis-[27.5%] shrink-0 flex flex-col overflow-hidden">
-      <div className="shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none bg-background-header">
+      <div className="shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
         {t("title")}
         {hydrated && count > 0 ? `(${count})` : ""}
       </div>

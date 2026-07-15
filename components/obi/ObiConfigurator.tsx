@@ -628,7 +628,7 @@ export function ObiConfigurator({
             {/* grouped per axis: material (type + description), then width
                 (type + description). Width block appears once width is chosen.
                 Each type carries the legacy mb-1.5 gap before its description. */}
-            <p className="text-[11px] italic leading-tight mb-0.5 text-foreground-hint">
+            <p className="text-[11px] italic leading-tight mb-0.5 text-foreground-muted">
               {t(`materialType.${state.material}`)}
             </p>
             <p className="text-xs leading-tight">
@@ -636,7 +636,7 @@ export function ObiConfigurator({
             </p>
             {state.widthCm != null && (
               <>
-                <p className="text-[11px] italic leading-tight mb-0.5 mt-2 text-foreground-hint">
+                <p className="text-[11px] italic leading-tight mb-0.5 mt-2 text-foreground-muted">
                   {t(`widthType.${state.widthCm === 4 ? "normal" : "special"}`)}
                 </p>
                 <p className="text-xs leading-tight">
@@ -698,7 +698,7 @@ export function ObiConfigurator({
                   ? "bg-foreground-selected text-background border-border cursor-pointer"
                   : canAdd
                     ? "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer"
-                    : "bg-transparent text-foreground-disabled border-border-blocked")
+                    : "bg-transparent text-foreground-blocked border-border-blocked")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
@@ -752,18 +752,36 @@ function OptionRow({
   const cellState = selected
     ? "bg-foreground-selected text-background cursor-pointer"
     : blocked
-      ? "text-foreground-muted cursor-default" // pending look; strike-through + no dot added below
+      ? "text-foreground-blocked cursor-default" // strike-through + no dot added below
       : selectable
         ? "text-foreground hover:bg-foreground-hover cursor-pointer"
-        : "text-foreground-muted cursor-default"; // pending
+        : "text-foreground-pending cursor-default"; // pending
 
-  // Borders track state too: pending & blocked use the line-pending tone (tunable
-  // in globals.css) to match their dim text.
-  const borderClass = pending || blocked ? "border-border-pending" : "border-border";
+  // Borders track state too: each inert state uses its own tunable border tone
+  // (--border-blocked / --border-pending in globals.css) to match its dim text.
+  const borderClass = blocked
+    ? "border-border-blocked"
+    : pending
+      ? "border-border-pending"
+      : "border-border";
 
   return (
     <tr onClick={clickable ? onClick : undefined}>
-      <td className={"group px-2 py-1 border " + borderClass + " " + cellState}>
+      <td
+        className={
+          // Selectable/selected cells use border-style: double — it renders as a
+          // 1px solid line but OUTRANKS the neighbours' solid borders in the
+          // border-collapse conflict order (double > solid). So a selectable row
+          // keeps its own (darker) border on every side — including the top edge
+          // it shares with a blocked/pending row above — instead of inheriting
+          // that row's lighter border. Inert rows stay solid.
+          "group px-2 py-1 border " +
+          (selected || selectable ? "border-double " : "") +
+          borderClass +
+          " " +
+          cellState
+        }
+      >
         <div className="flex items-center justify-between gap-2">
           <span className={blocked ? "line-through" : ""}>{children}</span>
           <div className="flex items-center gap-2">
@@ -771,25 +789,28 @@ function OptionRow({
             <span
               className={
                 "relative w-[8px] h-[8px] rounded-full border flex items-center justify-center " +
-                // Radio border tracks the text opacity: selectable at ink-50,
-                // pending & blocked dimmed to ink-40 to match their text.
+                // Radio border tracks the row's text tone: selectable at --foreground,
+                // pending/blocked use their own --foreground-pending / --foreground-blocked.
                 (selected
                   ? "border-background"
                   : selectable
                     ? "border-foreground"
-                    : "border-foreground-muted") // pending & blocked
+                    : blocked
+                      ? "border-foreground-blocked"
+                      : "border-foreground-pending")
               }
             >
               {selected ? (
                 <span className="w-[4px] h-[4px] rounded-full bg-background" />
               ) : blocked ? null : (
                 // Hovering previews the inner dot (legacy behaviour), dimmed to
-                // match the row's text: selectable at ink-50, pending at ink-40.
-                // Pending previews the dot WITHOUT the selectable background tint.
+                // match the row's text: selectable at --foreground, pending at
+                // --foreground-pending. Pending previews the dot WITHOUT the
+                // selectable background tint.
                 <span
                   className={
                     "hidden group-hover:block w-[4px] h-[4px] rounded-full " +
-                    (selectable ? "bg-foreground" : "bg-foreground-muted")
+                    (selectable ? "bg-foreground" : "bg-foreground-pending")
                   }
                 />
               )}
@@ -805,7 +826,8 @@ function OptionRow({
 // selector). Visual states mirror the legacy input rows:
 //   • completed (has text) → bg-foreground-selected with white text.
 //   • otherwise            → hover / focus-within tints bg-foreground-hover.
-//   • disabled (colored belt) → muted + not editable.
+//   • disabled (colored belt) → full blocked look (matches the thread-color
+//     rows above: blocked text + border + strike-through) + not editable.
 function EmbroideryInputRow({
   label,
   text,
@@ -828,24 +850,29 @@ function EmbroideryInputRow({
   const completed = !focused && text.trim().length > 0;
   const inert = disabled || pending;
   const cellState = disabled
-    ? "text-foreground-faint cursor-default"
+    ? "text-foreground-blocked cursor-default"
     : pending
-      ? "text-foreground-muted cursor-default"
+      ? "text-foreground-pending cursor-default"
       : completed
         ? "bg-foreground-selected text-background"
         : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
-  // Match OptionRow: pending rows soften their border to the tunable line-pending.
-  const borderClass = pending ? "border-border-pending" : "border-border";
+  // Match OptionRow: blocked rows use the blocked border, pending rows the
+  // softer pending border.
+  const borderClass = disabled
+    ? "border-border-blocked"
+    : pending
+      ? "border-border-pending"
+      : "border-border";
 
   return (
     <tr>
       <td className={"px-2 py-1 border " + borderClass + " " + cellState}>
         <div className="flex items-center gap-1.5">
-          <span>{label}</span>
+          <span className={disabled ? "line-through" : ""}>{label}</span>
           <input
             type="text"
             value={text}
-            placeholder={placeholder}
+            placeholder={disabled ? "" : placeholder}
             disabled={inert}
             onChange={(e) => onText(e.target.value)}
             onFocus={() => setFocused(true)}

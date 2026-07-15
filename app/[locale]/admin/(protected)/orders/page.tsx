@@ -38,7 +38,7 @@ export default async function AdminOrdersPage({
 
   return (
     <div>
-      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-foreground-selected sticky top-0 bg-background-header backdrop-blur-xs z-10">
+      <div className="h-[26px] flex items-center px-3 border-b border-border text-sm leading-none text-foreground-strong sticky top-0 bg-background-header backdrop-blur-xs z-10">
         Orders
       </div>
 
@@ -73,7 +73,7 @@ export default async function AdminOrdersPage({
                     <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums">
                       <Link
                         href={`/admin/orders/${o.order_number}`}
-                        className="text-foreground-input underline underline-offset-2"
+                        className="text-foreground underline underline-offset-2"
                       >
                         {o.order_number}
                       </Link>
@@ -81,13 +81,13 @@ export default async function AdminOrdersPage({
                     <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground">
                       {fmtDate(o.created_at)}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-foreground-input">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-foreground">
                       {o.customer_name}
                     </td>
                     <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-foreground">
                       {o.item_count}
                     </td>
-                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-foreground-input whitespace-nowrap">
+                    <td className="px-3 py-1.5 border-b border-border-blocked text-right tabular-nums text-foreground whitespace-nowrap">
                       {money.display ? `${money.display} · ` : ""}
                       {money.jpy}
                     </td>

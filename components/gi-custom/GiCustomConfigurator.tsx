@@ -1056,10 +1056,10 @@ export function GiCustomConfigurator({
 
         {modelDef && (
           <div className={modelName ? "" : "mt-6"}>
-            <p className="text-[11px] italic leading-tight text-foreground-hint">
+            <p className="text-[11px] italic leading-tight text-foreground-muted">
               {t(`modelComposition.${modelDef.slug}`)}
             </p>
-            <p className="text-[11px] italic leading-tight mb-1.5 text-foreground-hint">
+            <p className="text-[11px] italic leading-tight mb-1.5 text-foreground-muted">
               {t(`modelCategory.${modelDef.slug}`)}
             </p>
             <p className="text-xs leading-tight">
@@ -1116,7 +1116,7 @@ export function GiCustomConfigurator({
                   ? "bg-foreground-selected text-background border-border cursor-pointer"
                   : canAdd
                     ? "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer"
-                    : "bg-transparent text-foreground-disabled border-border-blocked")
+                    : "bg-transparent text-foreground-blocked border-border-blocked")
               }
             >
               {justAdded ? t("added") : isQuote ? t("quoteCta") : t("addToCart")}
@@ -1173,16 +1173,34 @@ function OptionRow({
   const cellState = selected
     ? "bg-foreground-selected text-background cursor-pointer"
     : blocked
-      ? "text-foreground-muted cursor-default"
+      ? "text-foreground-blocked cursor-default"
       : selectable
         ? "text-foreground hover:bg-foreground-hover cursor-pointer"
-        : "text-foreground-muted cursor-default";
+        : "text-foreground-pending cursor-default";
 
-  const borderClass = pending || blocked ? "border-border-pending" : "border-border";
+  const borderClass = blocked
+    ? "border-border-blocked"
+    : pending
+      ? "border-border-pending"
+      : "border-border";
 
   return (
     <tr onClick={clickable ? onClick : undefined}>
-      <td className={"group px-2 py-1 border " + borderClass + " " + cellState}>
+      <td
+        className={
+          // Selectable/selected cells use border-style: double — it renders as a
+          // 1px solid line but OUTRANKS the neighbours' solid borders in the
+          // border-collapse conflict order (double > solid). So a selectable row
+          // keeps its own (darker) border on every side — including the top edge
+          // it shares with a blocked/pending row above — instead of inheriting
+          // that row's lighter border. Inert rows stay solid.
+          "group px-2 py-1 border " +
+          (selected || selectable ? "border-double " : "") +
+          borderClass +
+          " " +
+          cellState
+        }
+      >
         <div className="flex items-center justify-between gap-2">
           <span className={blocked ? "line-through" : ""}>{children}</span>
           <div className="flex items-center gap-2">
@@ -1194,7 +1212,9 @@ function OptionRow({
                   ? "border-background"
                   : selectable
                     ? "border-foreground"
-                    : "border-foreground-muted")
+                    : blocked
+                      ? "border-foreground-blocked"
+                      : "border-foreground-pending")
               }
             >
               {selected ? (
@@ -1203,7 +1223,7 @@ function OptionRow({
                 <span
                   className={
                     "hidden group-hover:block w-[4px] h-[4px] rounded-full " +
-                    (selectable ? "bg-foreground" : "bg-foreground-muted")
+                    (selectable ? "bg-foreground" : "bg-foreground-pending")
                   }
                 />
               )}
@@ -1232,7 +1252,7 @@ function TextInputRow({
   const [focused, setFocused] = useState(false);
   const completed = !focused && text.trim().length > 0;
   const cellState = pending
-    ? "text-foreground-muted cursor-default"
+    ? "text-foreground-pending cursor-default"
     : completed
       ? "bg-foreground-selected text-background"
       : "hover:bg-foreground-hover focus-within:bg-foreground-hover";

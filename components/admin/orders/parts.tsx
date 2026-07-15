@@ -52,8 +52,8 @@ export function Field({
   return (
     <div className="flex items-baseline justify-between gap-3 border-b border-border-blocked py-0.5">
       <dt className="text-foreground-muted whitespace-nowrap">{label}</dt>
-      <dd className="text-foreground-input text-right tabular-nums">
-        {empty ? <span className="text-foreground-disabled">—</span> : value}
+      <dd className="text-foreground text-right tabular-nums">
+        {empty ? <span className="text-foreground-blocked">—</span> : value}
       </dd>
     </div>
   );

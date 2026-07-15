@@ -62,7 +62,7 @@ export function ProductCard({
         </div>
 
         {product.product_type && (
-          <p className="text-[11px] italic text-foreground-hint">
+          <p className="text-[11px] italic text-foreground-muted">
             {product.product_type}
           </p>
         )}
@@ -72,11 +72,11 @@ export function ProductCard({
         )}
 
         {/* meta footer — subcategory + availability, pushed to the bottom */}
-        <div className="mt-auto flex items-center gap-2 pt-1 text-[10px] uppercase tracking-wide text-foreground-hint">
+        <div className="mt-auto flex items-center gap-2 pt-1 text-[10px] uppercase tracking-wide text-foreground-muted">
           <span>{subcategoryLabel(product.subcategory)}</span>
           {optionParts.length > 0 && (
             <>
-              <span className="text-foreground-faint">·</span>
+              <span className="text-foreground-blocked">·</span>
               <span>{optionParts.join(" · ")}</span>
             </>
           )}

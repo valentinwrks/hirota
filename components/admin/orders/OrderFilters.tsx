@@ -31,7 +31,7 @@ export function OrderFilters() {
   }
 
   const selectCls =
-    "h-7 px-1 border border-border bg-background text-foreground-input text-[12px] outline-none focus:border-foreground";
+    "h-7 px-1 border border-border bg-background text-foreground text-[12px] outline-none focus:border-foreground";
 
   return (
     <div className="flex flex-wrap items-center gap-3 text-[12px]">

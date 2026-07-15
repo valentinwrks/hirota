@@ -22,7 +22,7 @@ export function AdminLoginForm({ locale }: { locale: string }) {
           name="email"
           autoComplete="username"
           required
-          className="h-8 px-2 border border-border bg-background text-foreground-input outline-none focus:border-foreground"
+          className="h-8 px-2 border border-border bg-background text-foreground outline-none focus:border-foreground"
         />
       </label>
 
@@ -33,7 +33,7 @@ export function AdminLoginForm({ locale }: { locale: string }) {
           name="password"
           autoComplete="current-password"
           required
-          className="h-8 px-2 border border-border bg-background text-foreground-input outline-none focus:border-foreground"
+          className="h-8 px-2 border border-border bg-background text-foreground outline-none focus:border-foreground"
         />
       </label>
 
@@ -44,7 +44,7 @@ export function AdminLoginForm({ locale }: { locale: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="h-8 border border-foreground text-foreground-input hover:bg-foreground-hover-subtle disabled:opacity-50 leading-none"
+        className="h-8 border border-foreground text-foreground hover:bg-foreground-hover disabled:opacity-50 leading-none"
       >
         {pending ? "Signing in…" : "Sign in"}
       </button>

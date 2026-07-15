@@ -8,7 +8,7 @@ export function SignOutButton({ locale }: { locale: string }) {
       <input type="hidden" name="locale" value={locale} />
       <button
         type="submit"
-        className="w-full h-8 border border-border text-foreground hover:bg-foreground-hover-subtle leading-none"
+        className="w-full h-8 border border-border text-foreground hover:bg-foreground-hover leading-none"
       >
         Sign out
       </button>

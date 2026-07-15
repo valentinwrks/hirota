@@ -236,7 +236,7 @@ export function CartItemCard({
                 type="button"
                 onClick={() => setQuantity(item.lineId, item.quantity + 1)}
                 aria-label={t("increase")}
-                className="w-4 h-4 flex items-center justify-center rounded-full leading-none text-foreground-selected cursor-pointer"
+                className="w-4 h-4 flex items-center justify-center rounded-full leading-none text-foreground-strong cursor-pointer"
               >
                 +
               </button>
@@ -253,8 +253,8 @@ export function CartItemCard({
                 className={
                   "w-4 h-4 flex items-center justify-center rounded-full leading-none " +
                   (item.quantity <= 1
-                    ? "text-foreground-faint cursor-default"
-                    : "text-foreground-selected cursor-pointer")
+                    ? "text-foreground-blocked cursor-default"
+                    : "text-foreground-strong cursor-pointer")
                 }
               >
                 −
@@ -263,7 +263,7 @@ export function CartItemCard({
             <button
               type="button"
               onClick={() => removeItem(item.lineId)}
-              className="text-foreground-muted underline hover:text-foreground-input cursor-pointer"
+              className="text-foreground-muted underline hover:text-foreground cursor-pointer"
             >
               {t("remove")}
             </button>

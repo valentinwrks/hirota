@@ -96,7 +96,7 @@ export function ProductPurchase({
         />
       )}
       {(offersSize || offersColor) && (
-        <p className="mt-1.5 text-[11px] italic text-foreground-hint">
+        <p className="mt-1.5 text-[11px] italic text-foreground-muted">
           {t("cosmeticNote")}
         </p>
       )}
@@ -117,7 +117,7 @@ export function ProductPurchase({
           "w-full mt-2.5 text-xs font-bold bg-transparent border tracking-wide py-1 " +
           (canAdd
             ? "text-foreground border-border hover:bg-foreground-hover cursor-pointer"
-            : "text-foreground-disabled border-border-blocked")
+            : "text-foreground-blocked border-border-blocked")
         }
       >
         {!inStock ? t("outOfStock") : justAdded ? t("added") : t("addToCart")}
@@ -160,7 +160,7 @@ function VariantGroup({
                 "px-2 py-1 text-xs border border-border cursor-pointer " +
                 (active
                   ? "bg-foreground-selected text-background"
-                  : "text-foreground-selected hover:bg-foreground-hover")
+                  : "text-foreground-strong hover:bg-foreground-hover")
               }
             >
               {value}

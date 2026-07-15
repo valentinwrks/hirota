@@ -22,7 +22,7 @@ export default async function AdminLoginPage({
           HIROTA / ADMIN
         </div>
         <div className="p-4">
-          <h1 className="text-foreground-selected text-[15px] mb-4 leading-none">Sign in</h1>
+          <h1 className="text-foreground-strong text-[15px] mb-4 leading-none">Sign in</h1>
           <AdminLoginForm locale={locale} />
         </div>
       </div>

@@ -39,7 +39,7 @@ export default async function OrderDetailPage({
 
   return (
     <div className="pb-10">
-      <div className="h-[26px] flex items-center gap-3 px-3 border-b border-border text-sm leading-none text-foreground-selected sticky top-0 bg-background-header backdrop-blur-xs z-10">
+      <div className="h-[26px] flex items-center gap-3 px-3 border-b border-border text-sm leading-none text-foreground-strong sticky top-0 bg-background-header backdrop-blur-xs z-10">
         <Link
           href="/admin/orders"
           className="text-foreground-muted underline underline-offset-2"
@@ -107,7 +107,7 @@ export default async function OrderDetailPage({
 
           {order.customer_note ? (
             <Section title="Customer note">
-              <p className="text-[12px] text-foreground-input whitespace-pre-wrap">
+              <p className="text-[12px] text-foreground whitespace-pre-wrap">
                 {order.customer_note}
               </p>
             </Section>

@@ -8,7 +8,7 @@ export async function ConfiguratorPlaceholder() {
   return (
     <div className="p-2.5">
       <div className="border border-border p-4 leading-tight">
-        <p className="text-lg font-bold uppercase text-foreground-selected">
+        <p className="text-lg font-bold uppercase text-foreground-strong">
           {t("configuratorComing")}
         </p>
         <p className="mt-2 text-xs text-foreground-muted">{t("configuratorNote")}</p>
