@@ -7,6 +7,7 @@ import { useCart } from "@/lib/cart/CartProvider";
 import { useMobileChrome } from "./MobileChromeProvider";
 import { LocaleSwitcher } from "@/components/ui/LocaleSwitcher";
 import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
+import { CartIcon } from "@/components/ui/icons";
 
 const CATEGORIES: NavCategory[] = [
   "karate-gi-custom",
@@ -16,15 +17,17 @@ const CATEGORIES: NavCategory[] = [
   "accessories",
 ];
 
-// Mobile (< md) TopBar controls for the store: a direct cart toggle (always
-// visible, with the line count) and the menu trigger. The menu is a DROPDOWN
-// under the TopBar — categories, about, and the language/currency switches that
-// the desktop TopBar shows inline — over a light scrim that closes it.
+// Mobile (< md) store navigation. The TopBar slot holds only the direct cart
+// toggle (with the line count); the menu TRIGGER lives in the shop section bar
+// (MobileMenuButton), and the dropdown rendered here hangs right under that bar
+// (26px TopBar + 26px section bar = 52px): the categories and the
+// language/currency switches that the desktop TopBar shows inline, as one
+// block. The hirota section is reached via the TopBar logo (which links to the
+// store index `/`), not from the menu. A light scrim below the dropdown closes it.
 export function StoreMobileNav() {
   const t = useTranslations("TopBar");
   const tNav = useTranslations("Nav");
   const tCart = useTranslations("Cart");
-  const tAbout = useTranslations("About");
   const { view, setView, menuOpen, setMenuOpen } = useMobileChrome();
   const { count, hydrated } = useCart();
   const pathname = usePathname();
@@ -32,11 +35,6 @@ export function StoreMobileNav() {
   function toggleCart() {
     setMenuOpen(false);
     setView(view === "cart" ? null : "cart");
-  }
-
-  function openAbout() {
-    setMenuOpen(false);
-    setView("about");
   }
 
   function closeMenu() {
@@ -52,46 +50,35 @@ export function StoreMobileNav() {
         type="button"
         onClick={toggleCart}
         aria-pressed={view === "cart"}
+        aria-label={tCart("title")}
         className={
-          "cursor-pointer " +
+          "cursor-pointer flex items-center gap-0.5 " +
           (view === "cart" ? "text-foreground-strong" : "text-foreground")
         }
       >
-        {tCart("title")}
+        <CartIcon className="w-[15px] h-[15px]" />
         {hydrated && count > 0 ? `(${count})` : ""}
-      </button>
-
-      <button
-        type="button"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-expanded={menuOpen}
-        className={
-          "cursor-pointer " +
-          (menuOpen ? "text-foreground-strong" : "text-foreground")
-        }
-      >
-        {menuOpen ? t("close") : t("menu")}
       </button>
 
       {menuOpen && (
         <>
-          {/* Scrim — tap anywhere outside the dropdown to close. */}
+          {/* Scrim — starts below the section bar so the menu trigger and the
+              TopBar cart toggle stay usable; tap anywhere on it to close. */}
           <button
             type="button"
             aria-label={t("close")}
             onClick={closeMenu}
-            className="md:hidden fixed inset-x-0 top-[26px] bottom-0 z-40 bg-black/10 cursor-default"
+            className="md:hidden fixed inset-x-0 top-[52px] bottom-0 z-40 bg-black/10 cursor-default"
           />
 
-          {/* Dropdown panel under the TopBar. */}
-          <div className="md:hidden fixed inset-x-0 top-[26px] z-50 border-b border-border bg-white/80 backdrop-blur-md">
-            {/* shop — section header + the same category list as CategoryNav. */}
-            <div className="h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
-              {tNav("shop")}
-            </div>
+          {/* Dropdown panel hanging from the shop section bar — one single
+              block: the categories, then the language/currency switches at the
+              same size, no internal separators. (The hirota section is reached
+              via the TopBar logo → `/`, not from here.) */}
+          <div className="md:hidden fixed inset-x-0 top-[52px] z-50 border-b border-border bg-white/80 backdrop-blur-md">
             <nav className="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-[18px] leading-none">
               {CATEGORIES.map((category) => {
-                const href = `/catalog/${category}`;
+                const href = `/${category}`;
                 return (
                   <Link
                     key={category}
@@ -109,27 +96,14 @@ export function StoreMobileNav() {
                   </Link>
                 );
               })}
+
+              {/* language / currency — the desktop TopBar group, relocated:
+                  stacked, set off from the links by vertical space alone. */}
+              <div className="mt-4 flex flex-col items-baseline gap-1">
+                <LocaleSwitcher label={t("language")} />
+                <CurrencySwitcher label={t("currency")} />
+              </div>
             </nav>
-
-            {/* about — opens the full-screen overlay. */}
-            <div className="border-t border-border p-1.5 pb-3">
-              <button
-                type="button"
-                onClick={openAbout}
-                className={
-                  "text-[18px] leading-none cursor-pointer " +
-                  linkClass(view === "about")
-                }
-              >
-                {tAbout("title")}
-              </button>
-            </div>
-
-            {/* language / currency — the desktop TopBar group, relocated. */}
-            <div className="flex items-center justify-between border-t border-border px-1.5 py-2 text-[13px] leading-none">
-              <LocaleSwitcher label={t("language")} />
-              <CurrencySwitcher label={t("currency")} />
-            </div>
           </div>
         </>
       )}

@@ -13,7 +13,7 @@ export function CategoryNav({
   const pathname = usePathname();
 
   const renderLink = (category: NavCategory) => {
-    const href = `/catalog/${category}`;
+    const href = `/${category}`;
     const active = pathname === href;
     return (
       <Link
@@ -31,7 +31,8 @@ export function CategoryNav({
   };
 
   return (
-    <nav className="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-[18px] 2xl:text-[20px] leading-none">
+    // Hidden below md — the mobile dropdown menu carries the categories.
+    <nav className="max-md:hidden flex flex-col items-baseline gap-1 p-1.5 pb-3 text-[18px] 2xl:text-[20px] leading-none">
       {/* The two karate-gi links share one line, comma-separated; the rest each
           get their own line. */}
       <div className="flex items-baseline">

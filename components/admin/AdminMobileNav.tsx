@@ -6,6 +6,7 @@ import { Link, usePathname } from "@/lib/i18n/navigation";
 import { SECTIONS } from "./AdminSidebar";
 import { LocaleSwitcher } from "@/components/ui/LocaleSwitcher";
 import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
+import { MenuIcon, CloseIcon } from "@/components/ui/icons";
 
 // Mobile (< md) admin navigation: a "menu" trigger in the TopBar opening a
 // DROPDOWN under it with the six sections, the language/currency switches the
@@ -34,12 +35,17 @@ export function AdminMobileNav({
         type="button"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
+        aria-label={open ? "close" : "menu"}
         className={
-          "cursor-pointer " +
+          "cursor-pointer flex items-center " +
           (open ? "text-foreground-strong" : "text-foreground")
         }
       >
-        {open ? "close" : "menu"}
+        {open ? (
+          <CloseIcon className="w-[17px] h-[17px]" />
+        ) : (
+          <MenuIcon className="w-[17px] h-[17px]" />
+        )}
       </button>
 
       {open && (

@@ -98,14 +98,22 @@ html::-webkit-scrollbar {
 
 body {
   min-height: 100%;
-  background: linear-gradient(135deg, var(--sky), var(--background), var(--sky));
-  background-size: 300% 300%;
-  animation: gradientMove 8s ease-in-out infinite;
   /* Monospaced "spreadsheet" aesthetic + muted body text (design language). */
   color: var(--foreground);
   font-family: "JP Sans", Consolas, "SF Mono", "Menlo", "Liberation Mono",
     ui-monospace, monospace;
   -ms-overflow-style: none;
+}
+
+/* The site's animated background gradient. Lives on the body, and is reused as
+   an opaque surface by the mobile about (hirota) overlay so it shows the same
+   gradient while still occluding the shop chrome stacked behind it (the shop
+   section bar sits in the same 26px strip directly behind the about header). */
+body,
+.app-gradient {
+  background: linear-gradient(135deg, var(--sky), var(--background), var(--sky));
+  background-size: 300% 300%;
+  animation: gradientMove 8s ease-in-out infinite;
 }
 
 body::-webkit-scrollbar {

@@ -15,7 +15,7 @@ import { StoreMobileNav } from "@/components/chrome/StoreMobileNav";
 // Store chrome layout — the three/four-column "spreadsheet" storefront shell.
 // Lives in the (store) route group so it wraps ONLY the public store, not the
 // admin panel. Route groups are invisible in the URL, so every store path
-// (/en, /en/catalog/obi, /en/product/…) is byte-identical to before this move.
+// (/en, /en/obi, /en/product/…) is wrapped only here, not in the admin shell.
 export default async function StoreLayout({
   children,
 }: {

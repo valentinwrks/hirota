@@ -1,8 +1,5 @@
-import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
-import { hasLocale } from "next-intl";
-import { routing, type Locale } from "@/lib/i18n/routing";
-import { isNavCategory, isSimpleCategory } from "@/lib/catalog/types";
+import { isSimpleCategory, type NavCategory } from "@/lib/catalog/types";
+import type { Locale } from "@/lib/i18n/routing";
 import { getSimpleProducts } from "@/lib/catalog/queries";
 import { ProductGrid } from "@/components/catalog/ProductGrid";
 import { ConfiguratorPlaceholder } from "@/components/catalog/ConfiguratorPlaceholder";
@@ -11,38 +8,23 @@ import { ObiConfiguratorSection } from "@/components/obi/ObiConfiguratorSection"
 import { GiStandardConfiguratorSection } from "@/components/gi-standard/GiStandardConfiguratorSection";
 import { GiCustomConfiguratorSection } from "@/components/gi-custom/GiCustomConfiguratorSection";
 
-// Pre-render the four category routes per locale.
-export function generateStaticParams() {
-  return (
-    [
-      "karate-gi-custom",
-      "karate-gi-standard",
-      "obi",
-      "equipment",
-      "accessories",
-    ] as const
-  ).map((category) => ({ category }));
-}
-
-export default async function CatalogCategoryPage({
-  params,
+// Renders the center-column content for one nav category: the "products /
+// <category>" sub-header, then either a product grid (simple categories) or the
+// matching configurator. Shared by the `/[category]` route and the store index
+// (`/`), which renders the default category behind the mobile hirota overlay.
+export async function CategoryView({
+  category,
+  locale,
 }: {
-  params: Promise<{ locale: string; category: string }>;
+  category: NavCategory;
+  locale: Locale;
 }) {
-  const { locale, category } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
-  if (!isNavCategory(category)) notFound();
-  setRequestLocale(locale);
-
   return (
     <div>
       <CategorySubHeader category={category} />
 
       {isSimpleCategory(category) ? (
-        <ProductGrid
-          products={await getSimpleProducts(category)}
-          locale={locale as Locale}
-        />
+        <ProductGrid products={await getSimpleProducts(category)} locale={locale} />
       ) : category === "obi" ? (
         <ObiConfiguratorSection />
       ) : category === "karate-gi-standard" ? (

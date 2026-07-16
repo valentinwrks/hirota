@@ -37,7 +37,7 @@ export default async function ProductPage({
 
       <div className="p-2.5 max-w-[640px]">
         <Link
-          href={`/catalog/${product.category}`}
+          href={`/${product.category}`}
           className="text-xs text-foreground-muted hover:text-foreground"
         >
           {t("back")}

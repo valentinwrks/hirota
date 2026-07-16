@@ -8,8 +8,9 @@ description: How to build, launch, and drive this app to verify changes at runti
 ## Launch
 
 A Next 16 dev daemon is usually already running — check `http://localhost:3000`
-first (`curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/en` → 307
-means it's up; it redirects to `/en/catalog/equipment`). It serves on **port
+first (`curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/en` → 200
+means it's up; `/en` is the hirota landing and renders the equipment default in
+the shop column). It serves on **port
 3000 regardless of `-p`**, and its log carries stale errors — trust fresh HTTP
 responses, not the log. If nothing is up: `pnpm dev`.
 
@@ -36,9 +37,12 @@ Mobile is `< md` (768px): 390×844. Desktop check: 1440×900.
 ## Flows worth driving
 
 - Catalog → PDP → ADD TO CART → cart → CHECKOUT sheet (simulated payment).
-- Configurators: `/en/catalog/karate-gi-custom`, `/karate-gi-standard`, `/obi`.
-- Mobile chrome: TopBar `menu` dropdown (categories/about/switchers), `cart`
-  button → full-screen overlays; ✕ in the column header closes them.
+- Configurators: `/en/karate-gi-custom`, `/karate-gi-standard`, `/obi`.
+- Mobile chrome: `cart` button in the TopBar; `menu` trigger in the "shop"
+  section bar (dropdown hangs at top-[52px]: categories/switchers).
+  The hirota (about) overlay IS the store index route `/`: on mobile that root
+  path is the full-screen about landing (logo links to `/`; its ✕ leaves for
+  `/equipment`); cart overlay is ephemeral UI state.
 - Locales: same routes under `/ja`.
 
 ## Gotchas

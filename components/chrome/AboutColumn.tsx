@@ -1,10 +1,11 @@
 import { getTranslations } from "next-intl/server";
-import { MobileCloseButton } from "./MobileCloseButton";
+import { MobileMenuButton } from "./MobileMenuButton";
 
 // Left "about" column: company history, offices, hours, visit policy, footer.
 // Narrowest of the three regions. Static chrome (server component). Below md it
-// renders inside a MobilePanel overlay: full width/height, no divider border,
-// and a close ✕ in the header.
+// renders inside a MobilePanel overlay (the `/` hirota landing): full
+// width/height, no divider border, and the nav hamburger in the header (this is
+// how you leave the landing — pick a category from the menu).
 export async function AboutColumn() {
   const t = await getTranslations("About");
 
@@ -13,7 +14,7 @@ export async function AboutColumn() {
       {/* sticky section header */}
       <div className="sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none backdrop-blur-xs">
         {t("title")}
-        <MobileCloseButton />
+        <MobileMenuButton />
       </div>
 
       <div className="mt-2 mx-1.5 text-xs leading-tight">
@@ -40,9 +41,9 @@ export async function AboutColumn() {
             <span>{t("tokyoTel")}</span>
             <span>{t("tokyoFax")}</span>
           </div>
-          <span className="underline cursor-pointer hover:text-[#5e8fff]">{t("tokyoEmail")}</span>
+          <span className="underline cursor-pointer text-foreground-muted hover:text-[#5e8fff]">{t("tokyoEmail")}</span>
           <p>{t("hoursTitle")}</p>
-          <ul className="list-disc list-inside">
+          <ul className="list-disc list-outside pl-4">
             <li>{t("hoursWeekday")}</li>
             <li>{t("hoursSaturday")}</li>
             <li>{t("hoursClosed")}</li>
@@ -57,9 +58,9 @@ export async function AboutColumn() {
             <span>{t("fukuokaTel")}</span>
             <span>{t("fukuokaFax")}</span>
           </div>
-          <span className="underline cursor-pointer hover:text-[#5e8fff]">{t("fukuokaEmail")}</span>
+          <span className="underline cursor-pointer text-foreground-muted hover:text-[#5e8fff]">{t("fukuokaEmail")}</span>
           <p>{t("hoursTitle")}</p>
-          <ul className="list-disc list-inside">
+          <ul className="list-disc list-outside pl-4">
             <li>{t("hoursWeekday")}</li>
             <li>{t("hoursSaturday")}</li>
             <li>{t("hoursClosed")}</li>

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { LocaleSwitcher } from "@/components/ui/LocaleSwitcher";
 import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
+import { LogoLink } from "./LogoLink";
 
 // Fixed 26px top bar: HIROTA logo (left) and the language / currency switches
 // (right — the slot the old theme dots used to occupy). No theme switcher.
@@ -21,12 +22,8 @@ export async function TopBar({
 
   return (
     <header className="fixed top-0 left-0 w-full h-[26px] border-y border-border bg-white/70 z-50 flex items-center justify-between pl-1 pr-2 pb-[1px] select-none">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/hirota/logo-空手衣のヒロタ.svg"
-        alt={t("logoAlt")}
-        className="h-[21px] object-contain object-center"
-      />
+      {/* Logo — links to the hirota section in the store (see LogoLink). */}
+      <LogoLink alt={t("logoAlt")} />
       <div
         className={
           (mobile ? "hidden md:flex" : "flex") +
