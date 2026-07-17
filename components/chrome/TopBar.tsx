@@ -11,12 +11,17 @@ import { LogoLink } from "./LogoLink";
 // (the switches move into the shell's dropdown menu): the store passes its
 // cart + menu controls, the admin its menu trigger. Without it the standard
 // group shows at every size.
+// `showCurrency` toggles the JPY/USD switch. The admin is JPY-only internally
+// (HIROTA's source of truth), so its shell hides it — a live USD conversion
+// there only muddles the rate the buyer actually saw on each order.
 export async function TopBar({
   trailing,
   mobile,
+  showCurrency = true,
 }: {
   trailing?: React.ReactNode;
   mobile?: React.ReactNode;
+  showCurrency?: boolean;
 }) {
   const t = await getTranslations("TopBar");
 
@@ -31,7 +36,7 @@ export async function TopBar({
         }
       >
         <LocaleSwitcher label={t("language")} />
-        <CurrencySwitcher label={t("currency")} />
+        {showCurrency && <CurrencySwitcher label={t("currency")} />}
         {trailing}
       </div>
       {mobile && (

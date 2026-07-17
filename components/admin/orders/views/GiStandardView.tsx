@@ -4,16 +4,18 @@ import { Section, Grid, Field } from "../parts";
 
 const EMB_FIELDS = ["lapel", "shoulder", "chest", "pants"] as const;
 
-// Pattern B1 (ready-made gi). Frozen summary → resolved English labels. The
-// embroidery character counts are read from the snapshot, not text.length
-// (adjustment 1). C/H are removal-only length adjustments; shrinkage is shown
-// whenever an adjustment was entered (§8.2).
+// Pattern B1 (ready-made gi). Frozen summary → resolved labels in the active
+// locale (domain values from the GiStandard namespace; structural field labels
+// from Admin.view). The embroidery character counts are read from the snapshot,
+// not text.length (adjustment 1). C/H are removal-only length adjustments;
+// shrinkage is shown whenever an adjustment was entered (§8.2).
 export async function GiStandardView({
   snapshot,
 }: {
   snapshot: GiStandardConfiguredSnapshot;
 }) {
-  const t = await getTranslations({ locale: "en", namespace: "GiStandard" });
+  const t = await getTranslations("GiStandard");
+  const tA = await getTranslations("Admin");
   const s = snapshot.summary;
 
   const sizeLabel = s.sizeCode.startsWith("S") ? s.sizeCode : `#${s.sizeCode}`;
@@ -23,19 +25,19 @@ export async function GiStandardView({
 
   return (
     <>
-      <Section title="Spec">
+      <Section title={tA("view.spec")}>
         <Grid>
-          <Field label="Model" value={t(`modelNames.${s.modelSlug}`)} />
-          <Field label="Fit" value={t(`fits.${s.fit}`)} />
-          <Field label="Size" value={sizeLabel} />
+          <Field label={tA("view.model")} value={t(`modelNames.${s.modelSlug}`)} />
+          <Field label={tA("view.fit")} value={t(`fits.${s.fit}`)} />
+          <Field label={tA("view.size")} value={sizeLabel} />
           <Field
-            label="Mfr logo"
+            label={tA("view.mfrLogo")}
             value={s.mfrLogo ? t(`mfrLogoPlacements.${s.mfrLogo}`) : null}
           />
-          <Field label="Label" value={s.labelName} />
+          <Field label={tA("view.label")} value={s.labelName} />
           {adjusted ? (
             <Field
-              label="Shrinkage"
+              label={tA("view.shrinkage")}
               value={s.shrinkage ? t(`shrinkageOptions.${s.shrinkage}`) : null}
             />
           ) : null}
@@ -43,7 +45,7 @@ export async function GiStandardView({
       </Section>
 
       {adjusted ? (
-        <Section title="Length adjustments (removal only)">
+        <Section title={tA("view.lengthAdjust")}>
           <Grid>
             <Field
               label={t("adjustC")}
@@ -57,7 +59,7 @@ export async function GiStandardView({
         </Section>
       ) : null}
 
-      <Section title="Embroidery">
+      <Section title={tA("view.embroidery")}>
         <Grid>
           {EMB_FIELDS.map((field) => {
             const f = byField.get(field);
@@ -67,7 +69,7 @@ export async function GiStandardView({
                 label={t(`embroideryFields.${field}`)}
                 value={
                   f
-                    ? `${f.text} (${f.chars} chars${thread ? `, ${thread}` : ""})`
+                    ? `${f.text} (${tA("view.charCount", { count: f.chars })}${thread ? `, ${thread}` : ""})`
                     : null
                 }
               />

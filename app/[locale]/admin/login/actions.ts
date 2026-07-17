@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { routing } from "@/lib/i18n/routing";
 import { createAuthClient } from "@/lib/supabase/auth-server";
 
@@ -23,9 +24,10 @@ export async function signIn(
   const locale = safeLocale(formData.get("locale"));
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const t = await getTranslations({ locale, namespace: "Admin" });
 
   if (!email || !password) {
-    return { error: "Enter your email and password." };
+    return { error: t("login.missing") };
   }
 
   const supabase = await createAuthClient();
@@ -33,7 +35,7 @@ export async function signIn(
 
   if (error) {
     // Generic message — don't reveal whether the email exists.
-    return { error: "Invalid email or password." };
+    return { error: t("login.invalid") };
   }
 
   // redirect() throws internally; it must be OUTSIDE the try/return path above.

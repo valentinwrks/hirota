@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/navigation";
 import { SECTIONS } from "./AdminSidebar";
 import { LocaleSwitcher } from "@/components/ui/LocaleSwitcher";
-import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
 import { MenuIcon, CloseIcon } from "@/components/ui/icons";
 
 // Mobile (< md) admin navigation: a "menu" trigger in the TopBar opening a
@@ -21,6 +20,7 @@ export function AdminMobileNav({
   signOut: ReactNode;
 }) {
   const t = useTranslations("TopBar");
+  const tAdmin = useTranslations("Admin");
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -35,7 +35,7 @@ export function AdminMobileNav({
         type="button"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
-        aria-label={open ? "close" : "menu"}
+        aria-label={open ? t("close") : t("menu")}
         className={
           "cursor-pointer flex items-center " +
           (open ? "text-foreground-strong" : "text-foreground")
@@ -53,7 +53,7 @@ export function AdminMobileNav({
           {/* Scrim — tap anywhere outside the dropdown to close. */}
           <button
             type="button"
-            aria-label="close"
+            aria-label={t("close")}
             onClick={() => setOpen(false)}
             className="md:hidden fixed inset-x-0 top-[26px] bottom-0 z-40 bg-black/10 cursor-default"
           />
@@ -61,11 +61,11 @@ export function AdminMobileNav({
           {/* Dropdown panel under the TopBar. */}
           <div className="md:hidden fixed inset-x-0 top-[26px] z-50 border-b border-border bg-white/80 backdrop-blur-md">
             <div className="h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none font-bold text-foreground-strong">
-              HIROTA / ADMIN
+              {tAdmin("title")}
             </div>
 
             <nav className="flex flex-col p-1.5 pb-3 gap-0.5">
-              {SECTIONS.map(({ href, label }) => {
+              {SECTIONS.map(({ href, key }) => {
                 const active =
                   pathname === href || pathname.startsWith(`${href}/`);
                 return (
@@ -80,16 +80,16 @@ export function AdminMobileNav({
                         : "px-2 py-1 leading-none text-foreground hover:bg-foreground-hover-subtle"
                     }
                   >
-                    {label}
+                    {tAdmin(`sections.${key}`)}
                   </Link>
                 );
               })}
             </nav>
 
-            {/* language / currency — the desktop TopBar group, relocated. */}
-            <div className="flex items-center justify-between border-t border-border px-1.5 py-2 text-[13px] leading-none">
+            {/* language — the desktop TopBar switch, relocated. The admin is
+                JPY-only, so no currency switch here (see the shell layout). */}
+            <div className="flex items-center border-t border-border px-1.5 py-2 text-[13px] leading-none">
               <LocaleSwitcher label={t("language")} />
-              <CurrencySwitcher label={t("currency")} />
             </div>
 
             <div className="border-t border-border p-1.5">{signOut}</div>

@@ -1,6 +1,7 @@
+import { getTranslations } from "next-intl/server";
 import type { Database } from "@/lib/database.types";
 import { parseSnapshot } from "@/lib/admin/orders/snapshot";
-import { jpy } from "@/lib/admin/orders/money";
+import { Money } from "./Money";
 import { PriceBreakdownBlock } from "./PriceBreakdownBlock";
 import { SimpleView } from "./views/SimpleView";
 import { ObiView } from "./views/ObiView";
@@ -9,11 +10,11 @@ import { GiCustomView } from "./views/GiCustomView";
 
 type OrderItemRow = Database["public"]["Tables"]["order_items"]["Row"];
 
-const KIND_LABEL: Record<OrderItemRow["kind"], string> = {
-  simple: "Simple",
-  obi: "Obi",
-  gi_standard: "Ready-made gi",
-  gi_custom: "Fully-tailored gi",
+const KIND_KEY: Record<OrderItemRow["kind"], string> = {
+  simple: "kindSimple",
+  obi: "kindObi",
+  gi_standard: "kindGiStandard",
+  gi_custom: "kindGiCustom",
 };
 
 // One line item rendered as a "fax sheet" card: a header (title · kind · qty ·
@@ -21,24 +22,28 @@ const KIND_LABEL: Record<OrderItemRow["kind"], string> = {
 // Everything is pure presentation of order_items — no engine, no recompute (§7).
 export async function OrderItemPanel({ item }: { item: OrderItemRow }) {
   const snapshot = parseSnapshot(item.config);
+  const t = await getTranslations("Admin");
 
   return (
-    <article className="border border-border bg-background">
-      <header className="flex items-start justify-between gap-3 px-3 py-2 border-b border-border">
+    <article className="border border-border">
+      {/* Highlighted like the configurators' selected cells (dark fill, paper
+          text). No border-b: the first Section below brings its own border-t —
+          both together would read as a doubled (2px) separator. */}
+      <header className="flex items-start justify-between gap-3 px-3 py-2 bg-foreground-selected text-background">
         <div className="min-w-0">
-          <h3 className="font-bold text-foreground truncate">{item.title}</h3>
-          <p className="text-[11px] text-foreground-muted leading-none mt-0.5">
-            {KIND_LABEL[item.kind]} · qty {item.quantity}
+          <h3 className="text-sm font-bold truncate">{item.title}</h3>
+          <p className="text-[11px] text-background/70 leading-none mt-0.5">
+            {t(`item.${KIND_KEY[item.kind]}`)} · {t("item.qty", { count: item.quantity })}
           </p>
         </div>
-        <p className="font-bold text-foreground tabular-nums whitespace-nowrap">
-          {jpy(item.line_total_jpy)}
+        <p className="text-sm font-bold tabular-nums whitespace-nowrap">
+          <Money amountJpy={item.line_total_jpy} />
         </p>
       </header>
 
       {snapshot === null ? (
-        <div className="px-3 py-2 text-[12px] text-foreground-muted">
-          Snapshot unavailable — this line could not be read.
+        <div className="px-3 py-2 border-t border-border text-[12px] text-foreground-muted">
+          {t("item.snapshotUnavailable")}
         </div>
       ) : (
         <>

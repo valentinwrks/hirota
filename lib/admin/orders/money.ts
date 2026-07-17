@@ -3,6 +3,12 @@ import type { Database } from "@/lib/database.types";
 
 type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
 
+// The admin is JPY-only internally (HIROTA's source of truth). Every amount in
+// the panel renders through this — a plain, no-conversion JPY format.
+export function formatJpy(amountJpy: number): string {
+  return formatMoney(amountJpy, "JPY", 1);
+}
+
 // What the admin shows for an order total: JPY is the source of truth and always
 // shown; when the buyer paid in USD we ALSO show the display-currency amount at
 // the fx rate RECORDED on the order (never a live rate — that's what they saw).
@@ -24,7 +30,3 @@ export function orderMoney(
   return { jpy, display: null };
 }
 
-/** JPY-only formatter for line-item / breakdown amounts (the fax sheet is ¥). */
-export function jpy(amountJpy: number): string {
-  return formatMoney(amountJpy, "JPY", 1);
-}

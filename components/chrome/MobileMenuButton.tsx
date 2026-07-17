@@ -23,9 +23,9 @@ export function MobileMenuButton() {
       }
     >
       {menuOpen ? (
-        <CloseIcon className="w-[17px] h-[17px]" />
+        <CloseIcon className="w-[19px] h-[19px]" />
       ) : (
-        <MenuIcon className="w-[17px] h-[17px]" />
+        <MenuIcon className="w-[19px] h-[19px]" />
       )}
     </button>
   );

@@ -30,7 +30,7 @@ export function MenuIcon({ className = "w-4 h-4" }: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={2}
       className={className}
       aria-hidden="true"
     >
@@ -51,6 +51,24 @@ export function CloseIcon({ className = "w-4 h-4" }: IconProps) {
       aria-hidden="true"
     >
       <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
+// Caret for custom dropdown triggers (the native <select> arrow's replacement).
+export function ChevronDownIcon({ className = "w-3 h-3" }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6" />
     </svg>
   );
 }

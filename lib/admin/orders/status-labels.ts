@@ -4,34 +4,10 @@ import type {
   ShippingStatus,
 } from "@/lib/admin/orders/status";
 
-// English labels for the three status axes. Order statuses are admin-only
-// concepts (not part of the store's localized catalog), and the admin is
-// English-only by decision — so these live here, hardcoded, as the single
-// source of truth shared by the list, badges, and status controls.
-
-export const PAYMENT_LABELS: Record<PaymentStatus, string> = {
-  pending: "Pending",
-  paid: "Paid",
-  cancelled: "Cancelled",
-};
-
-export const PRODUCTION_LABELS: Record<ProductionStatus, string> = {
-  pending: "Pending",
-  in_production: "In production",
-  ready: "Ready",
-};
-
-export const SHIPPING_LABELS: Record<ShippingStatus, string> = {
-  pending: "Not shipped",
-  shipped: "Shipped",
-  delivered: "Delivered",
-};
-
-export const AXIS_LABELS = {
-  payment: "Payment",
-  production: "Production",
-  shipping: "Shipping",
-} as const;
+// Labels for the three status axes now live in i18n (the Admin.status / Admin.axis
+// namespaces, EN/JA) and are resolved at each call site with useTranslations /
+// getTranslations. This module keeps only the language-agnostic VISUAL tone of
+// each value, shared by the list, badges, and status controls.
 
 // "Done-ness" of a value on its axis, for subtle visual emphasis. terminal =
 // the axis is complete (paid / ready / delivered); active = in progress;

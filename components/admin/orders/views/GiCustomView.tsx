@@ -10,13 +10,16 @@ const MEASURE_KEYS = [
 // Pattern C (fully-tailored gi) — the most important admin screen: a tailor must
 // be able to BUILD the garment from this alone (§8.4). Everything is read from
 // the FROZEN summary/breakdown; nothing is recomputed (measurements, char
-// counts, prices are all as captured at purchase). Labels forced to English.
+// counts, prices are all as captured at purchase). Domain VALUE labels come from
+// the store's GiCustom namespace in the active locale; the structural field
+// labels come from Admin.view.
 export async function GiCustomView({
   snapshot,
 }: {
   snapshot: GiCustomConfiguredSnapshot;
 }) {
-  const t = await getTranslations({ locale: "en", namespace: "GiCustom" });
+  const t = await getTranslations("GiCustom");
+  const tA = await getTranslations("Admin");
   const s = snapshot.summary;
 
   const m = s.measurements ?? {};
@@ -28,54 +31,54 @@ export async function GiCustomView({
 
   return (
     <>
-      <Section title="Spec">
+      <Section title={tA("view.spec")}>
         <Grid>
-          <Field label="Model" value={t(`modelNames.${s.modelSlug}`)} />
-          <Field label="Purchase unit" value={t(`purchaseUnits.${s.purchaseUnit}`)} />
-          <Field label="Size band" value={t(`bands.${s.bandCode}`)} />
-          <Field label="Label" value={s.labelName} />
+          <Field label={tA("view.model")} value={t(`modelNames.${s.modelSlug}`)} />
+          <Field label={tA("view.purchaseUnit")} value={t(`purchaseUnits.${s.purchaseUnit}`)} />
+          <Field label={tA("view.sizeBand")} value={t(`bands.${s.bandCode}`)} />
+          <Field label={tA("view.label")} value={s.labelName} />
           <Field
-            label="Shrinkage"
+            label={tA("view.shrinkage")}
             value={s.shrinkage ? t(`shrinkageOptions.${s.shrinkage}`) : null}
           />
         </Grid>
       </Section>
 
-      <Section title="Measurements (cm)">
+      <Section title={tA("view.measurements")}>
         <Grid cols={2}>
           {MEASURE_KEYS.map((k) => {
             const v = m[k];
             const value =
               v != null
-                ? `${v} cm${k === "f" ? " · not used for sizing" : ""}`
+                ? `${v} cm${k === "f" ? ` · ${tA("view.notForSizing")}` : ""}`
                 : null;
             return <Field key={k} label={t(`measureLabels.${k}`)} value={value} />;
           })}
         </Grid>
       </Section>
 
-      <Section title="Options">
+      <Section title={tA("view.options")}>
         <Grid>
           <Field
-            label="Collar"
+            label={tA("view.collar")}
             value={s.collar ? t(`collarOptions.${s.collar}`) : null}
           />
-          <Field label="Hems" value={t(`hemOptions.${hemKey}`)} />
-          <Field label="Side ties" value={s.sideTies ? "Yes" : false} />
+          <Field label={tA("view.hems")} value={t(`hemOptions.${hemKey}`)} />
+          <Field label={tA("view.sideTies")} value={s.sideTies ? tA("view.yes") : false} />
           <Field
-            label="High waist"
+            label={tA("view.highWaist")}
             value={s.highWaistCm != null ? `${s.highWaistCm} cm` : null}
           />
-          <Field label="Chest ties" value={s.chestTies ? "Yes" : false} />
-          <Field label="Elastic waist" value={s.elasticWaist ? "Yes" : false} />
+          <Field label={tA("view.chestTies")} value={s.chestTies ? tA("view.yes") : false} />
+          <Field label={tA("view.elasticWaist")} value={s.elasticWaist ? tA("view.yes") : false} />
           <Field
-            label="Mfr logo"
+            label={tA("view.mfrLogo")}
             value={s.mfrLogo ? t(`mfrLogoPlacements.${s.mfrLogo}`) : null}
           />
         </Grid>
       </Section>
 
-      <Section title="Embroidery">
+      <Section title={tA("view.embroidery")}>
         <Grid>
           {EMB_FIELDS.map((field) => {
             const f = byField.get(field);
@@ -85,7 +88,7 @@ export async function GiCustomView({
                 label={t(`embroideryFields.${field}`)}
                 value={
                   f
-                    ? `${f.text} (${f.chars} chars${thread ? `, ${thread}` : ""})`
+                    ? `${f.text} (${tA("view.charCount", { count: f.chars })}${thread ? `, ${thread}` : ""})`
                     : null
                 }
               />
@@ -94,7 +97,7 @@ export async function GiCustomView({
         </Grid>
       </Section>
 
-      <Section title="Body data (sanity — not used to build)">
+      <Section title={tA("view.bodyData")}>
         <Grid cols={3}>
           <Field
             label={t("bodyHeight")}

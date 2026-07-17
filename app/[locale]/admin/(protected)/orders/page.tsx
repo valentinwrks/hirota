@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { listOrders, type OrderFilters } from "@/lib/admin/orders/queries";
 import {
   asPayment,
@@ -7,11 +8,6 @@ import {
   PRODUCTION_STATUSES,
   SHIPPING_STATUSES,
 } from "@/lib/admin/orders/status";
-import {
-  PAYMENT_LABELS,
-  PRODUCTION_LABELS,
-  SHIPPING_LABELS,
-} from "@/lib/admin/orders/status-labels";
 import { OrderColumnFilter } from "@/components/admin/orders/OrderFilters";
 import { OrderRow } from "@/components/admin/orders/OrderRow";
 
@@ -33,45 +29,54 @@ export default async function AdminOrdersPage({
 
   const orders = await listOrders(filters);
 
+  const t = await getTranslations("Admin");
+  // Translated status labels, keyed by value, passed to the column filters.
+  const labelsFor = (axis: "payment" | "production" | "shipping", values: readonly string[]) =>
+    Object.fromEntries(values.map((v) => [v, t(`status.${axis}.${v}`)]));
+
   return (
     <div>
       {orders.length === 0 ? (
         <div className="p-6 text-[13px] text-foreground-muted">
-          No orders match these filters.
+          {t("orders.empty")}
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-[12px] border-collapse">
+        <div className="p-3 overflow-x-auto scrollbar-thin">
+          {/* Same framed, content-width table as the pricing editors: 4-sided
+              border, last row drops its faint border-b so the frame's bottom
+              edge stays strong (cell borders outrank the table's in collapse). */}
+          <table className="w-full max-w-7xl text-[12px] border-collapse border border-border [&_tbody_tr:last-child>td]:border-b-0">
             <thead>
+              {/* Plain header, matching the pricing tables: no dark fill, just bold foreground text. */}
               <tr className="text-foreground text-left">
-                <th className="px-3 py-1.5 border-b border-border font-bold">#</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">{t("orders.colNumber")}</th>
                 {/* Date + Items are secondary — hidden below md; the detail page has them. */}
-                <th className="px-3 py-1.5 border-b border-border font-bold max-md:hidden">Date (UTC)</th>
-                <th className="px-3 py-1.5 border-b border-border font-bold">Customer</th>
-                <th className="px-3 py-1.5 border-b border-border font-bold max-md:hidden">Items</th>
-                <th className="px-3 py-1.5 border-b border-border font-bold">Total</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold max-md:hidden">{t("orders.colDate")}</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">{t("orders.colCustomer")}</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold max-md:hidden">{t("orders.colItems")}</th>
+                <th className="px-3 py-1.5 border-b border-border font-bold">{t("orders.colTotal")}</th>
                 <th className="px-3 py-1.5 border-b border-border font-bold">
                   <OrderColumnFilter
-                    label="Payment"
+                    label={t("axis.payment")}
                     param="payment"
                     values={PAYMENT_STATUSES}
-                    labels={PAYMENT_LABELS}
+                    labels={labelsFor("payment", PAYMENT_STATUSES)}
                   />
                 </th>
                 <th className="px-3 py-1.5 border-b border-border font-bold">
                   <OrderColumnFilter
-                    label="Production"
+                    label={t("axis.production")}
                     param="production"
                     values={PRODUCTION_STATUSES}
-                    labels={PRODUCTION_LABELS}
+                    labels={labelsFor("production", PRODUCTION_STATUSES)}
                   />
                 </th>
                 <th className="px-3 py-1.5 border-b border-border font-bold">
                   <OrderColumnFilter
-                    label="Shipping"
+                    label={t("axis.shipping")}
                     param="shipping"
                     values={SHIPPING_STATUSES}
-                    labels={SHIPPING_LABELS}
+                    labels={labelsFor("shipping", SHIPPING_STATUSES)}
                   />
                 </th>
               </tr>

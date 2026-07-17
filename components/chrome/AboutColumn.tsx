@@ -17,7 +17,7 @@ export async function AboutColumn() {
         <MobileMenuButton />
       </div>
 
-      <div className="mt-2 mx-1.5 text-xs leading-tight">
+      <div className="mt-2 mx-1.5 pb-8 text-xs leading-tight">
         <p>
           <span className="font-bold">空手衣のヒロタ Hirota Co., Ltd</span> {t("intro")}
         </p>

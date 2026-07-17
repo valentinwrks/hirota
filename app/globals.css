@@ -9,14 +9,14 @@
   --background: #ffffff;
 
   /* --- Foreground: negro con transparencia, por rol ----------------- */
-  --foreground: rgba(0, 0, 0, 0.5);
+  --foreground: rgba(0, 0, 0, 0.50);
   --foreground-muted: rgba(0, 0, 0, 0.4);
   --foreground-strong: rgba(0, 0, 0, 0.6);
   --foreground-selected: rgba(0, 0, 0, 0.6); 
   --foreground-pending: rgba(0, 0, 0, 0.35);
   --foreground-blocked: rgba(0, 0, 0, 0.2);
   --foreground-hover: rgba(0, 0, 0, 0.1);
-  --foreground-hover-subtle: rgba(0, 0, 0, 0.04);
+  --foreground-hover-subtle: rgba(0, 0, 0, 0.05);
 
   /* --- Background: superficies translúcidas ------------------------- */
   --background-header: rgba(255, 255, 255, 0.3); /* headers sticky (con blur) */
@@ -154,6 +154,28 @@ svg {
 }
 .scrollbar-none {
   scrollbar-width: none;
+}
+
+/* Utility: thin, tokenised scrollbar for the admin tables that scroll when
+   they outgrow their column. Square thumb + transparent track to sit with the
+   1px-border spreadsheet look, coloured from the foreground palette. */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 0;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* Hide number-input spinners (measurement/qty fields), matching the prototype. */

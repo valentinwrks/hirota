@@ -1,12 +1,10 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/lib/i18n/navigation";
 import type { OrderListRow } from "@/lib/admin/orders/queries";
-import { orderMoney } from "@/lib/admin/orders/money";
+import { formatJpy } from "@/lib/admin/orders/money";
 import {
-  PAYMENT_LABELS,
-  PRODUCTION_LABELS,
-  SHIPPING_LABELS,
   PAYMENT_TONE,
   PRODUCTION_TONE,
   SHIPPING_TONE,
@@ -23,8 +21,8 @@ function fmtDate(iso: string): string {
 // working — its click stops propagation so the row handler doesn't double-fire.
 export function OrderRow({ order }: { order: OrderListRow }) {
   const router = useRouter();
+  const t = useTranslations("Admin");
   const href = `/admin/orders/${order.order_number}`;
-  const money = orderMoney(order, order.total_jpy);
 
   return (
     <tr
@@ -51,24 +49,23 @@ export function OrderRow({ order }: { order: OrderListRow }) {
         {order.item_count}
       </td>
       <td className="px-3 py-1.5 border-b border-border-blocked tabular-nums text-foreground whitespace-nowrap">
-        {money.display ? `${money.display} · ` : ""}
-        {money.jpy}
+        {formatJpy(order.total_jpy)}
       </td>
       <td className="px-3 py-1.5 border-b border-border-blocked">
         <StatusBadge
-          label={PAYMENT_LABELS[order.payment_status]}
+          label={t(`status.payment.${order.payment_status}`)}
           tone={PAYMENT_TONE[order.payment_status]}
         />
       </td>
       <td className="px-3 py-1.5 border-b border-border-blocked">
         <StatusBadge
-          label={PRODUCTION_LABELS[order.production_status]}
+          label={t(`status.production.${order.production_status}`)}
           tone={PRODUCTION_TONE[order.production_status]}
         />
       </td>
       <td className="px-3 py-1.5 border-b border-border-blocked">
         <StatusBadge
-          label={SHIPPING_LABELS[order.shipping_status]}
+          label={t(`status.shipping.${order.shipping_status}`)}
           tone={SHIPPING_TONE[order.shipping_status]}
         />
       </td>

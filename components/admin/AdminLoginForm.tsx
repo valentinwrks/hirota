@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { useTranslations } from "next-intl";
 import { signIn, type LoginState } from "@/app/[locale]/admin/login/actions";
 
 const initialState: LoginState = { error: null };
@@ -10,6 +11,7 @@ const initialState: LoginState = { error: null };
 // admin, out of scope). The two fields reuse the obi configurator's embroidery
 // input cells verbatim: a border-collapsed OptionTable of EmbroideryInputRows.
 export function AdminLoginForm({ locale }: { locale: string }) {
+  const t = useTranslations("Admin");
   const [state, formAction, pending] = useActionState(signIn, initialState);
 
   return (
@@ -19,14 +21,14 @@ export function AdminLoginForm({ locale }: { locale: string }) {
       <table className="w-full border-collapse text-xs font-bold">
         <tbody>
           <FieldRow
-            label="Email"
+            label={t("login.email")}
             name="email"
             type="email"
             autoComplete="username"
             pending={pending}
           />
           <FieldRow
-            label="Password"
+            label={t("login.password")}
             name="password"
             type="password"
             autoComplete="current-password"
@@ -49,7 +51,7 @@ export function AdminLoginForm({ locale }: { locale: string }) {
             : "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer")
         }
       >
-        {pending ? "Signing in…" : "Sign in"}
+        {pending ? t("login.signingIn") : t("login.signIn")}
       </button>
     </form>
   );

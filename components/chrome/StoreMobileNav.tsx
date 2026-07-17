@@ -61,22 +61,14 @@ export function StoreMobileNav() {
       </button>
 
       {menuOpen && (
-        <>
-          {/* Scrim — starts below the section bar so the menu trigger and the
-              TopBar cart toggle stay usable; tap anywhere on it to close. */}
-          <button
-            type="button"
-            aria-label={t("close")}
-            onClick={closeMenu}
-            className="md:hidden fixed inset-x-0 top-[52px] bottom-0 z-40 bg-black/10 cursor-default"
-          />
-
-          {/* Dropdown panel hanging from the shop section bar — one single
-              block: the categories, then the language/currency switches at the
-              same size, no internal separators. (The hirota section is reached
-              via the TopBar logo → `/`, not from here.) */}
-          <div className="md:hidden fixed inset-x-0 top-[52px] z-50 border-b border-border bg-white/80 backdrop-blur-md">
-            <nav className="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-[18px] leading-none">
+        // Dropdown panel hanging from the shop section bar — one single block:
+        // the categories, then the language/currency switches at the same size,
+        // no internal separators. No scrim over the page, so it keeps scrolling
+        // behind the open menu; the menu closes via the hamburger (✕), picking a
+        // category, or any navigation. (The hirota section is reached via the
+        // TopBar logo → `/`, not from here.)
+        <div className="md:hidden fixed inset-x-0 top-[52px] z-50 border-b border-border backdrop-blur-md">
+            <nav className="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-[14px] leading-none">
               {CATEGORIES.map((category) => {
                 const href = `/${category}`;
                 return (
@@ -98,14 +90,14 @@ export function StoreMobileNav() {
               })}
 
               {/* language / currency — the desktop TopBar group, relocated:
-                  stacked, set off from the links by vertical space alone. */}
-              <div className="mt-4 flex flex-col items-baseline gap-1">
+                  one row, language at the left edge and currency at the right,
+                  set off from the links by vertical space. */}
+              <div className="mt-4 flex w-full items-baseline justify-between">
                 <LocaleSwitcher label={t("language")} />
                 <CurrencySwitcher label={t("currency")} />
               </div>
             </nav>
-          </div>
-        </>
+        </div>
       )}
     </>
   );
