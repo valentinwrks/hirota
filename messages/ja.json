@@ -200,6 +200,9 @@
   },
   "Nav": {
     "shop": "ショップ",
+    "karateGiGroup": "空手衣",
+    "karateGiCustomShort": "フルオーダー",
+    "karateGiStandardShort": "既製",
     "karateGiCustom": "空手衣（フルオーダー）",
     "karateGiStandard": "空手衣（既製）",
     "obi": "帯",
@@ -734,5 +737,9 @@
     "errorInvalidConfig": "商品のいずれかが設定どおりにご購入いただけなくなりました。カートをご確認ください。",
     "errorInsufficientStock": "商品のいずれかが在庫切れになりました。カートを調整して再度お試しください。",
     "errorGeneric": "ご注文の処理中に問題が発生しました。もう一度お試しください。"
+  },
+  "Configurator": {
+    "configurator": "設定",
+    "yourProduct": "あなたの製品"
   }
 }

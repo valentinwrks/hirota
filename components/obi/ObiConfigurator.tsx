@@ -30,6 +30,7 @@ import {
   type ObiThreadColor,
 } from "@/lib/obi/model";
 import type { LabelOption } from "@/lib/obi/queries";
+import { ConfiguratorLayout } from "@/components/configurator/ConfiguratorLayout";
 
 // The obi configurator (Pattern B2). A client component: it runs the PURE
 // pricing engine against the reference data passed as props (no Supabase here,
@@ -434,13 +435,9 @@ export function ObiConfigurator({
   }
 
   return (
-    // Below md the 60/40 columns stack: dependency chain first, then figure +
-    // summary + CTA — configure top-down, price at the end.
-    <div className="flex w-full max-md:flex-col">
-      {/* ---------------------------------------------------------------- */}
-      {/* LEFT — the dependency chain + options                            */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="basis-[60%] max-md:basis-auto pt-2 px-2.5 pb-10 max-md:pb-0 leading-tight">
+    <ConfiguratorLayout
+      left={
+        <>
         {/* Color — no upstream: always selectable. Grouped by grade/use, each
             group captioned like the legacy "jacket/pants measurements" subtitles. */}
         <p className="text-lg font-bold mb-1.5">{t("color")}</p>
@@ -603,12 +600,10 @@ export function ObiConfigurator({
             </OptionRow>
           ))}
         </OptionTable>
-      </div>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* RIGHT — figure placeholder, material blurb, live features + CTA  */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="basis-[40%] max-md:basis-auto flex flex-col mt-8 max-md:mt-4 mb-5 max-md:mb-10 mx-8 max-md:mx-2.5 min-w-0">
+        </>
+      }
+      right={
+        <>
         {/* Obi figure (mirrors the karate-gi figure in the legacy UI). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -712,8 +707,9 @@ export function ObiConfigurator({
             )}
           </>
         )}
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }
 

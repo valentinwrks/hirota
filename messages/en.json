@@ -200,6 +200,9 @@
   },
   "Nav": {
     "shop": "shop",
+    "karateGiGroup": "karate-gi",
+    "karateGiCustomShort": "fully-tailored",
+    "karateGiStandardShort": "ready-made",
     "karateGiCustom": "karate-gi (fully-tailored)",
     "karateGiStandard": "karate-gi (ready-made)",
     "obi": "obi",
@@ -734,5 +737,9 @@
     "errorInvalidConfig": "One of your items is no longer available as configured. Please review your cart.",
     "errorInsufficientStock": "One of your items just went out of stock. Please adjust your cart and try again.",
     "errorGeneric": "Something went wrong placing your order. Please try again."
+  },
+  "Configurator": {
+    "configurator": "Configurator",
+    "yourProduct": "Your product"
   }
 }

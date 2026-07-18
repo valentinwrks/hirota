@@ -50,6 +50,7 @@ import {
 import type { GiEmbroiderySummaryField } from "@/lib/cart/types";
 import type { LabelOption } from "@/lib/obi/queries";
 import { KarateGiVector } from "@/components/karate-gi/KarateGiVector";
+import { ConfiguratorLayout } from "@/components/configurator/ConfiguratorLayout";
 
 // The custom (made-to-order) karate-gi configurator (Pattern C) — HIROTA's
 // flagship. A client component: it runs the PURE pricing engine against the
@@ -672,13 +673,9 @@ export function GiCustomConfigurator({
   }
 
   return (
-    // Below md the 60/40 columns stack: cascade first, then figure + summary
-    // + CTA — configure top-down, price at the end.
-    <div className="flex w-full max-md:flex-col">
-      {/* ---------------------------------------------------------------- */}
-      {/* LEFT — the cascade + part-tagged optionals                       */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="basis-[60%] max-md:basis-auto pt-2 px-2.5 pb-10 max-md:pb-0 leading-tight">
+    <ConfiguratorLayout
+      left={
+        <>
         {/* Model — no upstream: always selectable. */}
         <p className="text-lg font-bold mb-1.5">{t("model")}</p>
         <OptionTable>
@@ -1056,12 +1053,10 @@ export function GiCustomConfigurator({
             </OptionRow>
           ))}
         </OptionTable>
-      </div>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* RIGHT — figure placeholder, model info, live features + CTA      */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="basis-[40%] max-md:basis-auto flex flex-col mt-8 max-md:mt-4 mb-5 max-md:mb-10 mx-8 max-md:mx-2.5 min-w-0">
+        </>
+      }
+      right={
+        <>
         <KarateGiVector
           aria-label={t("figureAlt")}
           className="w-[82.5%] max-md:w-[65%] mx-auto select-none text-black"
@@ -1141,8 +1136,9 @@ export function GiCustomConfigurator({
             )}
           </>
         )}
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }
 

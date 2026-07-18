@@ -11,6 +11,7 @@ import { CheckoutSheet } from "@/components/checkout/CheckoutSheet";
 import { MobileChromeProvider } from "@/components/chrome/MobileChromeProvider";
 import { MobilePanel } from "@/components/chrome/MobilePanel";
 import { StoreMobileNav } from "@/components/chrome/StoreMobileNav";
+import { StoreMobileMenu } from "@/components/chrome/StoreMobileMenu";
 
 // Store chrome layout — the three/four-column "spreadsheet" storefront shell.
 // Lives in the (store) route group so it wraps ONLY the public store, not the
@@ -33,6 +34,9 @@ export default async function StoreLayout({
             {/* Fixed 26px top bar. Below md the right group is replaced by the
                 mobile cart + menu controls (StoreMobileNav). */}
             <TopBar mobile={<StoreMobileNav />} />
+            {/* Mobile menu panel — a TopBar sibling (z below it) so the opaque
+                bar hides it while it slides in/out from behind. */}
+            <StoreMobileMenu />
             {/* Column layout below the bar, filling the viewport.
                 Below md: single column — shop inline; about and cart become
                 full-screen overlays (MobilePanel) driven by the mobile menu.
