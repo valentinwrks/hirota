@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { usePersistentState } from "@/lib/hooks/usePersistentState";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import {
@@ -201,21 +202,24 @@ export function GiCustomConfigurator({
   const defaultLabelId =
     labels.find((l) => l.name === "Hirota")?.id ?? labels[0]?.id ?? 1;
 
-  const [state, setState] = useState<GiCustomState>({
-    measure: emptyMeasure(),
-    sideTies: false,
-    chestTies: false,
-    elasticWaist: false,
-    highWaistText: "",
-    lapelText: "",
-    shoulderText: "",
-    chestText: "",
-    pantsText: "",
-    heightText: "",
-    weightText: "",
-    waistText: "",
-    labelId: defaultLabelId,
-  });
+  const [state, setState] = usePersistentState<GiCustomState>(
+    "hirota:config:gi-custom",
+    {
+      measure: emptyMeasure(),
+      sideTies: false,
+      chestTies: false,
+      elasticWaist: false,
+      highWaistText: "",
+      lapelText: "",
+      shoulderText: "",
+      chestText: "",
+      pantsText: "",
+      heightText: "",
+      weightText: "",
+      waistText: "",
+      labelId: defaultLabelId,
+    },
+  );
   const [justAdded, setJustAdded] = useState(false);
 
   // Reconcile downstream selections whenever an upstream axis (model / purchase
@@ -309,13 +313,13 @@ export function GiCustomConfigurator({
 
   const update = useCallback(
     (patch: Partial<GiCustomState>) => setState((s) => reconcile({ ...s, ...patch })),
-    [reconcile],
+    [reconcile, setState],
   );
 
   const setMeasure = useCallback(
     (letter: MeasureLetter, value: string) =>
       setState((s) => reconcile({ ...s, measure: { ...s.measure, [letter]: value } })),
-    [reconcile],
+    [reconcile, setState],
   );
 
   const modelDef = state.modelSlug ? modelBySlug.get(state.modelSlug) : undefined;

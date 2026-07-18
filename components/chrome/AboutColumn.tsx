@@ -19,7 +19,7 @@ export async function AboutColumn() {
 
       <div className="mt-2 mx-1.5 pb-8 text-xs leading-tight">
         <p>
-          <span className="font-bold">空手衣のヒロタ Hirota Co., Ltd</span> {t("intro")}
+          <span className="font-bold">Hirota Co., Ltd (空手衣のヒロタ)</span> {t("intro")}
         </p>
         <p className="mt-2">{t("history")}</p>
 
@@ -79,7 +79,7 @@ export async function AboutColumn() {
 
         {/* visit policy */}
         <div className="mt-8">
-          <p className="uppercase">{t("visitTitle")}:</p>
+          <p className="uppercase font-bold">{t("visitTitle")}</p>
           <p>{t("visitP1")}</p>
           <p className="mt-2">{t("visitP2")}</p>
           <p className="mt-2">{t("visitP3")}</p>

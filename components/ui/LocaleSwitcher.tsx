@@ -7,13 +7,13 @@ import { usePathname, useRouter } from "@/lib/i18n/navigation";
 import { type Locale } from "@/lib/i18n/routing";
 
 // Display order + labels. The routing locale codes stay "en"/"ja" (URLs, next-intl);
-// only the surfaced label differs (ja → "JP"). JP is shown first per design.
+// only the surfaced label differs (ja → "JA"). JA is shown first per design.
 const LOCALE_ORDER: { locale: Locale; label: string }[] = [
-  { locale: "ja", label: "JP" },
+  { locale: "ja", label: "JA" },
   { locale: "en", label: "EN" },
 ];
 
-// EN/JP switch. Navigates to the same path under the chosen locale (next-intl
+// EN/JA switch. Navigates to the same path under the chosen locale (next-intl
 // locale-aware router preserves the current route + params).
 export function LocaleSwitcher({ label }: { label: string }) {
   const active = useLocale();

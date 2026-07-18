@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { usePersistentState } from "@/lib/hooks/usePersistentState";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import {
@@ -154,11 +155,14 @@ export function ObiConfigurator({
 
   const defaultLabelId = labels.find((l) => l.name === "Hirota")?.id ?? labels[0]?.id ?? 1;
 
-  const [state, setState] = useState<ObiState>({
-    endAText: "",
-    endBText: "",
-    labelId: defaultLabelId,
-  });
+  const [state, setState] = usePersistentState<ObiState>(
+    "hirota:config:obi",
+    {
+      endAText: "",
+      endBText: "",
+      labelId: defaultLabelId,
+    },
+  );
   const [justAdded, setJustAdded] = useState(false);
 
   // Reconcile downstream axes + threads whenever an upstream axis changes. Pure
@@ -204,7 +208,7 @@ export function ObiConfigurator({
 
   const update = useCallback(
     (patch: Partial<ObiState>) => setState((s) => reconcile({ ...s, ...patch })),
-    [reconcile],
+    [reconcile, setState],
   );
 
   // Every table is rendered in full from the start; options become muted +
