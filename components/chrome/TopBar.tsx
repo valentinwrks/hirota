@@ -26,7 +26,7 @@ export async function TopBar({
   const t = await getTranslations("TopBar");
 
   return (
-    <header className="fixed top-0 left-0 w-full h-[26px] border-y border-border max-md:border-y-0 bg-white z-50 flex items-center justify-between pl-1 pr-2 pb-[1px] select-none">
+    <header className="fixed top-0 left-0 w-full h-[26px] border-y border-border max-md:border-y-0 bg-white md:bg-white/50 z-50 flex items-center justify-between pl-1 pr-2 pb-[1px] select-none">
       {/* Logo — links to the hirota section in the store (see LogoLink). */}
       <LogoLink alt={t("logoAlt")} />
       <div

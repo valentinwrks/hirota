@@ -37,7 +37,7 @@ Mobile is `< md` (768px): 390×844. Desktop check: 1440×900.
 ## Flows worth driving
 
 - Catalog → PDP → ADD TO CART → cart → CHECKOUT sheet (simulated payment).
-- Configurators: `/en/karate-gi-custom`, `/karate-gi-standard`, `/obi`.
+- Configurators: `/en/karate-gi` (ready-made / fully-tailored radio), `/obi`.
 - Mobile chrome: `cart` button in the TopBar; `menu` trigger in the "shop"
   section bar (dropdown hangs at top-[52px]: categories/switchers).
   The hirota (about) overlay IS the store index route `/`: on mobile that root

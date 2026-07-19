@@ -200,11 +200,7 @@
   },
   "Nav": {
     "shop": "shop",
-    "karateGiGroup": "karate-gi",
-    "karateGiCustomShort": "fully-tailored",
-    "karateGiStandardShort": "ready-made",
-    "karateGiCustom": "karate-gi (fully-tailored)",
-    "karateGiStandard": "karate-gi (ready-made)",
+    "karateGi": "karate-gi",
     "obi": "obi",
     "equipment": "equipment",
     "accessories": "accessories",
@@ -355,8 +351,15 @@
       "special": "This is a 4.5 cm wide belt with an extra layer of komi (core), giving it a thicker and more substantial feel. It is stable and makes the wearer look bigger. It is widely used by kata competitors and instructors, and is also commonly purchased as a gift."
     }
   },
+  "KarateGi": {
+    "orderType": "Karate-gi order type",
+    "orderTypeNote": "Select a standard size or customize to your own measurements.",
+    "readyMade": "Ready-made (既製品)",
+    "fullyTailored": "Made-to-order (特別仕立て) — fully-tailored"
+  },
   "GiStandard": {
-    "model": "Karate-gi model",
+    "model": "Model",
+    "modelNote": "Choose a karate-gi fabric.",
     "modelNames": {
       "tsubasa": "Tsubasa (ツバサ)",
       "pinac-kumite": "Pinac Kumite (ピナック組手用)",
@@ -510,7 +513,8 @@
     "disclaimer": "Self-initiated concept build. Not commissioned or endorsed by HIROTA."
   },
   "GiCustom": {
-    "model": "Karate-gi model",
+    "model": "Model",
+    "modelNote": "Choose a karate-gi fabric.",
     "modelNames": {
       "tsubasa": "Tsubasa (ツバサ)",
       "kuu": "Kū (クウ)",
@@ -739,7 +743,9 @@
     "errorGeneric": "Something went wrong placing your order. Please try again."
   },
   "Configurator": {
-    "configurator": "Configurator",
-    "yourProduct": "Your product"
+    "dogiConfigurator": "Karate-gi configurator",
+    "yourDogi": "Your karate-gi",
+    "obiConfigurator": "Obi configurator",
+    "yourObi": "Your obi"
   }
 }

@@ -10,6 +10,11 @@ export const metadata: Metadata = {
   title: "HIROTA — BEST KARATE-GI",
   description:
     "HIROTA — premium Japanese karate-gi and equipment. Self-initiated concept storefront.",
+  // Suppress Chrome/Google's automatic page translation — the app ships its own
+  // EN/JA i18n, so the browser's machine translation would only fight it. Emits
+  // <meta name="google" content="notranslate">; paired with translate="no" on
+  // <html> below for the strongest signal.
+  other: { google: "notranslate" },
 };
 
 // Pre-render both locale shells.
@@ -41,7 +46,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="h-full antialiased">
+    <html lang={locale} translate="no" className="h-full antialiased notranslate">
       {/* NOTE: body background gradient is applied in globals.css — do not touch. */}
       <body className="min-h-full">
         <NextIntlClientProvider messages={messages}>

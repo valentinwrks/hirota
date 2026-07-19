@@ -138,6 +138,21 @@ body::-webkit-scrollbar {
   background: rgb(0 0 0 / 0.1);
 }
 
+/* Active mobile-menu link marker: a hard on/off blink instead of an underline.
+   step-end holds each keyframe's value, so opacity SNAPS 100%↔0% with no
+   intermediate steps (the deliberately "clunky" flicker). */
+@keyframes blinkHard {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.blink-active {
+  animation: blinkHard 1s step-end infinite;
+}
+
 /* Deterrent against casually saving imagery: block drag-to-desktop and text
    selection on every image/SVG. The context-menu block lives in ImageGuard
    (client). Not real protection — DevTools/Network can still fetch the asset. */

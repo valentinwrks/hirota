@@ -141,6 +141,7 @@ export function GiCustomConfigurator({
   giHighWaistPrices,
   giEmbroideryPrices,
   labels,
+  headerField,
 }: {
   giModels: GiModelRow[];
   sizeCharts: SizeChartRow[];
@@ -150,6 +151,9 @@ export function GiCustomConfigurator({
   giHighWaistPrices: GiHighWaistPriceRow[];
   giEmbroideryPrices: GiEmbroideryPriceRow[];
   labels: LabelOption[];
+  /** Optional node rendered as the form's FIRST field (the /karate-gi
+   *  tailoring-mode radio lives here, above "Karate-gi model"). */
+  headerField?: React.ReactNode;
 }) {
   const t = useTranslations("GiCustom");
   const { format } = useCurrency();
@@ -674,10 +678,13 @@ export function GiCustomConfigurator({
 
   return (
     <ConfiguratorLayout
+      variant="dogi"
       left={
         <>
+        {headerField}
         {/* Model — no upstream: always selectable. */}
-        <p className="text-lg font-bold mb-1.5">{t("model")}</p>
+        <p className={"text-lg font-bold mb-[3px]" + (headerField ? " pt-5" : "")}>{t("model")}</p>
+        <p className="text-xs text-foreground leading-tight mb-2">{t("modelNote")}</p>
         <OptionTable>
           {models.map((m) => (
             <OptionRow

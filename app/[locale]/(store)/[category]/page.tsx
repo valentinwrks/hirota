@@ -8,13 +8,7 @@ import { CategoryView } from "@/components/catalog/CategoryView";
 // Pre-render the four category routes per locale.
 export function generateStaticParams() {
   return (
-    [
-      "karate-gi-custom",
-      "karate-gi-standard",
-      "obi",
-      "equipment",
-      "accessories",
-    ] as const
+    ["karate-gi", "obi", "equipment", "accessories"] as const
   ).map((category) => ({ category }));
 }
 

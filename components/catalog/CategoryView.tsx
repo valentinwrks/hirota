@@ -5,8 +5,7 @@ import { ProductGrid } from "@/components/catalog/ProductGrid";
 import { ConfiguratorPlaceholder } from "@/components/catalog/ConfiguratorPlaceholder";
 import { CategorySubHeader } from "@/components/catalog/CategorySubHeader";
 import { ObiConfiguratorSection } from "@/components/obi/ObiConfiguratorSection";
-import { GiStandardConfiguratorSection } from "@/components/gi-standard/GiStandardConfiguratorSection";
-import { GiCustomConfiguratorSection } from "@/components/gi-custom/GiCustomConfiguratorSection";
+import { KarateGiConfiguratorSection } from "@/components/karate-gi/KarateGiConfiguratorSection";
 
 // Renders the center-column content for one nav category: the "products /
 // <category>" sub-header, then either a product grid (simple categories) or the
@@ -27,10 +26,8 @@ export async function CategoryView({
         <ProductGrid products={await getSimpleProducts(category)} locale={locale} />
       ) : category === "obi" ? (
         <ObiConfiguratorSection />
-      ) : category === "karate-gi-standard" ? (
-        <GiStandardConfiguratorSection />
-      ) : category === "karate-gi-custom" ? (
-        <GiCustomConfiguratorSection />
+      ) : category === "karate-gi" ? (
+        <KarateGiConfiguratorSection />
       ) : (
         <ConfiguratorPlaceholder />
       )}

@@ -436,6 +436,7 @@ export function ObiConfigurator({
 
   return (
     <ConfiguratorLayout
+      variant="obi"
       left={
         <>
         {/* Color — no upstream: always selectable. Grouped by grade/use, each

@@ -2,8 +2,7 @@ import { getTranslations } from "next-intl/server";
 import type { NavCategory } from "@/lib/catalog/types";
 
 const CATEGORY_LABEL_KEY: Record<NavCategory, string> = {
-  "karate-gi-custom": "karateGiCustom",
-  "karate-gi-standard": "karateGiStandard",
+  "karate-gi": "karateGi",
   obi: "obi",
   equipment: "equipment",
   accessories: "accessories",

@@ -30,7 +30,9 @@ export function CartColumn() {
           the empty state before localStorage loads. */}
       {!hydrated ? null : items.length === 0 ? (
         <div className="mt-2.5 mx-2.5 text-xs leading-tight">
-          <p>{t("empty")}</p>
+          {/* Larger on the mobile cart flap, where the empty state is the whole
+              full-screen surface; stays compact in the narrow desktop column. */}
+          <p className="max-md:text-lg">{t("empty")}</p>
         </div>
       ) : (
         <>

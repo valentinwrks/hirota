@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/navigation";
 import { type NavCategory } from "@/lib/catalog/types";
 import { useMobileChrome } from "./MobileChromeProvider";
@@ -8,8 +8,7 @@ import { LocaleSwitcher } from "@/components/ui/LocaleSwitcher";
 import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
 
 const CATEGORIES: NavCategory[] = [
-  "karate-gi-custom",
-  "karate-gi-standard",
+  "karate-gi",
   "obi",
   "equipment",
   "accessories",
@@ -26,20 +25,31 @@ const CATEGORIES: NavCategory[] = [
 export function StoreMobileMenu() {
   const t = useTranslations("TopBar");
   const tNav = useTranslations("Nav");
+  const locale = useLocale();
   const { view, menuOpen, setMenuOpen } = useMobileChrome();
   const pathname = usePathname();
 
+  // The Japanese category labels read better bold (weight 700); Latin ones keep
+  // the normal weight.
+  const linkWeight = locale === "ja" ? "font-bold" : "";
+
   const closeMenu = () => setMenuOpen(false);
-  const linkClass = (active: boolean) =>
-    active ? "underline underline-offset-2 decoration-2" : "hover:opacity-60";
 
   // Per-item entrance: fade + rise, staggered on open; delays collapse to 0 on
   // close so the panel just slides back up without a reverse ripple.
+  // NB: Tailwind v4 translate-* utilities set the CSS `translate` property, not
+  // `transform`, so the transition must cover it — `transition-all` does (an
+  // explicit `transition-[opacity,transform]` would animate only the fade).
   const itemClass =
-    "transition-[opacity,transform] duration-150 ease-out " +
-    (menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[30px]");
+    "transition-all duration-150 ease-out " +
+    (menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[40px]");
+  // Hold every item hidden until the panel is most of the way down (PANEL_MS,
+  // just under its 300ms slide), THEN run the stagger — otherwise the first links
+  // would "arrive" while still parked behind the TopBar and you'd never see them
+  // enter. Delays drop to 0 on close so the panel just slides back up.
+  const PANEL_MS = 200;
   const itemDelay = (i: number) => ({
-    transitionDelay: menuOpen ? `${i * 30}ms` : "0ms",
+    transitionDelay: menuOpen ? `${PANEL_MS + i * 40}ms` : "0ms",
   });
 
   return (
@@ -48,46 +58,44 @@ export function StoreMobileMenu() {
       inert={!menuOpen}
       className={
         "md:hidden fixed inset-x-0 top-[26px] z-[45] rounded-b-3xl bg-white " +
-        "shadow-[0_4px_6px_-2px_rgba(0,0,0,0.12)] transition-transform duration-300 " +
+        "shadow-[0_4px_6px_-2px_rgba(0,0,0,0.12)] transition-all duration-300 " +
         "[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
         (menuOpen ? "translate-y-0" : "-translate-y-full pointer-events-none")
       }
     >
-      <nav className="flex flex-col items-baseline gap-1 p-1.5 pb-3 text-2xl leading-none">
+      <nav className="flex flex-col items-baseline gap-1 p-[9px] pb-[14px] text-2xl leading-none">
         {CATEGORIES.map((category, i) => {
           const href = `/${category}`;
+          const active = pathname === href && view === null;
           return (
             <Link
               key={category}
               href={href}
               onClick={closeMenu}
               style={itemDelay(i)}
-              className={itemClass + " " + linkClass(pathname === href && view === null)}
+              className={
+                itemClass + " " + linkWeight + (active ? "" : " hover:opacity-60")
+              }
             >
-              {tNav(
-                category === "karate-gi-custom"
-                  ? "karateGiCustom"
-                  : category === "karate-gi-standard"
-                    ? "karateGiStandard"
-                    : category,
-              )}
+              {/* Active category blinks (hard on/off — see .blink-active). The
+                  blink lives on this inner span so its opacity animation doesn't
+                  collide with the Link's entrance opacity transition (transitions
+                  outrank animations in the cascade). */}
+              <span className={active ? "blink-active" : undefined}>
+                {tNav(category === "karate-gi" ? "karateGi" : category)}
+              </span>
             </Link>
           );
         })}
 
-        {/* language / currency — each nudged inward by ~the flap's corner radius
-            so they clear the rounded corners and read more centred. Appears last
-            in the stagger. */}
+        {/* language / currency — one row, language at the left and currency at
+            the right. Appears last in the stagger. */}
         <div
           style={itemDelay(CATEGORIES.length)}
           className={"mt-4 flex w-full items-baseline justify-between " + itemClass}
         >
-          <div className="ml-3">
-            <LocaleSwitcher label={t("language")} />
-          </div>
-          <div className="mr-3">
-            <CurrencySwitcher label={t("currency")} />
-          </div>
+          <LocaleSwitcher label={t("language")} />
+          <CurrencySwitcher label={t("currency")} />
         </div>
       </nav>
     </div>

@@ -200,11 +200,7 @@
   },
   "Nav": {
     "shop": "ショップ",
-    "karateGiGroup": "空手衣",
-    "karateGiCustomShort": "フルオーダー",
-    "karateGiStandardShort": "既製",
-    "karateGiCustom": "空手衣（フルオーダー）",
-    "karateGiStandard": "空手衣（既製）",
+    "karateGi": "空手衣",
     "obi": "帯",
     "equipment": "用具",
     "accessories": "アクセサリー",
@@ -355,8 +351,15 @@
       "special": "4.5cm幅で芯を1枚増やした重厚なつくりの帯になります。安定感があり、締める人をより大きく魅せます。贈呈用や形選手に多く使用されています。"
     }
   },
+  "KarateGi": {
+    "orderType": "ご注文タイプ",
+    "orderTypeNote": "標準サイズの既製品か、採寸に合わせて仕立てるフルオーダーかをお選びください。",
+    "readyMade": "既製品",
+    "fullyTailored": "特別仕立て（フルオーダー）"
+  },
   "GiStandard": {
     "model": "モデル",
+    "modelNote": "空手衣の生地をお選びください。",
     "modelNames": {
       "tsubasa": "ツバサ",
       "pinac-kumite": "ピナック組手用",
@@ -511,6 +514,7 @@
   },
   "GiCustom": {
     "model": "モデル",
+    "modelNote": "空手衣の生地をお選びください。",
     "modelNames": {
       "tsubasa": "ツバサ",
       "kuu": "クウ",
@@ -739,7 +743,9 @@
     "errorGeneric": "ご注文の処理中に問題が発生しました。もう一度お試しください。"
   },
   "Configurator": {
-    "configurator": "設定",
-    "yourProduct": "あなたの製品"
+    "dogiConfigurator": "道着設定",
+    "yourDogi": "あなたの道着",
+    "obiConfigurator": "帯設定",
+    "yourObi": "あなたの帯"
   }
 }

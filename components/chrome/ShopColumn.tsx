@@ -11,8 +11,7 @@ export async function ShopColumn({ children }: { children: React.ReactNode }) {
   const t = await getTranslations("Nav");
 
   const navLabels: Record<NavCategory, string> = {
-    "karate-gi-custom": t("karateGiCustom"),
-    "karate-gi-standard": t("karateGiStandard"),
+    "karate-gi": t("karateGi"),
     obi: t("obi"),
     equipment: t("equipment"),
     accessories: t("accessories"),
@@ -26,14 +25,7 @@ export async function ShopColumn({ children }: { children: React.ReactNode }) {
         <ShopSectionTitle shopLabel={t("shop")} categoryLabels={navLabels} />
       </div>
 
-      <CategoryNav
-        labels={navLabels}
-        giGroupLabel={t("karateGiGroup")}
-        giShortLabels={{
-          "karate-gi-custom": t("karateGiCustomShort"),
-          "karate-gi-standard": t("karateGiStandardShort"),
-        }}
-      />
+      <CategoryNav labels={navLabels} />
 
       {children}
     </section>
