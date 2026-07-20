@@ -198,6 +198,10 @@ character:
 | Special 4.5cm | 275 | 330 |
  
 - **Colored ("Other") belts can only be embroidered in black.**
+- **Obi thread colors** (6): Golden Brown (金茶), Red (赤), White (白), Silver gray (銀ネズ),
+  Gold (純金), Silver (純銀). Gold and silver are the metallic tier; the other four price at
+  the standard rate. This palette is **obi-only** — the gi palette is different (§8.4); the
+  two lists must never be merged or shared.
 ### 8.4 Pattern C — Karate-gi Custom (7 models)
 MH-12 is **not** available custom. The 7 custom models, with the internal kata/kumite
 classification that governs thickness options:
@@ -285,6 +289,12 @@ measurements (jacket: A–E, F ignored; pants: G–J with high-waist subtraction
 four:
 1. Jacket lapel, 2. Pants, 3. Left shoulder, 4. Chest.
 - 220/char standard color; 275/char gold or silver.
+- **Gi thread colors** (4 — a *different, narrower* list than the obi palette in §8.3, and it
+  includes a color obi does not offer): Black (黒), Red (赤), Gold (純金), Silver (純銀).
+  Gold and silver are the metallic tier; black and red price at the standard rate.
+  There is no golden brown, white, or silver gray on a gi. Do not reuse the obi list here —
+  `GiThreadColor` in `lib/gi-standard/model.ts` is deliberately independent of `ObiThreadColor`.
+- The same 4 gi colors apply to the standard (ready-made) gi embroidery of §8.2.
 - Input languages: Latin alphabet, katakana, or kanji.
 **Manufacturer's logo** — HIROTA logo placement. Options: `neck only` (+1100) or
 `right breast & neck` (+1100). Does not overlap with the chest embroidery/brand logo (that

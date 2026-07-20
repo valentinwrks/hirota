@@ -414,18 +414,14 @@
     "perChar": "per char.",
     "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
     "threadColors": {
-      "golden_brown": "Golden Brown (金茶)",
+      "black": "Black (黒)",
       "red": "Red (赤)",
-      "white": "White (白)",
-      "silver_grey": "Silver gray (銀ネズ)",
       "gold": "Gold (純金)",
       "silver": "Silver (純銀)"
     },
     "threadColorsShort": {
-      "golden_brown": "golden brown",
+      "black": "black",
       "red": "red",
-      "white": "white",
-      "silver_grey": "silver gray",
       "gold": "gold",
       "silver": "silver"
     },
@@ -646,18 +642,14 @@
     "embroideryPlaceholder": "none",
     "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
     "threadColors": {
-      "golden_brown": "Golden Brown (金茶)",
+      "black": "Black (黒)",
       "red": "Red (赤)",
-      "white": "White (白)",
-      "silver_grey": "Silver gray (銀ネズ)",
       "gold": "Gold (純金)",
       "silver": "Silver (純銀)"
     },
     "threadColorsShort": {
-      "golden_brown": "golden brown",
+      "black": "black",
       "red": "red",
-      "white": "white",
-      "silver_grey": "silver gray",
       "gold": "gold",
       "silver": "silver"
     },

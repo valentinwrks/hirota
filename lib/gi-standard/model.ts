@@ -112,24 +112,17 @@ export function standardSizeChartRow(
 
 // ---------------------------------------------------------------------------
 // Embroidery thread. Gi embroidery is priced by thread *category* (standard vs
-// metallic, §8.4); the specific colour is a fulfilment detail. Same six colours
-// as the obi palette, but with no belt-colour restriction — declared here so the
-// gi configurator is independent of the obi module.
+// metallic, §8.4); the specific colour is a fulfilment detail. The gi palette is
+// its own list — narrower than the obi one and containing a colour (black) the
+// obi palette does not offer — so it is declared here, independent of the obi
+// module. Do not merge the two.
 // ---------------------------------------------------------------------------
 
-export type GiThreadColor =
-  | 'golden_brown'
-  | 'red'
-  | 'white'
-  | 'silver_grey'
-  | 'gold'
-  | 'silver'
+export type GiThreadColor = 'black' | 'red' | 'gold' | 'silver'
 
 export const GI_THREAD_COLORS: readonly GiThreadColor[] = [
-  'golden_brown',
+  'black',
   'red',
-  'white',
-  'silver_grey',
   'gold',
   'silver',
 ] as const

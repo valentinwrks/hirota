@@ -414,18 +414,14 @@
     "perChar": "／文字",
     "threadNeedsText": "少なくとも1箇所に文字を入力するか、糸の色を解除してください。",
     "threadColors": {
-      "golden_brown": "金茶（オレンジ)",
+      "black": "黒",
       "red": "赤",
-      "white": "白",
-      "silver_grey": "銀ネズ（グレー)",
       "gold": "純金",
       "silver": "純銀"
     },
     "threadColorsShort": {
-      "golden_brown": "金茶",
+      "black": "黒",
       "red": "赤",
-      "white": "白",
-      "silver_grey": "銀ネズ",
       "gold": "純金",
       "silver": "純銀"
     },
@@ -646,18 +642,14 @@
     "embroideryPlaceholder": "なし",
     "threadNeedsText": "少なくとも1箇所に文字を入力するか、糸の色を解除してください。",
     "threadColors": {
-      "golden_brown": "金茶（オレンジ)",
+      "black": "黒",
       "red": "赤",
-      "white": "白",
-      "silver_grey": "銀ネズ（グレー)",
       "gold": "純金",
       "silver": "純銀"
     },
     "threadColorsShort": {
-      "golden_brown": "金茶",
+      "black": "黒",
       "red": "赤",
-      "white": "白",
-      "silver_grey": "銀ネズ",
       "gold": "純金",
       "silver": "純銀"
     },
