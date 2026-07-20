@@ -354,7 +354,7 @@
   "KarateGi": {
     "orderType": "Karate-gi order type",
     "orderTypeNote": "Select a standard size or customize to your own measurements.",
-    "readyMade": "Ready-made (既製品)",
+    "readyMade": "Ready-made (既製品) — standard size",
     "fullyTailored": "Made-to-order (特別仕立て) — fully-tailored"
   },
   "GiStandard": {
@@ -409,8 +409,8 @@
     },
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
-    "embroiderySubtitle": "embroideries — up to four fields",
-    "threadColorTitle": "thread color (prices per character)",
+    "embroiderySubtitle": "Embroideries — up to four fields",
+    "threadColorTitle": "Thread color (prices per character)",
     "perChar": "per char.",
     "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
     "threadColors": {
@@ -640,9 +640,9 @@
       "breast_neck": "chest & neck logo"
     },
     "embroidery": "Embroidery (optional)",
-    "threadColorTitle": "thread color (prices per character)",
+    "threadColorTitle": "Thread color (prices per character)",
     "perChar": "per char.",
-    "embroiderySubtitle": "embroideries — up to four fields",
+    "embroiderySubtitle": "Embroideries — up to four fields",
     "embroideryPlaceholder": "none",
     "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
     "threadColors": {

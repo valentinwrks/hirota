@@ -172,11 +172,17 @@ export function GiStandardConfigurator({
         fit,
         sizeCode,
         mfrLogo,
+        threadColor,
+        lapelText,
+        shoulderText,
+        chestText,
+        pantsText,
         adjustCOn,
         adjustHOn,
         adjustCText,
         adjustHText,
         shrinkage,
+        labelId,
       } = s;
 
       // Fit: never auto-selected — the user must click it (even single-fit
@@ -216,16 +222,36 @@ export function GiStandardConfigurator({
       // unchecks the last adjustment that was still on).
       if (!adjustCOn && !adjustHOn) shrinkage = undefined;
 
+      // The whole lower form (embroidery, manufacturer's logo, label — the C/H
+      // cut + shrinkage were already reset above) is gated on a resolved core
+      // (model + fit + size). With no size it's all pending, so drop those
+      // selections: they must be completed again, not linger selected-but-inert.
+      if (sizeCode == null) {
+        mfrLogo = undefined;
+        threadColor = undefined;
+        lapelText = "";
+        shoulderText = "";
+        chestText = "";
+        pantsText = "";
+        labelId = undefined;
+      }
+
       return {
         ...s,
         fit,
         sizeCode,
         mfrLogo,
+        threadColor,
+        lapelText,
+        shoulderText,
+        chestText,
+        pantsText,
         adjustCOn,
         adjustHOn,
         adjustCText,
         adjustHText,
         shrinkage,
+        labelId,
       };
     },
     [data, modelBySlug],
@@ -406,6 +432,20 @@ export function GiStandardConfigurator({
   const mfrExcluded = modelReady && !modelDef?.mfrLogo;
   const adjustExcluded = modelReady && !modelDef?.adjustCH;
 
+  // Section-header tint: each section's title (and its description) mirrors the
+  // state of the options right below it — `pending` while its upstream axis is
+  // unresolved, `blocked` for a decided model-rule exclusion (mh-12 C/H, models
+  // without the mfr logo). blocked wins over pending; sections that can't be
+  // blocked carry only the pending flag. Mirrors the obi configurator.
+  const fitPending = !modelReady;
+  const sizePending = state.fit == null;
+  const embroideryPending = !coreReady; // thread-color table
+  const embroideryEndsPending = !coreReady || state.threadColor == null; // ends
+  const adjustPending = !coreReady && !adjustExcluded;
+  const shrinkagePending = !shrinkageRequired && !adjustExcluded;
+  const mfrPending = !coreReady && !mfrExcluded;
+  const labelPending = !coreReady;
+
   const mfrLogoPrice = data.options.get(OPT_MFR_NECK)?.price ?? 0;
   const adjustCPrice = data.options.get(OPT_ADJUST_C)?.price ?? 0;
   const adjustHPrice = data.options.get(OPT_ADJUST_H)?.price ?? 0;
@@ -562,8 +602,8 @@ export function GiStandardConfigurator({
         {/* Fit — always shown (both slim & normal). A model that isn't sold in a
             fit renders it blocked; the offered fit(s) are selectable and the user
             must click one (no auto-selection), even for single-fit models. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("fit")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("fitNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (fitPending ? " text-foreground-pending" : "")}>{t("fit")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (fitPending ? "text-foreground-pending" : "text-foreground")}>{t("fitNote")}</p>
         <OptionTable>
           {Fits.map((f) => {
             const offered = modelDef?.fits.includes(f) ?? false;
@@ -584,7 +624,7 @@ export function GiStandardConfigurator({
         {/* Size — the full universe (S5…8) always shown. Pending until model +
             fit resolve; then sizes offered for that (model, fit) become selectable
             with a price, and the rest render blocked. No runtime size math. */}
-        <p className="text-lg font-bold pt-5 mb-1.5">{t("size")}</p>
+        <p className={"text-lg font-bold pt-5 mb-1.5" + (sizePending ? " text-foreground-pending" : "")}>{t("size")}</p>
         <OptionTable>
           {allSizes.map((row) => {
             const offered = sizeOffered(row.size_code);
@@ -612,8 +652,8 @@ export function GiStandardConfigurator({
 
         {/* Embroidery (optional). One thread color is chosen globally for all
             four fields; the per-character rate follows the thread's category. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
-        <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (embroideryPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
+        <p className={"text-xs mb-1 " + (embroideryPending ? "text-foreground-pending" : "text-foreground")}>{t("threadColorTitle")}</p>
         <OptionTable>
           {GI_THREAD_COLORS.map((tc) => (
             <OptionRow
@@ -630,7 +670,7 @@ export function GiStandardConfigurator({
           ))}
         </OptionTable>
 
-        <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
+        <p className={"text-xs mb-1 pt-2 " + (embroideryEndsPending ? "text-foreground-pending" : "text-foreground")}>{t("embroiderySubtitle")}</p>
         <OptionTable>
           {embFields.map((f) => (
             <TextInputRow
@@ -647,8 +687,8 @@ export function GiStandardConfigurator({
             +price) that only ever SHORTENS; toggling it on reveals the length
             input below. mh-12 renders the radios blocked; otherwise they're
             pending until a size resolves (the input needs the chart ceiling). */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("adjust")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("adjustNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (adjustExcluded ? " text-foreground-blocked" : adjustPending ? " text-foreground-pending" : "")}>{t("adjust")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (adjustExcluded ? "text-foreground-blocked" : adjustPending ? "text-foreground-pending" : "text-foreground")}>{t("adjustNote")}</p>
         <OptionTable>
           <OptionRow
             selected={state.adjustCOn}
@@ -717,7 +757,7 @@ export function GiStandardConfigurator({
         {/* Shrinkage — always shown; mandatory once any C/H value is entered,
             because a new measurement is being requested (§8.2). Blocked on mh-12,
             pending until a C/H value is entered, then selectable. */}
-        <p className="text-xs mb-1 text-foreground pt-3">{t("shrinkage")}</p>
+        <p className={"text-xs mb-1 pt-3 " + (adjustExcluded ? "text-foreground-blocked" : shrinkagePending ? "text-foreground-pending" : "text-foreground")}>{t("shrinkage")}</p>
         <OptionTable>
           {ShrinkageOptions.map((opt) => (
             <OptionRow
@@ -736,8 +776,8 @@ export function GiStandardConfigurator({
 
         {/* Manufacturer's logo — always shown. Only tsubasa & pinac-kumite offer
             it; every other model renders both placements blocked. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("mfrLogoTitle")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("mfrLogoNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (mfrExcluded ? " text-foreground-blocked" : mfrPending ? " text-foreground-pending" : "")}>{t("mfrLogoTitle")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (mfrExcluded ? "text-foreground-blocked" : mfrPending ? "text-foreground-pending" : "text-foreground")}>{t("mfrLogoNote")}</p>
         <OptionTable>
           {MfrLogoPlacements.map((placement) => (
             <OptionRow
@@ -759,8 +799,8 @@ export function GiStandardConfigurator({
 
         {/* Label — free, required (no default). Selectable once the core
             resolves; a required single choice like the other sections. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
         <OptionTable>
           {labels.map((l) => (
             <OptionRow

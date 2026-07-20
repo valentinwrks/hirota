@@ -354,7 +354,7 @@
   "KarateGi": {
     "orderType": "ご注文タイプ",
     "orderTypeNote": "標準サイズの既製品か、採寸に合わせて仕立てるフルオーダーかをお選びください。",
-    "readyMade": "既製品",
+    "readyMade": "既製品（標準サイズ）",
     "fullyTailored": "特別仕立て（フルオーダー）"
   },
   "GiStandard": {

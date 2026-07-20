@@ -400,10 +400,12 @@ export function ObiConfigurator({
           ? "startPromptWidth"
           : "startPromptSize";
 
-  // First line builds up progressively as each axis is chosen (color → +material
-  // → +width → +size). The base price attaches only once size — and thus a valid
-  // breakdown — exists.
-  if (state.color != null) {
+  // The spec line (color · material · width · #size) appears ONLY once fully
+  // configured — it doesn't build up axis-by-axis. So nothing shows in the
+  // features area until size resolves, at which point the complete line (with its
+  // base price from the breakdown) appears all at once, together with any
+  // embroidery/label lines below (also configured-gated).
+  if (configured && state.color != null) {
     const parts = [colorShort(state.color)];
     if (state.material != null) parts.push(materialShort(state.material));
     if (state.widthCm != null) parts.push(widthShort(state.widthCm));
