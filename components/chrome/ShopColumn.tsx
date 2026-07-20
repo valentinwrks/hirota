@@ -18,16 +18,22 @@ export async function ShopColumn({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <section className="flex-1 min-w-0 border-r border-border overflow-y-auto overscroll-contain scrollbar-none max-md:border-r-0">
+    <section className="flex-1 min-w-0 border-r border-border flex flex-col overflow-hidden max-md:border-r-0">
       {/* Section bar — desktop only. On mobile the TopBar carries all the nav
-          chrome (cart + menu), so this "shop / <category>" row is dropped. */}
-      <div className="max-md:hidden sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none backdrop-blur-md">
+          chrome (cart + menu), so this "shop / <category>" row is dropped.
+          Fixed above the scroll region (like the cart column / admin) rather
+          than sticky-over-content, so nothing passes behind it — no
+          glassmorphism, opaque like /admin. */}
+      <div className="max-md:hidden shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
         <ShopSectionTitle shopLabel={t("shop")} categoryLabels={navLabels} />
       </div>
 
-      <CategoryNav labels={navLabels} />
-
-      {children}
+      {/* Scroll region — the category nav + routed content scroll here, below
+          the fixed bar. */}
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain scrollbar-none">
+        <CategoryNav labels={navLabels} />
+        {children}
+      </div>
     </section>
   );
 }

@@ -10,13 +10,17 @@ export async function AboutColumn() {
   const t = await getTranslations("About");
 
   return (
-    <section className="basis-[22%] 2xl:basis-[20%] shrink-0 border-r border-border overflow-y-auto overscroll-contain scrollbar-none max-md:h-full max-md:border-r-0">
-      {/* sticky section header — desktop only; on mobile the TopBar carries all
-          the chrome, so this "hirota" row is dropped from the `/` overlay. */}
-      <div className="max-md:hidden sticky top-0 z-10 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none backdrop-blur-xs">
+    <section className="basis-[22%] 2xl:basis-[20%] shrink-0 border-r border-border flex flex-col overflow-hidden max-md:h-full max-md:border-r-0">
+      {/* section header — desktop only; on mobile the TopBar carries all the
+          chrome, so this "hirota" row is dropped from the `/` overlay. Fixed
+          above the scroll region (like the cart column / admin) rather than
+          sticky-over-content, so nothing passes behind it — no glassmorphism,
+          opaque like /admin. */}
+      <div className="max-md:hidden shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
         {t("title")}
       </div>
 
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain scrollbar-none">
       <div className="mt-2 mx-1.5 pb-8 text-xs leading-tight">
         <p>
           <span className="font-bold">Hirota Co., Ltd (空手衣のヒロタ)</span> {t("intro")}
@@ -87,6 +91,7 @@ export async function AboutColumn() {
       </div>
 
       <MobileLogoFooter />
+      </div>
     </section>
   );
 }

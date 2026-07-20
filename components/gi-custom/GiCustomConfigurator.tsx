@@ -48,6 +48,7 @@ import {
   type MeasureLetter,
 } from "@/lib/gi-custom/model";
 import type { GiEmbroiderySummaryField } from "@/lib/cart/types";
+import { displayLabelName } from "@/lib/cart/format";
 import type { LabelOption } from "@/lib/obi/queries";
 import { KarateGiVector } from "@/components/karate-gi/KarateGiVector";
 import { ConfiguratorLayout } from "@/components/configurator/ConfiguratorLayout";
@@ -117,7 +118,7 @@ interface GiCustomState {
   weightText: string;
   waistText: string;
   shrinkage?: Shrinkage;
-  labelId: number;
+  labelId?: number;
 }
 
 /** Count embroidery characters (code-point aware for kanji/katakana). */
@@ -204,11 +205,11 @@ export function GiCustomConfigurator({
     [data.highWaistBands],
   );
 
-  const defaultLabelId =
-    labels.find((l) => l.name === "Hirota")?.id ?? labels[0]?.id ?? 1;
-
   const [state, setState] = usePersistentState<GiCustomState>(
-    "hirota:config:gi-custom",
+    // v2: label is no longer defaulted to Hirota — bumped so pre-existing saved
+    // payloads (which still carry the old default labelId) are dropped instead of
+    // shallow-merged back in and resurfacing as a selected label.
+    "hirota:config:gi-custom:v2",
     {
       measure: emptyMeasure(),
       sideTies: false,
@@ -222,7 +223,8 @@ export function GiCustomConfigurator({
       heightText: "",
       weightText: "",
       waistText: "",
-      labelId: defaultLabelId,
+      // Label is a required, un-defaulted choice — like every other section, the
+      // buyer must pick one (no auto-selected "Hirota").
     },
   );
   const [justAdded, setJustAdded] = useState(false);
@@ -294,6 +296,22 @@ export function GiCustomConfigurator({
         for (const l of PANTS_LETTERS) measure[l] = "";
       }
 
+      // --- Core-level measurement fields ---------------------------------
+      // Shrinkage and body data only make sense once the core (model + unit +
+      // band) resolves — they sit under Measurements and go selectable/editable
+      // on `coreReady`. If the core is dropped, clear them so nothing lingers
+      // (shrinkage especially: it would otherwise stay struck as a selected-but-
+      // inert row while the rest of Measurements empties).
+      let { shrinkage, heightText, weightText, waistText } = s;
+      const coreReady =
+        s.modelSlug != null && purchaseUnit != null && bandCode != null;
+      if (!coreReady) {
+        shrinkage = undefined;
+        heightText = "";
+        weightText = "";
+        waistText = "";
+      }
+
       return {
         ...s,
         purchaseUnit,
@@ -311,6 +329,10 @@ export function GiCustomConfigurator({
         chestText,
         pantsText,
         measure,
+        shrinkage,
+        heightText,
+        weightText,
+        waistText,
       };
     },
     [modelBySlug],
@@ -332,6 +354,17 @@ export function GiCustomConfigurator({
   const isKata = modelDef?.isKata ?? false;
   const jacket = unitIncludesJacket(state.purchaseUnit);
   const pants = unitIncludesPants(state.purchaseUnit);
+
+  // A purchase unit alone decides the part-exclusion blocks (points 1/2): a
+  // single-piece unit blocks the other piece's fields immediately, without
+  // waiting for the size band. Interactivity of the IN-scope fields still needs
+  // the full core (below) because prices come from the band.
+  const unitChosen = state.purchaseUnit != null;
+
+  // Likewise, the MODEL alone decides the model-rule blocks (kumite can't touch
+  // collar/hem thickness, elastic waist is Tsubasa-only). These fire the moment
+  // a model is picked — no need to wait for the purchase unit or the band.
+  const modelChosen = modelDef != null;
 
   // Core = model + purchase unit + band chosen. Optionals stay pending until then.
   const coreReady =
@@ -500,6 +533,10 @@ export function GiCustomConfigurator({
   // Shrinkage is required — a real garment is being measured to order (§8.4).
   const shrinkageChosen = state.shrinkage != null;
 
+  // Label is required — no default; the buyer must pick one like any other
+  // section.
+  const labelChosen = state.labelId != null;
+
   // A thread color with no embroidery text anywhere is a meaningless selection.
   const embFields = [
     { key: "lapel" as const, text: state.lapelText, show: jacket, set: (v: string) => update({ lapelText: v }) },
@@ -524,6 +561,7 @@ export function GiCustomConfigurator({
     !hwNeedsValue &&
     shrinkageChosen &&
     bodyComplete &&
+    labelChosen &&
     !threadWithoutText;
 
   const labelName = labels.find((l) => l.id === state.labelId)?.name ?? "Hirota";
@@ -560,51 +598,62 @@ export function GiCustomConfigurator({
     }
 
     // Push order mirrors the left-hand form top-to-bottom (§9): base line, then
-    // the measurements' shrinkage, then Ties → Elastic waist → High waist →
-    // Collar → Hems → Embroidery → Manufacturer's logo → Label. The amounts were
-    // read above in the ENGINE's line order, so reordering the pushes here is
-    // purely presentational.
+    // the entered measurements A–J, their shrinkage and the body data, then
+    // Ties → Elastic waist → High waist → Collar → Hems → Embroidery →
+    // Manufacturer's logo → Label. The amounts were read above in the ENGINE's
+    // line order, so reordering the pushes here is purely presentational. The
+    // model itself lives in the panel title (and the cart-line name), so the
+    // base line reads "fully-tailored · full set · 6 to 8".
     features.push({
-      label: `${t("giLine").toLowerCase()}: ${t(`modelShort.${state.modelSlug!}`)} · ${t(`purchaseUnitsShort.${state.purchaseUnit}`)} · ${t(`bandsShort.${band.bandCode}`)}`,
+      label: `${t("giLine")} · ${t(`purchaseUnitsShort.${state.purchaseUnit}`)} · ${t(`bandsShort.${band.bandCode}`)}`,
       amountJpy: baseAmt,
     });
+    for (const l of ALL_LETTERS) {
+      const v = parsedMeasurements[l];
+      if (v != null) features.push({ label: `${l.toUpperCase()} = ${v}` });
+    }
     if (state.shrinkage) {
+      features.push({ label: t(`shrinkageShort.${state.shrinkage}`) });
+    }
+    if (bodyComplete) {
       features.push({
-        label: `${t("shrinkage").toLowerCase()}: ${t(`shrinkageOptions.${state.shrinkage}`)}`,
+        label: `${bodyHeightCm}cm · ${bodyWeightKg}kg · ${bodyWaistCm}cm`,
       });
     }
-    if (state.sideTies && jacket) features.push({ label: t("sideTies").toLowerCase() });
-    if (state.chestTies && jacket) features.push({ label: t("chestTies").toLowerCase() });
+    if (state.sideTies && jacket) features.push({ label: t("sideTiesShort") });
+    if (state.chestTies && jacket) features.push({ label: t("chestTiesShort") });
     if (state.elasticWaist && pants) {
-      features.push({ label: t("elasticWaist").toLowerCase(), amountJpy: elasticAmt });
+      features.push({ label: t("elasticWaistShort"), amountJpy: elasticAmt });
     }
     if (pants && hwValid) {
-      features.push({ label: `${t("highWaist").toLowerCase()}: ${hwVal}cm`, amountJpy: hwAmt });
+      features.push({ label: `${t("highWaistLabel").toLowerCase()} = ${hwVal}cm`, amountJpy: hwAmt });
     }
     if (state.collar && jacket) {
       features.push({ label: `${t(`collarOptions.${state.collar}`).toLowerCase()}`, amountJpy: collarAmt });
     }
     if (state.hem) {
       features.push({
-        label: `${t("hems").toLowerCase()}: ${t(`hemOptions.${hemOptionKey(state.hem)}`)}`,
+        label: t("hemLine", { option: t(`hemOptions.${hemOptionKey(state.hem)}`) }),
         amountJpy: hemAmt,
       });
     }
     for (const f of embFields) {
       if (f.show && charCount(f.text) > 0 && thread != null) {
         features.push({
-          label: `${t(`embroideryFieldsShort.${f.key}`).toLowerCase()}: ${f.text.trim()}${threadColorSuffix}`,
+          label: `${t(`embroideryFieldsShort.${f.key}`)} = ${f.text.trim()}${threadColorSuffix}`,
           amountJpy: embAmt[f.key],
         });
       }
     }
     if (state.mfrLogo && jacket) {
       features.push({
-        label: `${t("mfrLogo").toLowerCase()}: ${t(`mfrLogoPlacementsShort.${state.mfrLogo}`)}`,
+        label: t(`mfrLogoShort.${state.mfrLogo}`),
         amountJpy: mfrAmt,
       });
     }
-    features.push({ label: `${t("label").toLowerCase()}: ${labelName}` });
+    if (labelChosen) {
+      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
+    }
   }
 
   // What's still blocking add-to-cart (surfaced below the button).
@@ -614,6 +663,7 @@ export function GiCustomConfigurator({
     if (hwNeedsValue) blockingHints.push(t("highWaistNeedsValue"));
     if (!shrinkageChosen) blockingHints.push(t("shrinkageRequired"));
     if (!bodyComplete) blockingHints.push(t("bodyNeedsAll"));
+    if (!labelChosen) blockingHints.push(t("labelRequired"));
     if (threadWithoutText) blockingHints.push(t("threadNeedsText"));
   }
 
@@ -767,6 +817,11 @@ export function GiCustomConfigurator({
         <OptionTable>
           {ALL_LETTERS.map((l) => {
             const inScope = coreReady && letterInScope(l);
+            // As soon as a single-piece purchase unit is chosen, the other
+            // piece's letters are a decided exclusion (blocked, struck through),
+            // not merely pending — jacket-only blocks G–J, pants-only blocks A–F.
+            // Depends only on the unit, so it fires before the size band.
+            const blocked = unitChosen && !letterInScope(l);
             const ls = letterState(l);
             return (
               <MeasureInputRow
@@ -777,7 +832,8 @@ export function GiCustomConfigurator({
                 placeholder={t("measurePlaceholder")}
                 unit="cm"
                 error={inScope && ls.error}
-                pending={!inScope}
+                pending={!coreReady}
+                blocked={blocked}
               />
             );
           })}
@@ -856,6 +912,7 @@ export function GiCustomConfigurator({
           <OptionRow
             selected={jacket && state.sideTies}
             selectable={coreReady && jacket}
+            blocked={unitChosen && !jacket}
             price={t("free")}
             onClick={() => update({ sideTies: !state.sideTies })}
           >
@@ -864,6 +921,7 @@ export function GiCustomConfigurator({
           <OptionRow
             selected={jacket && state.chestTies}
             selectable={coreReady && jacket}
+            blocked={unitChosen && !jacket}
             price={t("free")}
             onClick={() => update({ chestTies: !state.chestTies })}
           >
@@ -880,7 +938,10 @@ export function GiCustomConfigurator({
           <OptionRow
             selected={pants && state.elasticWaist}
             selectable={coreReady && pants && (modelDef?.allowsElasticWaist ?? false)}
-            blocked={coreReady && pants && !(modelDef?.allowsElasticWaist ?? false)}
+            blocked={
+              (modelChosen && !(modelDef?.allowsElasticWaist ?? false)) ||
+              (unitChosen && !pants)
+            }
             price={`+ ${format(elasticPrice)}`}
             onClick={() => update({ elasticWaist: !state.elasticWaist })}
           >
@@ -904,6 +965,7 @@ export function GiCustomConfigurator({
                 key={`${b.minCm}-${b.maxCm}`}
                 selected={isSel}
                 selectable={coreReady && pants}
+                blocked={unitChosen && !pants}
                 price={`+ ${format(b.price)}`}
                 onClick={() =>
                   update(
@@ -944,7 +1006,7 @@ export function GiCustomConfigurator({
               key={c}
               selected={jacket && state.collar === c}
               selectable={coreReady && jacket && isKata}
-              blocked={coreReady && jacket && !isKata}
+              blocked={(unitChosen && !jacket) || (modelChosen && !isKata)}
               price={`+ ${format(collarPrice(c))}`}
               onClick={() => update({ collar: state.collar === c ? undefined : c })}
             >
@@ -976,7 +1038,7 @@ export function GiCustomConfigurator({
                 key={hemOptionKey(o)}
                 selected={selected}
                 selectable={coreReady && allowed}
-                blocked={coreReady && !allowed}
+                blocked={modelChosen && !allowed}
                 price={price}
                 onClick={() =>
                   update({
@@ -1021,7 +1083,12 @@ export function GiCustomConfigurator({
               text={f.text}
               onText={f.set}
               placeholder={t("embroideryPlaceholder")}
-              pending={!coreReady || !f.show || state.threadColor == null}
+              // Field whose part the purchase unit excludes ⇒ blocked (struck
+              // through) as soon as the unit is chosen. Otherwise pending until
+              // the core + a thread colour resolve. jacket-only blocks the pants
+              // field; pants-only blocks lapel/shoulder/chest.
+              blocked={unitChosen && !f.show}
+              pending={!coreReady || (f.show && state.threadColor == null)}
             />
           ))}
         </OptionTable>
@@ -1035,6 +1102,7 @@ export function GiCustomConfigurator({
               key={placement}
               selected={jacket && state.mfrLogo === placement}
               selectable={coreReady && jacket}
+              blocked={unitChosen && !jacket}
               price={`+ ${format(mfrLogoPrice)}`}
               onClick={() =>
                 update({ mfrLogo: state.mfrLogo === placement ? undefined : placement })
@@ -1045,16 +1113,19 @@ export function GiCustomConfigurator({
           ))}
         </OptionTable>
 
-        {/* Label — free, defaults to Hirota. */}
+        {/* Label — free, required (no default). Selectable once the core
+            resolves; a required single choice like the other sections. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
         <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
         <OptionTable>
           {labels.map((l) => (
             <OptionRow
               key={l.id}
-              selected={state.labelId === l.id}
+              selected={coreReady && state.labelId === l.id}
               selectable={coreReady}
-              onClick={() => update({ labelId: l.id })}
+              onClick={() =>
+                update({ labelId: state.labelId === l.id ? undefined : l.id })
+              }
             >
               {l.name}
             </OptionRow>
@@ -1133,9 +1204,9 @@ export function GiCustomConfigurator({
             </button>
 
             {!isQuote && blockingHints.length > 0 && (
-              <div className="mt-2.5 flex flex-col gap-0.5">
+              <div className="mt-2.5 flex flex-col gap-1.5">
                 {blockingHints.map((hint, i) => (
-                  <p key={i} className="text-[11px] italic text-foreground-muted">
+                  <p key={i} className="text-[11px] italic leading-tight text-foreground-muted">
                     {hint}
                   </p>
                 ))}
@@ -1199,14 +1270,15 @@ function OptionRow({
     <tr onClick={clickable ? onClick : undefined}>
       <td
         className={
-          // Selectable/selected cells use border-style: double — it renders as a
-          // 1px solid line but OUTRANKS the neighbours' solid borders in the
-          // border-collapse conflict order (double > solid). So a selectable row
-          // keeps its own (darker) border on every side — including the top edge
-          // it shares with a blocked/pending row above — instead of inheriting
-          // that row's lighter border. Inert rows stay solid.
+          // Every non-blocked cell (selected / selectable / pending) uses
+          // border-style: double — it renders as a 1px solid line but OUTRANKS a
+          // blocked neighbour's solid border in the border-collapse conflict
+          // order (double > solid). So a live OR still-pending row keeps its own
+          // border on every side — including the top edge it shares with a
+          // blocked row above (e.g. the lone 5cm-normal hem allowed for kumite,
+          // pending under blocked thicker rows). Only blocked cells stay solid.
           "group px-2 py-1 border " +
-          (selected || selectable ? "border-double " : "") +
+          (blocked ? "" : "border-double ") +
           borderClass +
           " " +
           cellState
@@ -1246,39 +1318,54 @@ function OptionRow({
   );
 }
 
-// A free-text embroidery input row (thread is chosen globally).
+// A free-text embroidery input row (thread is chosen globally). `blocked`
+// (struck through, inert) marks a field the chosen purchase unit excludes — a
+// decided exclusion, distinct from `pending` (still-unresolved, awaiting core).
 function TextInputRow({
   label,
   text,
   onText,
   placeholder,
   pending = false,
+  blocked = false,
 }: {
   label: string;
   text: string;
   onText: (v: string) => void;
   placeholder: string;
   pending?: boolean;
+  blocked?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
   const completed = !focused && text.trim().length > 0;
-  const cellState = pending
-    ? "text-foreground-pending cursor-default"
-    : completed
-      ? "bg-foreground-selected text-background"
-      : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
-  const borderClass = pending ? "border-border-pending" : "border-border";
+  const cellState = blocked
+    ? "text-foreground-blocked cursor-default"
+    : pending
+      ? "text-foreground-pending cursor-default"
+      : completed
+        ? "bg-foreground-selected text-background"
+        : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
+  const borderClass = blocked
+    ? "border-border-blocked"
+    : pending
+      ? "border-border-pending"
+      : "border-border";
+  // Every non-blocked row (active OR pending) uses border-style: double so it
+  // OUTRANKS a blocked neighbour's solid border on the shared edge (double >
+  // solid in the border-collapse conflict order) — so both a live input and a
+  // still-pending one below a blocked cell keep their own top border.
+  const doubleClass = !blocked ? "border-double " : "";
 
   return (
     <tr>
-      <td className={"px-2 py-1 border " + borderClass + " " + cellState}>
+      <td className={"px-2 py-1 border " + doubleClass + borderClass + " " + cellState}>
         <div className="flex items-center gap-1.5">
-          <span>{label}</span>
+          <span className={blocked ? "line-through" : ""}>{label}</span>
           <input
             type="text"
             value={text}
             placeholder={placeholder}
-            disabled={pending}
+            disabled={pending || blocked}
             onChange={(e) => onText(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
@@ -1296,6 +1383,8 @@ function TextInputRow({
 // once a valid value is left in it; `error` marks an invalid/out-of-range entry
 // (the explanatory hint is rendered separately, below the table). `pending`
 // renders the inert, un-editable style used before the field is in scope.
+// `blocked` (struck through) marks a measurement the chosen purchase unit
+// excludes — a decided exclusion, distinct from `pending` (awaiting the core).
 function MeasureInputRow({
   label,
   text,
@@ -1304,6 +1393,7 @@ function MeasureInputRow({
   unit,
   error = false,
   pending = false,
+  blocked = false,
 }: {
   label: string;
   text: string;
@@ -1312,27 +1402,40 @@ function MeasureInputRow({
   unit?: string;
   error?: boolean;
   pending?: boolean;
+  blocked?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
-  const completed = !pending && !focused && text.trim().length > 0 && !error;
-  const cellState = pending
-    ? "text-foreground-pending cursor-default"
-    : completed
-      ? "bg-foreground-selected text-background"
-      : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
-  const borderClass = pending ? "border-border-pending" : "border-border";
+  const completed =
+    !pending && !blocked && !focused && text.trim().length > 0 && !error;
+  const cellState = blocked
+    ? "text-foreground-blocked cursor-default"
+    : pending
+      ? "text-foreground-pending cursor-default"
+      : completed
+        ? "bg-foreground-selected text-background"
+        : "hover:bg-foreground-hover focus-within:bg-foreground-hover";
+  const borderClass = blocked
+    ? "border-border-blocked"
+    : pending
+      ? "border-border-pending"
+      : "border-border";
+  // Every non-blocked row (active OR pending) uses border-style: double so it
+  // OUTRANKS a blocked neighbour's solid border on the shared edge (double >
+  // solid in the border-collapse conflict order) — so both a live measurement
+  // and a still-pending one below a blocked cell keep their own top border.
+  const doubleClass = !blocked ? "border-double " : "";
 
   return (
     <tr>
-      <td className={"px-2 py-1 border " + borderClass + " " + cellState}>
+      <td className={"px-2 py-1 border " + doubleClass + borderClass + " " + cellState}>
         <div className="flex items-center gap-1.5">
-          <span>{label}</span>
+          <span className={blocked ? "line-through" : ""}>{label}</span>
           <input
             type="text"
             inputMode="decimal"
             value={text}
             placeholder={placeholder}
-            disabled={pending}
+            disabled={pending || blocked}
             onChange={(e) => onText(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
@@ -1345,9 +1448,11 @@ function MeasureInputRow({
                 "whitespace-nowrap " +
                 (completed
                   ? "text-background"
-                  : pending
-                    ? "text-foreground-pending"
-                    : "text-foreground-muted")
+                  : blocked
+                    ? "text-foreground-blocked"
+                    : pending
+                      ? "text-foreground-pending"
+                      : "text-foreground-muted")
               }
             >
               {unit}

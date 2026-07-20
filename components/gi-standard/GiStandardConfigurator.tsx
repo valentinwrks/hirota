@@ -33,6 +33,7 @@ import {
   type GiThreadColor,
 } from "@/lib/gi-standard/model";
 import type { GiEmbroiderySummaryField } from "@/lib/cart/types";
+import { displayLabelName } from "@/lib/cart/format";
 import type { LabelOption } from "@/lib/obi/queries";
 import { KarateGiVector } from "@/components/karate-gi/KarateGiVector";
 import { ConfiguratorLayout } from "@/components/configurator/ConfiguratorLayout";
@@ -75,7 +76,7 @@ interface GiState {
   adjustCText: string;
   adjustHText: string;
   shrinkage?: Shrinkage;
-  labelId: number;
+  labelId?: number;
 }
 
 /** Count embroidery characters (code-point aware for kanji/katakana). */
@@ -141,11 +142,11 @@ export function GiStandardConfigurator({
     [models],
   );
 
-  const defaultLabelId =
-    labels.find((l) => l.name === "Hirota")?.id ?? labels[0]?.id ?? 1;
-
   const [state, setState] = usePersistentState<GiState>(
-    "hirota:config:gi-standard",
+    // v2: label is no longer defaulted to Hirota — bumped so pre-existing saved
+    // payloads (which still carry the old default labelId) are dropped instead of
+    // shallow-merged back in and resurfacing as a selected label.
+    "hirota:config:gi-standard:v2",
     {
       lapelText: "",
       shoulderText: "",
@@ -155,7 +156,7 @@ export function GiStandardConfigurator({
       adjustHOn: false,
       adjustCText: "",
       adjustHText: "",
-      labelId: defaultLabelId,
+      // Label is a required, un-defaulted choice — the buyer must pick one.
     },
   );
   const [justAdded, setJustAdded] = useState(false);
@@ -354,6 +355,10 @@ export function GiStandardConfigurator({
   const threadWithoutText =
     state.threadColor != null && embFields.every((f) => charCount(f.text) === 0);
 
+  // Label is required — no default; the buyer must pick one like any other
+  // section.
+  const labelChosen = state.labelId != null;
+
   const canAdd =
     coreReady &&
     config != null &&
@@ -362,6 +367,7 @@ export function GiStandardConfigurator({
     !cNeedsValue &&
     !hNeedsValue &&
     (!shrinkageRequired || state.shrinkage != null) &&
+    labelChosen &&
     !threadWithoutText;
 
   // Hints explaining what's still missing to enable add-to-cart. Surfaced BELOW
@@ -376,6 +382,7 @@ export function GiStandardConfigurator({
     if (shrinkageRequired && state.shrinkage == null) {
       blockingHints.push(t("shrinkageRequired"));
     }
+    if (!labelChosen) blockingHints.push(t("labelRequired"));
   }
 
   const labelName = labels.find((l) => l.id === state.labelId)?.name ?? "Hirota";
@@ -426,48 +433,50 @@ export function GiStandardConfigurator({
     const hAmt = includeH ? breakdown.lines[i++]?.amountJpy : undefined;
 
     // Display order mirrors the form: base, embroidery, sleeve & pants cut
-    // (C, H, shrinkage), manufacturer's logo, label.
+    // (C, H, shrinkage), manufacturer's logo, label. The model itself lives in
+    // the panel title (and the cart-line name), so the base line reads
+    // "ready-made · slim cut · #7".
     features.push({
-      label: `${t("giLine").toLowerCase()}: ${t(`modelShort.${state.modelSlug!}`)} · ${t(`fitsShort.${state.fit}`)} · ${sizeLabel}`,
+      label: `${t("giLine")} · ${t(`fitsShort.${state.fit}`)} · ${sizeLabel}`,
       amountJpy: baseAmt,
     });
     for (const f of embFields) {
       if (charCount(f.text) > 0 && thread != null) {
         features.push({
-          label: `${t(`embroideryFieldsShort.${f.key}`).toLowerCase()}: ${f.text.trim()}${threadColorSuffix}`,
+          label: `${t(`embroideryFieldsShort.${f.key}`)} = ${f.text.trim()}${threadColorSuffix}`,
           amountJpy: embAmt[f.key],
         });
       }
     }
     // The adjustment appears in the config as soon as its radio is toggled on
-    // ("new length C: ?"), before any measurement or shrinkage. The "?" becomes
+    // ("new C = ?"), before any measurement or shrinkage. The "?" becomes
     // the entered number once typed; the +price only lands (via cAmt/hAmt) once
     // the value is valid AND shrinkage is chosen (that's when the engine prices
     // it into the subtotal).
     if (state.adjustCOn) {
       features.push({
-        label: `${t("adjustCShort")}: ${Number.isFinite(cVal) ? `${cVal}cm` : "?"}`,
+        label: `${t("adjustCShort")} = ${Number.isFinite(cVal) ? cVal : "?"}`,
         amountJpy: cAmt,
       });
     }
     if (state.adjustHOn) {
       features.push({
-        label: `${t("adjustHShort")}: ${Number.isFinite(hVal) ? `${hVal}cm` : "?"}`,
+        label: `${t("adjustHShort")} = ${Number.isFinite(hVal) ? hVal : "?"}`,
         amountJpy: hAmt,
       });
     }
     if (shrinkageRequired && state.shrinkage) {
-      features.push({
-        label: `${t("shrinkage").toLowerCase()}: ${t(`shrinkageOptions.${state.shrinkage}`)}`,
-      });
+      features.push({ label: t(`shrinkageShort.${state.shrinkage}`) });
     }
     if (state.mfrLogo) {
       features.push({
-        label: `${t("mfrLogo").toLowerCase()}: ${t(`mfrLogoPlacementsShort.${state.mfrLogo}`)}`,
+        label: t(`mfrLogoShort.${state.mfrLogo}`),
         amountJpy: logoAmt,
       });
     }
-    features.push({ label: `${t("label").toLowerCase()}: ${labelName}` });
+    if (labelChosen) {
+      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
+    }
   }
 
   // Prompt copy narrows to the axes still missing (first unmet one leads).
@@ -748,7 +757,8 @@ export function GiStandardConfigurator({
           ))}
         </OptionTable>
 
-        {/* Label — free, defaults to Hirota. Selectable once the core resolves. */}
+        {/* Label — free, required (no default). Selectable once the core
+            resolves; a required single choice like the other sections. */}
         <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
         <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
         <OptionTable>
@@ -757,7 +767,9 @@ export function GiStandardConfigurator({
               key={l.id}
               selected={coreReady && state.labelId === l.id}
               selectable={coreReady}
-              onClick={() => update({ labelId: l.id })}
+              onClick={() =>
+                update({ labelId: state.labelId === l.id ? undefined : l.id })
+              }
             >
               {l.name}
             </OptionRow>
@@ -845,9 +857,9 @@ export function GiStandardConfigurator({
             {/* What's still missing to enable the button — surfaced here rather
                 than inline in the form. */}
             {blockingHints.length > 0 && (
-              <div className="mt-2.5 flex flex-col gap-0.5">
+              <div className="mt-2.5 flex flex-col gap-1.5">
                 {blockingHints.map((hint, i) => (
-                  <p key={i} className="text-[11px] italic text-foreground-muted">
+                  <p key={i} className="text-[11px] italic leading-tight text-foreground-muted">
                     {hint}
                   </p>
                 ))}

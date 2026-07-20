@@ -251,14 +251,13 @@
     "widthSpecial": "Special tailoring (特別仕立て) — 4.5cm width",
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
-    "embroiderySubtitle": "embroidery",
-    "threadColorTitle": "thread color (prices per character)",
+    "embroiderySubtitle": "Embroidery",
+    "threadColorTitle": "Thread color (prices per character)",
     "perChar": "per char.",
-    "noEmbroideryNote": "Colored belts cannot be embroidered.",
     "threadNeedsText": "Enter embroidery text in at least one end, or clear the thread color.",
     "endA": "End A (label side)",
-    "endAShort": "embr. A",
-    "endBShort": "embr. B",
+    "endAShort": "end A embr",
+    "endBShort": "end B embr",
     "endB": "End B",
     "endAPlaceholder": "name?",
     "endBPlaceholder": "style/association?",
@@ -280,8 +279,9 @@
       "silver": "silver"
     },
     "label": "Label",
-    "obiLine": "Obi",
+    "labelLine": "{name} label",
     "labelSpecNote": "Please specify the label. If there is no particular specification, select ‘Hirota.’",
+    "labelRequired": "Select a label to continue.",
     "figureAlt": "obi figure",
     "startPromptColor": "Please select color, material, width & size to see the price.",
     "startPromptMaterial": "Select material, width & size to see the price.",
@@ -397,16 +397,15 @@
     "size": "Size",
     "sizeRow": "#{code}",
     "sizePending": "Select a model and fit to see sizes.",
-    "mfrLogo": "logo",
     "mfrLogoTitle": "Manufacturer's logo (optional)",
     "mfrLogoNote": "Hirota logo can be embroidered on the karate-gi. No logo is added by default.",
     "mfrLogoPlacements": {
       "neck": "Neck only",
       "breast_neck": "Right chest & neck"
     },
-    "mfrLogoPlacementsShort": {
-      "neck": "neck",
-      "breast_neck": "chest & neck"
+    "mfrLogoShort": {
+      "neck": "neck logo",
+      "breast_neck": "chest & neck logo"
     },
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
@@ -437,10 +436,10 @@
       "pants": "Pants"
     },
     "embroideryFieldsShort": {
-      "lapel": "embr. lapel",
-      "shoulder": "embr. shoulder",
-      "chest": "embr. chest",
-      "pants": "embr. pants"
+      "lapel": "lapel embr",
+      "shoulder": "shoulder embr",
+      "chest": "chest embr",
+      "pants": "pants embr"
     },
     "adjust": "Sleeve & Pants cut (optional)",
     "adjustNote": "Shorten sleeves and/or pants from the selected standard size. Both lengths can only be reduced.",
@@ -448,8 +447,8 @@
     "pantsAdjust": "Pants length adjustment",
     "adjustC": "New length (C)",
     "adjustH": "New length (H)",
-    "adjustCShort": "new length (C)",
-    "adjustHShort": "new length (H)",
+    "adjustCShort": "new C",
+    "adjustHShort": "new H",
     "adjustLengthPlaceholder": "length",
     "sleeveNeedsLength": "Add new sleeve length (C) to continue.",
     "pantsNeedsLength": "Add new pant length (H) to continue.",
@@ -460,17 +459,16 @@
       "accounted": "Already accounted for",
       "to_add": "To be added by HIROTA"
     },
+    "shrinkageShort": {
+      "accounted": "shrinkage already accounted",
+      "to_add": "shrinkage to be added"
+    },
     "shrinkageRequired": "Select a shrinkage option to continue.",
     "label": "Label",
     "labelSpecNote": "Please specify the label. If there is no particular specification, select ‘Hirota.’",
-    "giLine": "dogi",
-    "modelShort": {
-      "tsubasa": "tsubasa",
-      "pinac-kumite": "pinac kumite",
-      "mh-10": "MH-10",
-      "mh-11": "MH-11",
-      "mh-12": "MH-12"
-    },
+    "labelLine": "{name} label",
+    "labelRequired": "Select a label to continue.",
+    "giLine": "ready-made",
     "fitsShort": {
       "slim": "slim cut",
       "normal": "normal cut"
@@ -607,6 +605,8 @@
     "ties": "Ties",
     "sideTies": "Side ties (waki)",
     "chestTies": "Chest ties (mune)",
+    "sideTiesShort": "side ties",
+    "chestTiesShort": "chest ties",
     "free": "free",
     "hems": "Hems (optional)",
     "hemsNote": "4cm width and normal thickness is applied by default. Kumite models allow normal thickness only.",
@@ -618,6 +618,7 @@
       "5-thick": "5cm width, thick",
       "5-ultra": "5cm width, ultra-thick"
     },
+    "hemLine": "{option} hems",
     "highWaist": "High waist (optional)",
     "highWaistNote": "Choose a high-waist band, then enter the exact height in cm within that range.",
     "highWaistBand": "Add high waist ({min}–{max}cm)",
@@ -627,16 +628,16 @@
     "elasticWaistTitle": "Elastic waist (optional)",
     "elasticNote": "Available on Tsubasa only. Can be combined with a high waist.",
     "elasticWaist": "Elastic waist",
-    "mfrLogo": "logo",
+    "elasticWaistShort": "elastic waist added",
     "mfrLogoTitle": "Manufacturer's logo (optional)",
     "mfrLogoNote": "Hirota logo can be embroidered on the jacket. No logo is added by default.",
     "mfrLogoPlacements": {
       "neck": "Neck only",
       "breast_neck": "Right chest & neck"
     },
-    "mfrLogoPlacementsShort": {
-      "neck": "neck",
-      "breast_neck": "chest & neck"
+    "mfrLogoShort": {
+      "neck": "neck logo",
+      "breast_neck": "chest & neck logo"
     },
     "embroidery": "Embroidery (optional)",
     "threadColorTitle": "thread color (prices per character)",
@@ -667,16 +668,20 @@
       "pants": "Pants"
     },
     "embroideryFieldsShort": {
-      "lapel": "embr. lapel",
-      "shoulder": "embr. shoulder",
-      "chest": "embr. chest",
-      "pants": "embr. pants"
+      "lapel": "lapel embr",
+      "shoulder": "shoulder embr",
+      "chest": "chest embr",
+      "pants": "pants embr"
     },
     "shrinkage": "Shrinkage",
     "shrinkageNote": "Required — the garment is measured to order.",
     "shrinkageOptions": {
       "accounted": "Already accounted for",
       "to_add": "To be added by HIROTA"
+    },
+    "shrinkageShort": {
+      "accounted": "shrinkage already accounted",
+      "to_add": "shrinkage to be added"
     },
     "shrinkageRequired": "Select a shrinkage option to continue.",
     "bodyData": "Body data — sanity-check fields, not used to build the garment.",
@@ -687,16 +692,9 @@
     "bodyNeedsAll": "Enter height, weight and waist to continue.",
     "label": "Label",
     "labelSpecNote": "Please specify the label. If there is no particular specification, select ‘Hirota.’",
-    "giLine": "custom gi",
-    "modelShort": {
-      "tsubasa": "tsubasa",
-      "kuu": "kū",
-      "pinac-kumite": "pinac kumite",
-      "takumi": "takumi",
-      "pinac-kata": "pinac kata",
-      "mh-10": "MH-10",
-      "mh-11": "MH-11"
-    },
+    "labelLine": "{name} label",
+    "labelRequired": "Select a label to continue.",
+    "giLine": "fully-tailored",
     "figureAlt": "karate-gi figure",
     "startPromptModel": "Please select a model, purchase unit & size band to see the price.",
     "startPromptUnit": "Select a purchase unit & size band to see the price.",

@@ -13,7 +13,7 @@
   --foreground-muted: rgba(0, 0, 0, 0.4);
   --foreground-strong: rgba(0, 0, 0, 0.6);
   --foreground-selected: rgba(0, 0, 0, 0.6); 
-  --foreground-pending: rgba(0, 0, 0, 0.35);
+  --foreground-pending: rgba(0, 0, 0, 0.4);
   --foreground-blocked: rgba(0, 0, 0, 0.2);
   --foreground-hover: rgba(0, 0, 0, 0.1);
   --foreground-hover-subtle: rgba(0, 0, 0, 0.05);

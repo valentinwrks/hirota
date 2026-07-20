@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { usePersistentState } from "@/lib/hooks/usePersistentState";
 import { useCart } from "@/lib/cart/CartProvider";
+import { displayLabelName } from "@/lib/cart/format";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import {
   indexPricingData,
@@ -49,7 +50,7 @@ interface ObiState {
   /** Global thread color for BOTH ends (its category drives embroidery pricing).
    *  Undefined until the buyer explicitly picks one (no default selection). */
   threadColor?: ObiThreadColor;
-  labelId: number;
+  labelId?: number;
 }
 
 /** Count embroidery characters (code-point aware for kanji/katakana). */
@@ -154,14 +155,15 @@ export function ObiConfigurator({
     return indexPricingData(tables);
   }, [obiSizes, obiPrices, obiEmbroideryPrices]);
 
-  const defaultLabelId = labels.find((l) => l.name === "Hirota")?.id ?? labels[0]?.id ?? 1;
-
   const [state, setState] = usePersistentState<ObiState>(
-    "hirota:config:obi",
+    // v2: label is no longer defaulted to Hirota — bumped so pre-existing saved
+    // payloads (which still carry the old default labelId) are dropped instead of
+    // shallow-merged back in and resurfacing as a selected label.
+    "hirota:config:obi:v2",
     {
       endAText: "",
       endBText: "",
-      labelId: defaultLabelId,
+      // Label is a required, un-defaulted choice — the buyer must pick one.
     },
   );
   const [justAdded, setJustAdded] = useState(false);
@@ -171,7 +173,7 @@ export function ObiConfigurator({
   const reconcile = useCallback(
     (s: ObiState): ObiState => {
       const { color } = s;
-      let { material, widthCm, sizeCode, threadColor, endAText, endBText } = s;
+      let { material, widthCm, sizeCode, threadColor, endAText, endBText, labelId } = s;
 
       if (color == null) {
         material = undefined;
@@ -194,15 +196,28 @@ export function ObiConfigurator({
         sizeCode = undefined;
       }
 
-      // Colored ("Other") belts cannot be embroidered at all — clear any text
-      // and drop the thread selection (§8.3).
-      if (color != null && isOtherColor(color)) {
-        endAText = "";
-        endBText = "";
+      // The thread-color table is priced off the width and only offered on
+      // non-"Other" belts. Drop the thread selection whenever that table is
+      // pending (no width yet) or blocked (a colored belt) — a pending/blocked
+      // table must never keep a stale selection (§8.3).
+      if (widthCm == null || (color != null && isOtherColor(color))) {
         threadColor = undefined;
       }
+      // The end inputs stay pending until a thread color is chosen; with no
+      // thread (never chosen, or just cleared above) their text is cleared too,
+      // so a pending ends table keeps nothing either.
+      if (threadColor == null) {
+        endAText = "";
+        endBText = "";
+      }
 
-      return { ...s, color, material, widthCm, sizeCode, threadColor, endAText, endBText };
+      // Label is gated on the width (top-to-bottom UX flow); with no width its
+      // table is pending, so drop the selection like every other pending table.
+      if (widthCm == null) {
+        labelId = undefined;
+      }
+
+      return { ...s, color, material, widthCm, sizeCode, threadColor, endAText, endBText, labelId };
     },
     [data],
   );
@@ -262,6 +277,20 @@ export function ObiConfigurator({
   // the thread first, then type the text it will be stitched in.
   const embroideryPending = embroideryAllowed && state.threadColor == null;
 
+  // Section-header pending: a section's title (and its description, if any) render
+  // in the pending tint whenever that section's options are still inert — its
+  // upstream axis isn't chosen yet — mirroring the table right below it. The
+  // colored-belt embroidery case is instead a *blocked* state (embroideryBlocked
+  // below), tinting its headers blocked rather than pending.
+  const materialPending = !colorReady;
+  const widthPending = !materialReady;
+  const sizePending = !sizeUpstreamReady;
+  const embroideryHeaderPending = embroideryAllowed && state.widthCm == null;
+  const labelPending = !labelReady;
+  // A colored ("Other") belt blocks the whole embroidery section (cells + inputs
+  // render blocked); its headers/descriptions follow, tinting blocked too.
+  const embroideryBlocked = !embroideryAllowed;
+
   // Per-character embroidery rate for a thread category at the chosen width.
   // Null until a width is picked (like Size, prices appear once width is set).
   const embroideryRate = (category: Thread): number | null => {
@@ -315,8 +344,16 @@ export function ObiConfigurator({
   const threadWithoutText =
     state.threadColor != null && endAChars === 0 && endBChars === 0;
 
+  // Label is required — no default; the buyer must pick one like any other
+  // section.
+  const labelChosen = state.labelId != null;
+
   const canAdd =
-    config != null && breakdown != null && !breakdown.quote && !threadWithoutText;
+    config != null &&
+    breakdown != null &&
+    !breakdown.quote &&
+    labelChosen &&
+    !threadWithoutText;
 
   const labelName = labels.find((l) => l.id === state.labelId)?.name ?? "Hirota";
   const colorName = (c: ObiColor) => t(`colors.${c}`);
@@ -372,7 +409,7 @@ export function ObiConfigurator({
     if (state.widthCm != null) parts.push(widthShort(state.widthCm));
     if (state.sizeCode != null) parts.push(`#${state.sizeCode}`);
     features.push({
-      label: `${t("obiLine").toLowerCase()}: ${parts.join(" · ")}`,
+      label: parts.join(" · "),
       amountJpy: breakdown?.lines[0]?.amountJpy,
     });
   }
@@ -381,22 +418,25 @@ export function ObiConfigurator({
   // the base positionally in the breakdown: lines[0] is the base, shown above).
   if (breakdown && configured) {
     let i = 1;
-    // "End X: <text>, <thread color>". Thread is always set when an end has text.
+    // "end X embr = <text> (<thread color>)". Thread is always set when an end
+    // has text.
     const threadSuffix =
       state.threadColor != null ? ` (${t(`threadColorsShort.${state.threadColor}`)})` : "";
     if (endAChars > 0) {
       features.push({
-        label: `${t("endAShort")}: ${state.endAText.trim()}${threadSuffix}`,
+        label: `${t("endAShort")} = ${state.endAText.trim()}${threadSuffix}`,
         amountJpy: breakdown.lines[i++]?.amountJpy,
       });
     }
     if (endBChars > 0) {
       features.push({
-        label: `${t("endBShort")}: ${state.endBText.trim()}${threadSuffix}`,
+        label: `${t("endBShort")} = ${state.endBText.trim()}${threadSuffix}`,
         amountJpy: breakdown.lines[i++]?.amountJpy,
       });
     }
-    features.push({ label: `${t("label").toLowerCase()}: ${labelName}` });
+    if (labelChosen) {
+      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
+    }
   }
 
   function handleAdd() {
@@ -466,7 +506,7 @@ export function ObiConfigurator({
 
         {/* Material — depends on color; incompatible materials mute once a
             color is chosen. */}
-        <p className="text-lg font-bold pt-5 mb-1.5">{t("material")}</p>
+        <p className={"text-lg font-bold pt-5 mb-1.5" + (materialPending ? " text-foreground-pending" : "")}>{t("material")}</p>
         <OptionTable>
           {OBI_MATERIALS.map((m) => {
             const valid = colorReady && COLOR_MATERIALS[state.color!].includes(m);
@@ -485,7 +525,7 @@ export function ObiConfigurator({
         </OptionTable>
 
         {/* Width — depends on material; e.g. Nami mutes 4.5cm. */}
-        <p className="text-lg font-bold pt-5 mb-1.5">{t("width")}</p>
+        <p className={"text-lg font-bold pt-5 mb-1.5" + (widthPending ? " text-foreground-pending" : "")}>{t("width")}</p>
         <OptionTable>
           {OBI_WIDTHS.map((w) => {
             const valid = materialReady && MATERIAL_WIDTHS[state.material!].includes(w);
@@ -507,7 +547,7 @@ export function ObiConfigurator({
 
         {/* Size — all #0–#13 with cm always shown. Not selectable until color +
             material + width are set; then prices appear, unavailable sizes mute. */}
-        <p className="text-lg font-bold pt-5 mb-1.5">{t("size")}</p>
+        <p className={"text-lg font-bold pt-5 mb-1.5" + (sizePending ? " text-foreground-pending" : "")}>{t("size")}</p>
         <OptionTable>
           {allSizes.map(([code, lengthCm]) => {
             const valid = availableSizes.has(code);
@@ -530,16 +570,13 @@ export function ObiConfigurator({
         {/* Embroidery (optional). One thread color is chosen globally for both
             ends; metallic mutes until an eligible belt is picked. Colored belts
             (white–brown) cannot be embroidered — the whole section blocks. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
-        {!embroideryAllowed && (
-          <p className="text-[11px] italic text-foreground-muted mb-1">{t("noEmbroideryNote")}</p>
-        )}
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (embroideryBlocked ? " text-foreground-blocked" : embroideryHeaderPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
 
         {/* thread color (single table, prices per character). Every option stays
             pending until a width sets the per-character price; then standard
             colors are selectable and metallic ones mute unless the belt allows
             them. Colored belts block the whole table. */}
-        <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
+        <p className={"text-xs mb-1 " + (embroideryBlocked ? "text-foreground-blocked" : embroideryHeaderPending ? "text-foreground-pending" : "text-foreground")}>{t("threadColorTitle")}</p>
         <OptionTable>
           {OBI_THREAD_COLORS.map((tc) => {
             const isMetallic = threadCategory(tc) === "metallic";
@@ -565,7 +602,7 @@ export function ObiConfigurator({
         </OptionTable>
 
         {/* the two embroidery ends, flush in one table (no per-input thread). */}
-        <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
+        <p className={"text-xs mb-1 pt-2 " + (embroideryBlocked ? "text-foreground-blocked" : embroideryPending ? "text-foreground-pending" : "text-foreground")}>{t("embroiderySubtitle")}</p>
         <OptionTable>
           <EmbroideryInputRow
             label={t("endA")}
@@ -585,17 +622,20 @@ export function ObiConfigurator({
           />
         </OptionTable>
 
-        {/* Label — free, defaults to Hirota. Always available. HIROTA's standard
-            label-specification note sits under the heading (localized). */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
+        {/* Label — free, required (no default). Selectable once the width
+            resolves; a required single choice like the other sections. HIROTA's
+            standard label-specification note sits under the heading (localized). */}
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
         <OptionTable>
           {labels.map((l) => (
             <OptionRow
               key={l.id}
               selected={labelReady && state.labelId === l.id}
               selectable={labelReady}
-              onClick={() => update({ labelId: l.id })}
+              onClick={() =>
+                update({ labelId: state.labelId === l.id ? undefined : l.id })
+              }
             >
               {l.name}
             </OptionRow>
@@ -699,11 +739,18 @@ export function ObiConfigurator({
 
             {/* What's still missing to enable the button — surfaced here rather
                 than inline in the form (mirrors the gi-standard configurator). */}
-            {threadWithoutText && (
-              <div className="mt-2.5 flex flex-col gap-0.5">
-                <p className="text-[11px] italic text-foreground-muted">
-                  {t("threadNeedsText")}
-                </p>
+            {(threadWithoutText || !labelChosen) && (
+              <div className="mt-2.5 flex flex-col gap-1.5">
+                {!labelChosen && (
+                  <p className="text-[11px] italic leading-tight text-foreground-muted">
+                    {t("labelRequired")}
+                  </p>
+                )}
+                {threadWithoutText && (
+                  <p className="text-[11px] italic leading-tight text-foreground-muted">
+                    {t("threadNeedsText")}
+                  </p>
+                )}
               </div>
             )}
           </>

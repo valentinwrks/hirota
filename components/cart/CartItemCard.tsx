@@ -6,6 +6,9 @@ import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import { localize } from "@/lib/i18n/localized";
 import type { Locale } from "@/lib/i18n/routing";
 import { type CartItem, lineTotalJpy } from "@/lib/cart/types";
+import { displayLabelName } from "@/lib/cart/format";
+import { JACKET_LETTERS, PANTS_LETTERS } from "@/lib/gi-custom/model";
+import type { GiMeasurements } from "@/lib/pricing/types";
 
 // One cart line, rendered as a bordered table row. Shared by the always-visible
 // cart column and the checkout summary. In `readOnly` mode (checkout) the qty is
@@ -40,7 +43,8 @@ export function CartItemCard({
   }
 
   // The configured-obi description, mirroring the configurator's right-panel
-  // summary: one "Obi: …" line, then each embroidered end, then the label.
+  // summary: "color · material · width · #size", then each embroidered end,
+  // then the label.
   function obiLines(s: {
     colorKey: string;
     materialKey: string;
@@ -54,31 +58,31 @@ export function CartItemCard({
     labelName: string;
   }): string[] {
     const lines = [
-      `${tObi("obiLine").toLowerCase()}: ${[
+      [
         tObi(`colorsShort.${s.colorKey}`),
         tObi(`materialsShort.${s.materialKey}`),
         s.widthCm === 4 ? tObi("widthShortNormal") : tObi("widthShortSpecial"),
         `#${s.sizeCode}`,
-      ].join(" · ")}`,
+      ].join(" · "),
     ];
     const threadSuffix = s.threadColorKey
       ? ` (${tObi(`threadColorsShort.${s.threadColorKey}`)})`
       : "";
     if (s.endAChars > 0 && s.endAText) {
-      lines.push(`${tObi("endAShort")}: ${s.endAText}${threadSuffix}`);
+      lines.push(`${tObi("endAShort")} = ${s.endAText}${threadSuffix}`);
     }
     if (s.endBChars > 0 && s.endBText) {
-      lines.push(`${tObi("endBShort")}: ${s.endBText}${threadSuffix}`);
+      lines.push(`${tObi("endBShort")} = ${s.endBText}${threadSuffix}`);
     }
-    lines.push(`${tObi("label").toLowerCase()}: ${s.labelName}`);
+    lines.push(tObi("labelLine", { name: displayLabelName(s.labelName) }));
     return lines;
   }
 
   // The configured standard-gi description, mirroring the configurator's
-  // right-panel summary: fit · #size, then mfr-logo, embroidered fields, C/H
-  // shortening (with shrinkage), and the label.
+  // right-panel summary: "ready-made · fit · #size" (the model is the card
+  // title), then embroidered fields, C/H shortening (with shrinkage), the
+  // mfr-logo and the label.
   function giStandardLines(s: {
-    modelSlug: string;
     fit: string;
     sizeCode: string;
     mfrLogo?: string;
@@ -91,47 +95,40 @@ export function CartItemCard({
   }): string[] {
     // Numeric sizes get a "#"; the small "S" sizes (S5–S7) are shown as-is.
     const sizeLabel = s.sizeCode.startsWith("S") ? s.sizeCode : `#${s.sizeCode}`;
-    // Guard the model against stale cart items saved before modelSlug existed.
-    const modelPart = s.modelSlug ? `${tGi(`modelShort.${s.modelSlug}`)} · ` : "";
     const lines = [
-      `${tGi("giLine").toLowerCase()}: ${modelPart}${tGi(`fitsShort.${s.fit}`)} · ${sizeLabel}`,
+      `${tGi("giLine")} · ${tGi(`fitsShort.${s.fit}`)} · ${sizeLabel}`,
     ];
     const threadSuffix = s.threadColorKey
       ? ` (${tGi(`threadColorsShort.${s.threadColorKey}`)})`
       : "";
     for (const f of s.embroidery) {
-      lines.push(
-        `${tGi(`embroideryFieldsShort.${f.field}`).toLowerCase()}: ${f.text}${threadSuffix}`,
-      );
+      lines.push(`${tGi(`embroideryFieldsShort.${f.field}`)} = ${f.text}${threadSuffix}`);
     }
     if (s.sleeveCcm != null) {
-      lines.push(`${tGi("adjustCShort")}: ${s.sleeveCcm}cm`);
+      lines.push(`${tGi("adjustCShort")} = ${s.sleeveCcm}`);
     }
     if (s.pantHcm != null) {
-      lines.push(`${tGi("adjustHShort")}: ${s.pantHcm}cm`);
+      lines.push(`${tGi("adjustHShort")} = ${s.pantHcm}`);
     }
     if (s.shrinkage) {
-      lines.push(
-        `${tGi("shrinkage").toLowerCase()}: ${tGi(`shrinkageOptions.${s.shrinkage}`)}`,
-      );
+      lines.push(tGi(`shrinkageShort.${s.shrinkage}`));
     }
     if (s.mfrLogo) {
-      lines.push(
-        `${tGi("mfrLogo").toLowerCase()}: ${tGi(`mfrLogoPlacementsShort.${s.mfrLogo}`)}`,
-      );
+      lines.push(tGi(`mfrLogoShort.${s.mfrLogo}`));
     }
-    lines.push(`${tGi("label").toLowerCase()}: ${s.labelName}`);
+    lines.push(tGi("labelLine", { name: displayLabelName(s.labelName) }));
     return lines;
   }
 
   // The configured custom-gi description, mirroring the configurator's
-  // right-panel summary: model · purchase unit · band, then the key option flags
-  // (collar, ties, hem, high waist, elastic, embroidery, mfr-logo, shrinkage) and
-  // the label. The full spec (measurements, body data) lives in the snapshot.
+  // right-panel summary: "fully-tailored · purchase unit · band" (the model is
+  // the card title), then the measurements A–J with their shrinkage, the body
+  // data, and the option flags (ties, elastic, high waist, collar, hem,
+  // embroidery, mfr-logo) and the label.
   function giCustomLines(s: {
-    modelSlug: string;
     purchaseUnit: string;
     bandCode: string;
+    measurements?: GiMeasurements;
     collar?: string;
     sideTies: boolean;
     chestTies: boolean;
@@ -142,45 +139,50 @@ export function CartItemCard({
     threadColorKey?: string;
     embroidery: { field: string; chars: number; text: string }[];
     shrinkage?: string;
+    bodyHeightCm?: number;
+    bodyWeightKg?: number;
+    bodyWaistCm?: number;
     labelName: string;
   }): string[] {
-    const modelPart = s.modelSlug ? `${tGiC(`modelShort.${s.modelSlug}`)} · ` : "";
     const lines = [
-      `${tGiC("giLine").toLowerCase()}: ${modelPart}${tGiC(`purchaseUnitsShort.${s.purchaseUnit}`)} · ${tGiC(`bandsShort.${s.bandCode}`)}`,
+      `${tGiC("giLine")} · ${tGiC(`purchaseUnitsShort.${s.purchaseUnit}`)} · ${tGiC(`bandsShort.${s.bandCode}`)}`,
     ];
+    for (const l of [...JACKET_LETTERS, ...PANTS_LETTERS]) {
+      const v = s.measurements?.[l];
+      if (v != null) lines.push(`${l.toUpperCase()} = ${v}`);
+    }
+    if (s.shrinkage) {
+      lines.push(tGiC(`shrinkageShort.${s.shrinkage}`));
+    }
+    if (s.bodyHeightCm != null && s.bodyWeightKg != null && s.bodyWaistCm != null) {
+      lines.push(`${s.bodyHeightCm}cm · ${s.bodyWeightKg}kg · ${s.bodyWaistCm}cm`);
+    }
+    if (s.sideTies) lines.push(tGiC("sideTiesShort"));
+    if (s.chestTies) lines.push(tGiC("chestTiesShort"));
+    if (s.elasticWaist) lines.push(tGiC("elasticWaistShort"));
+    if (s.highWaistCm != null) {
+      lines.push(`${tGiC("highWaistLabel").toLowerCase()} = ${s.highWaistCm}cm`);
+    }
     if (s.collar) {
       lines.push(tGiC(`collarOptions.${s.collar}`).toLowerCase());
     }
-    if (s.sideTies) lines.push(tGiC("sideTies").toLowerCase());
-    if (s.chestTies) lines.push(tGiC("chestTies").toLowerCase());
     if (s.hem) {
       lines.push(
-        `${tGiC("hems").toLowerCase()}: ${tGiC(`hemOptions.${s.hem.widthCm}-${s.hem.thickness}`)}`,
+        tGiC("hemLine", {
+          option: tGiC(`hemOptions.${s.hem.widthCm}-${s.hem.thickness}`),
+        }),
       );
     }
-    if (s.highWaistCm != null) {
-      lines.push(`${tGiC("highWaist").toLowerCase()}: ${s.highWaistCm}cm`);
-    }
-    if (s.elasticWaist) lines.push(tGiC("elasticWaist").toLowerCase());
     const threadSuffix = s.threadColorKey
       ? ` (${tGiC(`threadColorsShort.${s.threadColorKey}`)})`
       : "";
     for (const f of s.embroidery) {
-      lines.push(
-        `${tGiC(`embroideryFieldsShort.${f.field}`).toLowerCase()}: ${f.text}${threadSuffix}`,
-      );
+      lines.push(`${tGiC(`embroideryFieldsShort.${f.field}`)} = ${f.text}${threadSuffix}`);
     }
     if (s.mfrLogo) {
-      lines.push(
-        `${tGiC("mfrLogo").toLowerCase()}: ${tGiC(`mfrLogoPlacementsShort.${s.mfrLogo}`)}`,
-      );
+      lines.push(tGiC(`mfrLogoShort.${s.mfrLogo}`));
     }
-    if (s.shrinkage) {
-      lines.push(
-        `${tGiC("shrinkage").toLowerCase()}: ${tGiC(`shrinkageOptions.${s.shrinkage}`)}`,
-      );
-    }
-    lines.push(`${tGiC("label").toLowerCase()}: ${s.labelName}`);
+    lines.push(tGiC("labelLine", { name: displayLabelName(s.labelName) }));
     return lines;
   }
 

@@ -1,7 +1,24 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import { useMobileChrome, type MobileView } from "./MobileChromeProvider";
+
+// Tracks the md breakpoint (48rem) in JS. Needed because `inert` is an HTML
+// attribute, not CSS — Tailwind's md: variants can't switch it off, and an
+// inert subtree swallows clicks/focus at every viewport width. Server snapshot
+// is `false` (mobile-safe: the parked flap is already pointer-events-none via
+// CSS until hydration).
+function useIsDesktop() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mql = window.matchMedia("(min-width: 48rem)");
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia("(min-width: 48rem)").matches,
+    () => false,
+  );
+}
 
 // Wraps the about / cart columns so they exist ONCE in the tree but render two
 // ways: on md+ the wrapper is display:contents (the column stays a direct flex
@@ -32,13 +49,17 @@ export function MobilePanel({
   children: ReactNode;
 }) {
   const { view: active } = useMobileChrome();
+  const isDesktop = useIsDesktop();
   const open = active === view;
+  // Only the mobile overlay may be inert/hidden; on md+ the column is always
+  // live even though `open` never becomes true there.
+  const parked = !open && !isDesktop;
 
   if (view === "cart") {
     return (
       <div
-        aria-hidden={!open}
-        inert={!open}
+        aria-hidden={parked}
+        inert={parked}
         className={
           "md:contents max-md:fixed max-md:inset-x-0 max-md:top-[26px] max-md:bottom-0 " +
           "max-md:z-[45] max-md:bg-white max-md:transition-all max-md:duration-[450ms] " +
