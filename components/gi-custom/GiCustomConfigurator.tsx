@@ -296,20 +296,35 @@ export function GiCustomConfigurator({
         for (const l of PANTS_LETTERS) measure[l] = "";
       }
 
-      // --- Core-level measurement fields ---------------------------------
-      // Shrinkage and body data only make sense once the core (model + unit +
-      // band) resolves — they sit under Measurements and go selectable/editable
-      // on `coreReady`. If the core is dropped, clear them so nothing lingers
-      // (shrinkage especially: it would otherwise stay struck as a selected-but-
-      // inert row while the rest of Measurements empties).
-      let { shrinkage, heightText, weightText, waistText } = s;
+      // --- Core gating: everything below Size band ----------------------
+      // The entire form below the Size band (measurements, every option,
+      // embroidery, label — plus shrinkage and body data) is gated on
+      // `coreReady` (model + unit + band). Dropping any of those axes — most
+      // notably de-selecting the band — must wipe ALL of it, not just the flags:
+      // nothing should linger selected/filled while the section sits pending.
+      let { shrinkage, heightText, weightText, waistText, threadColor, labelId } = s;
       const coreReady =
         s.modelSlug != null && purchaseUnit != null && bandCode != null;
       if (!coreReady) {
+        measure = emptyMeasure();
+        collar = undefined;
+        sideTies = false;
+        chestTies = false;
+        elasticWaist = false;
+        mfrLogo = undefined;
+        hem = undefined;
+        highWaistBand = undefined;
+        highWaistText = "";
+        threadColor = undefined;
+        lapelText = "";
+        shoulderText = "";
+        chestText = "";
+        pantsText = "";
         shrinkage = undefined;
         heightText = "";
         weightText = "";
         waistText = "";
+        labelId = undefined;
       }
 
       return {
@@ -333,6 +348,8 @@ export function GiCustomConfigurator({
         heightText,
         weightText,
         waistText,
+        threadColor,
+        labelId,
       };
     },
     [modelBySlug],
@@ -370,6 +387,35 @@ export function GiCustomConfigurator({
   const coreReady =
     state.modelSlug != null && state.purchaseUnit != null && state.bandCode != null;
   const isQuote = band?.isQuote ?? false;
+
+  // Section-header tint (mirrors ready-made / obi): each section's title (and its
+  // description) follows the state of the options right below it — `pending`
+  // while its upstream axis is unresolved, `blocked` when a decided rule (a
+  // purchase-unit part exclusion, or a model rule) blocks the WHOLE section.
+  // blocked wins over pending; each `*Pending` is "not blocked and not yet
+  // selectable", exactly the inert-but-not-struck state of the rows below.
+  const allowsElastic = modelDef?.allowsElasticWaist ?? false;
+  const unitPending = !modelChosen;
+  const bandPending = !(modelChosen && unitChosen);
+  // Measurements + shrinkage + body data: pending until the core resolves; no
+  // whole-section blocked state (single-piece units only block SOME letters).
+  const measurementsPending = !coreReady;
+  const tiesBlocked = unitChosen && !jacket;
+  const tiesPending = !tiesBlocked && !(coreReady && jacket);
+  const elasticBlocked = (modelChosen && !allowsElastic) || (unitChosen && !pants);
+  const elasticPending = !elasticBlocked && !(coreReady && pants && allowsElastic);
+  const highWaistBlocked = unitChosen && !pants;
+  const highWaistPending = !highWaistBlocked && !(coreReady && pants);
+  const collarBlocked = (unitChosen && !jacket) || (modelChosen && !isKata);
+  const collarPending = !collarBlocked && !(coreReady && jacket && isKata);
+  // Hems always keep the normal-thickness path (5cm-normal) available, so the
+  // section is never fully blocked — only pending until the core resolves.
+  const hemsPending = !coreReady;
+  const embroideryPending = !coreReady; // thread-color table
+  const embroideryEndsPending = !coreReady || state.threadColor == null; // fields
+  const mfrBlocked = unitChosen && !jacket;
+  const mfrPending = !mfrBlocked && !(coreReady && jacket);
+  const labelPending = !coreReady;
 
   // The band's top size chart row — source of the per-letter measurement ceilings
   // (NULL for the quote band, which has no top size).
@@ -752,8 +798,8 @@ export function GiCustomConfigurator({
 
         {/* Purchase unit — selectable once a model is chosen. Drives which
             measurements are validated and which optionals show. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("purchaseUnit")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("purchaseUnitNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (unitPending ? " text-foreground-pending" : "")}>{t("purchaseUnit")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (unitPending ? "text-foreground-pending" : "text-foreground")}>{t("purchaseUnitNote")}</p>
         <OptionTable>
           {PURCHASE_UNITS.map((u) => (
             <OptionRow
@@ -771,8 +817,8 @@ export function GiCustomConfigurator({
 
         {/* Size band — sets the base price (× the purchase-unit multiplier).
             "above 8" is quote-on-request: selectable, but priced as a quote. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("band")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("bandNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (bandPending ? " text-foreground-pending" : "")}>{t("band")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (bandPending ? "text-foreground-pending" : "text-foreground")}>{t("bandNote")}</p>
         <OptionTable>
           {bands.map((b) => {
             const base = bandBaseFor(b, state.purchaseUnit);
@@ -810,8 +856,8 @@ export function GiCustomConfigurator({
             the ones outside the chosen purchase unit stay pending. Validated
             against the band's top size (F collected but not size-checked; H/J have
             the high waist subtracted). */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("measurements")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (measurementsPending ? " text-foreground-pending" : "")}>{t("measurements")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (measurementsPending ? "text-foreground-pending" : "text-foreground")}>
           {isQuote ? t("measurementsNoteQuote") : t("measurementsNote")}
         </p>
         <OptionTable>
@@ -859,7 +905,7 @@ export function GiCustomConfigurator({
             being entered, so the buyer must say whether shrinkage is already
             accounted for or HIROTA should add it (§8.4). No heading of its own;
             it sits under the measurements like the ready-made cut section. */}
-        <p className="text-xs mb-1 text-foreground pt-3">{t("shrinkage")}</p>
+        <p className={"text-xs mb-1 pt-3 " + (measurementsPending ? "text-foreground-pending" : "text-foreground")}>{t("shrinkage")}</p>
         <OptionTable>
           {ShrinkageOptions.map((opt) => (
             <OptionRow
@@ -878,7 +924,7 @@ export function GiCustomConfigurator({
         {/* Body data — part of the measurements: required sanity-check fields,
             stored but never priced and not used to build the garment. No heading
             of its own; it sits under the measurements like shrinkage. */}
-        <p className="text-xs mb-1 text-foreground pt-3">{t("bodyData")}</p>
+        <p className={"text-xs mb-1 pt-3 " + (measurementsPending ? "text-foreground-pending" : "text-foreground")}>{t("bodyData")}</p>
         <OptionTable>
           <MeasureInputRow
             label={t("bodyHeight")}
@@ -907,7 +953,7 @@ export function GiCustomConfigurator({
         </OptionTable>
 
         {/* Ties — jacket, free toggles (all models). */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("ties")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (tiesBlocked ? " text-foreground-blocked" : tiesPending ? " text-foreground-pending" : "")}>{t("ties")}</p>
         <OptionTable>
           <OptionRow
             selected={jacket && state.sideTies}
@@ -932,8 +978,8 @@ export function GiCustomConfigurator({
         {/* Elastic waist — pants, Tsubasa only. Pending until the core resolves
             with pants in scope; blocked for non-Tsubasa. Does not replace the
             high waist. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("elasticWaistTitle")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("elasticNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (elasticBlocked ? " text-foreground-blocked" : elasticPending ? " text-foreground-pending" : "")}>{t("elasticWaistTitle")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (elasticBlocked ? "text-foreground-blocked" : elasticPending ? "text-foreground-pending" : "text-foreground")}>{t("elasticNote")}</p>
         <OptionTable>
           <OptionRow
             selected={pants && state.elasticWaist}
@@ -952,8 +998,8 @@ export function GiCustomConfigurator({
         {/* High waist — pants; one radio per cm band (price = the band's). Once a
             band is picked, an input collects the exact cm, validated to fall
             inside that band. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("highWaist")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("highWaistNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (highWaistBlocked ? " text-foreground-blocked" : highWaistPending ? " text-foreground-pending" : "")}>{t("highWaist")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (highWaistBlocked ? "text-foreground-blocked" : highWaistPending ? "text-foreground-pending" : "text-foreground")}>{t("highWaistNote")}</p>
         <OptionTable>
           {highWaistBands.map((b) => {
             const isSel =
@@ -998,8 +1044,8 @@ export function GiCustomConfigurator({
 
         {/* Collar thickness — jacket, kata only. Pending until the core resolves
             with a jacket in scope; blocked (struck through) for kumite. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("collar")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("collarNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (collarBlocked ? " text-foreground-blocked" : collarPending ? " text-foreground-pending" : "")}>{t("collar")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (collarBlocked ? "text-foreground-blocked" : collarPending ? "text-foreground-pending" : "text-foreground")}>{t("collarNote")}</p>
         <OptionTable>
           {CollarOptions.map((c) => (
             <OptionRow
@@ -1020,8 +1066,8 @@ export function GiCustomConfigurator({
             default is NOT a row (it's the note above); clicking a selected row
             toggles back to it. kumite models may only use the normal-thickness
             rows; the rest render blocked for them once the core resolves. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("hems")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("hemsNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (hemsPending ? " text-foreground-pending" : "")}>{t("hems")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (hemsPending ? "text-foreground-pending" : "text-foreground")}>{t("hemsNote")}</p>
         <OptionTable>
           {HEM_OPTIONS.filter((o) => !o.isDefault).map((o) => {
             const allowed = hemAllowedForModel(isKata, o);
@@ -1057,8 +1103,8 @@ export function GiCustomConfigurator({
         {/* Embroidery — one global thread color; four fields (per part). All four
             fields always show; ones outside the purchase unit, or before a thread
             colour is chosen, stay pending. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("embroidery")}</p>
-        <p className="text-xs mb-1 text-foreground">{t("threadColorTitle")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (embroideryPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
+        <p className={"text-xs mb-1 " + (embroideryPending ? "text-foreground-pending" : "text-foreground")}>{t("threadColorTitle")}</p>
         <OptionTable>
           {GI_THREAD_COLORS.map((tc) => (
             <OptionRow
@@ -1074,7 +1120,7 @@ export function GiCustomConfigurator({
             </OptionRow>
           ))}
         </OptionTable>
-        <p className="text-xs mb-1 text-foreground pt-2">{t("embroiderySubtitle")}</p>
+        <p className={"text-xs mb-1 pt-2 " + (embroideryEndsPending ? "text-foreground-pending" : "text-foreground")}>{t("embroiderySubtitle")}</p>
         <OptionTable>
           {embFields.map((f) => (
             <TextInputRow
@@ -1094,8 +1140,8 @@ export function GiCustomConfigurator({
         </OptionTable>
 
         {/* Manufacturer's logo — jacket, all custom models. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("mfrLogoTitle")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("mfrLogoNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (mfrBlocked ? " text-foreground-blocked" : mfrPending ? " text-foreground-pending" : "")}>{t("mfrLogoTitle")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (mfrBlocked ? "text-foreground-blocked" : mfrPending ? "text-foreground-pending" : "text-foreground")}>{t("mfrLogoNote")}</p>
         <OptionTable>
           {MfrLogoPlacements.map((placement) => (
             <OptionRow
@@ -1115,8 +1161,8 @@ export function GiCustomConfigurator({
 
         {/* Label — free, required (no default). Selectable once the core
             resolves; a required single choice like the other sections. */}
-        <p className="text-lg font-bold pt-5 mb-[3px]">{t("label")}</p>
-        <p className="text-xs text-foreground leading-tight mb-2">{t("labelSpecNote")}</p>
+        <p className={"text-lg font-bold pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
         <OptionTable>
           {labels.map((l) => (
             <OptionRow
