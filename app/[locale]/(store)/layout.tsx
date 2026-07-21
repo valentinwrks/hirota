@@ -44,7 +44,7 @@ export default async function StoreLayout({
                 2xl+: four regions like the legacy UI — a 7.5% vertical-logo
                 band appears and widths shift to 7.5 / 20 / 45 / 27.5. Shop is
                 flex-1, so it absorbs the remainder in both layouts. */}
-            <main className="mt-[26px] h-[calc(100dvh-26px)] flex overflow-hidden">
+            <main className="mt-[32px] md:mt-[26px] h-[calc(100dvh-32px)] md:h-[calc(100dvh-26px)] flex overflow-hidden">
               <LogoColumn />
               <MobilePanel view="about">
                 <AboutColumn />

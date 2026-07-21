@@ -16,10 +16,12 @@ export async function GiStandardView({
 }) {
   const t = await getTranslations("GiStandard");
   const tA = await getTranslations("Admin");
+  // Thread colours live in the shared GiThread namespace (one gi palette, §8.4).
+  const tThread = await getTranslations("GiThread");
   const s = snapshot.summary;
 
   const sizeLabel = s.sizeCode.startsWith("S") ? s.sizeCode : `#${s.sizeCode}`;
-  const thread = s.threadColorKey ? t(`threadColors.${s.threadColorKey}`) : null;
+  const thread = s.threadColorKey ? tThread(`threadColors.${s.threadColorKey}`) : null;
   const byField = new Map(s.embroidery.map((f) => [f.field, f]));
   const adjusted = s.sleeveCcm != null || s.pantHcm != null;
 

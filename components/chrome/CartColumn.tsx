@@ -29,7 +29,7 @@ export function CartColumn() {
       {/* Until hydrated we render nothing beyond the header to avoid a flash of
           the empty state before localStorage loads. */}
       {!hydrated ? null : items.length === 0 ? (
-        <div className="mt-2.5 mx-2.5 text-xs leading-tight">
+        <div className="mt-2.5 mx-2.5 max-md:mx-2 text-xs leading-tight">
           {/* Larger on the mobile cart flap, where the empty state is the whole
               full-screen surface; stays compact in the narrow desktop column. */}
           <p className="max-md:text-lg">{t("empty")}</p>
@@ -39,7 +39,7 @@ export function CartColumn() {
           {/* Scrollable items — grows to fill, keeping the footer pinned below.
               The bottom edge fades to transparent (mask gradient) so a long list
               dissolves just above the subtotal, cueing that there's more to scroll. */}
-          <div className="flex-1 overflow-y-auto overscroll-contain scrollbar-none mt-2.5 mx-2.5 pb-10 text-xs leading-tight [mask-image:linear-gradient(to_bottom,black_calc(100%_-_2.5rem),transparent)] [-webkit-mask-image:linear-gradient(to_bottom,black_calc(100%_-_2.5rem),transparent)]">
+          <div className="flex-1 overflow-y-auto overscroll-contain scrollbar-none mt-2.5 mx-2.5 max-md:mx-2 pb-10 text-xs leading-tight [mask-image:linear-gradient(to_bottom,black_calc(100%_-_2.5rem),transparent)] [-webkit-mask-image:linear-gradient(to_bottom,black_calc(100%_-_2.5rem),transparent)]">
           <table className="w-full border-separate border-spacing-x-0 border-spacing-y-2.5 -mt-2.5 -mb-2.5">
             <tbody>
               {items.map((item) => (
@@ -50,7 +50,7 @@ export function CartColumn() {
           </div>
 
           {/* Footer pinned to the bottom of the cart column. */}
-          <div className="shrink-0 mx-2.5 mb-[10px] pt-2.5 text-xs leading-tight">
+          <div className="shrink-0 mx-2.5 max-md:mx-2 mb-[10px] pt-2.5 text-xs leading-tight">
             <div className="flex justify-between">
               <p className="text-base font-bold leading-tight">{t("subtotal")}</p>
               <p className="text-base font-bold leading-tight">

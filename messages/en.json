@@ -251,7 +251,7 @@
     "widthSpecial": "Special tailoring (特別仕立て) — 4.5cm width",
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
-    "embroiderySubtitle": "Embroidery",
+    "embroiderySubtitle": "Embroideries — in kanji, katakana, or latin alphabet.",
     "threadColorTitle": "Thread color (prices per character)",
     "perChar": "per char.",
     "threadNeedsText": "Enter embroidery text in at least one end, or clear the thread color.",
@@ -357,6 +357,20 @@
     "readyMade": "Ready-made (既製品) — standard size",
     "fullyTailored": "Made-to-order (特別仕立て) — fully-tailored"
   },
+  "GiThread": {
+    "threadColors": {
+      "black": "Black (黒)",
+      "red": "Red (赤)",
+      "gold": "Gold (純金)",
+      "silver": "Silver (純銀)"
+    },
+    "threadColorsShort": {
+      "black": "black",
+      "red": "red",
+      "gold": "gold",
+      "silver": "silver"
+    }
+  },
   "GiStandard": {
     "model": "Model",
     "modelNote": "Choose a karate-gi fabric.",
@@ -409,22 +423,10 @@
     },
     "embroidery": "Embroidery (optional)",
     "embroideryPlaceholder": "none",
-    "embroiderySubtitle": "Embroideries — up to four fields",
+    "embroiderySubtitle": "Embroideries — up to four fields, in kanji, katakana, or latin alphabet.",
     "threadColorTitle": "Thread color (prices per character)",
     "perChar": "per char.",
     "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
-    "threadColors": {
-      "black": "Black (黒)",
-      "red": "Red (赤)",
-      "gold": "Gold (純金)",
-      "silver": "Silver (純銀)"
-    },
-    "threadColorsShort": {
-      "black": "black",
-      "red": "red",
-      "gold": "gold",
-      "silver": "silver"
-    },
     "embroideryFields": {
       "lapel": "Jacket lapel",
       "shoulder": "Left shoulder",
@@ -478,7 +480,7 @@
     "added": "ADDED"
   },
   "About": {
-    "title": "hirota",
+    "title": "hirota (ヒロタ)",
     "intro": "is a Japanese manufacturing house specializing in premium karate-gi and karate equipment.",
     "history": "Founded in 1965, the company has established a long-standing reputation for precision craftsmanship, material excellence, and uncompromising quality. HIROTA uniforms are trusted and worn by masters, instructors, and elite competitors at the highest levels of traditional and competitive karate worldwide.",
     "tokyoTitle": "Tokyo Head Office (東京本社)",
@@ -557,7 +559,7 @@
       "jacket": "jacket",
       "pants": "pants"
     },
-    "band": "Size band (base price)",
+    "band": "Size band — base price",
     "bandNote": "Choose the size band that contains your size to set the base price.",
     "bands": {
       "up_to_2_5": "Up to 2½",
@@ -604,7 +606,7 @@
     "sideTiesShort": "side ties",
     "chestTiesShort": "chest ties",
     "free": "free",
-    "hems": "Hems (optional)",
+    "hems": "Hems width & thickness (optional)",
     "hemsNote": "4cm width and normal thickness is applied by default. Kumite models allow normal thickness only.",
     "hemOptions": {
       "4-normal": "4cm width, normal (default)",
@@ -638,21 +640,9 @@
     "embroidery": "Embroidery (optional)",
     "threadColorTitle": "Thread color (prices per character)",
     "perChar": "per char.",
-    "embroiderySubtitle": "Embroideries — up to four fields",
+    "embroiderySubtitle": "Embroideries — up to four fields, in kanji, katakana, or latin alphabet.",
     "embroideryPlaceholder": "none",
     "threadNeedsText": "Enter text in at least one field, or clear the thread color.",
-    "threadColors": {
-      "black": "Black (黒)",
-      "red": "Red (赤)",
-      "gold": "Gold (純金)",
-      "silver": "Silver (純銀)"
-    },
-    "threadColorsShort": {
-      "black": "black",
-      "red": "red",
-      "gold": "gold",
-      "silver": "silver"
-    },
     "embroideryFields": {
       "lapel": "Jacket lapel",
       "shoulder": "Left shoulder",

@@ -11,12 +11,22 @@ export function LogoLink({ alt }: { alt: string }) {
   const pathname = usePathname();
 
   const img = (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src="/hirota/logo-空手衣のヒロタ.svg"
-      alt={alt}
-      className="h-[21px] object-contain object-center"
-    />
+    <>
+      {/* Mobile shows the blue HIROTA wordmark; md+ keeps the full
+          空手衣のヒロタ lockup. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/hirota/logo-blue.svg"
+        alt={alt}
+        className="md:hidden h-[24px] object-contain object-center"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/hirota/logo-空手衣のヒロタ.svg"
+        alt={alt}
+        className="hidden md:block h-[21px] object-contain object-center"
+      />
+    </>
   );
 
   if (pathname.startsWith("/admin")) return img;

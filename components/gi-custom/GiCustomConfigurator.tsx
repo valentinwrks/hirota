@@ -157,6 +157,8 @@ export function GiCustomConfigurator({
   headerField?: React.ReactNode;
 }) {
   const t = useTranslations("GiCustom");
+  // Thread colours are shared with the ready-made gi (one palette, §8.4).
+  const tThread = useTranslations("GiThread");
   const { format } = useCurrency();
   const { addItem } = useCart();
 
@@ -622,7 +624,7 @@ export function GiCustomConfigurator({
   const embroideryRate = (color: GiThreadColor): number =>
     data.giEmbroidery.get(giThreadCategory(color)) ?? 0;
   const threadColorSuffix =
-    state.threadColor != null ? ` (${t(`threadColorsShort.${state.threadColor}`)})` : "";
+    state.threadColor != null ? ` (${tThread(`threadColorsShort.${state.threadColor}`)})` : "";
 
   // ---- Right-panel live features, paired positionally with the engine's
   // breakdown lines (base, collar, elastic, mfr-logo, hem, high-waist, then
@@ -644,12 +646,13 @@ export function GiCustomConfigurator({
     }
 
     // Push order mirrors the left-hand form top-to-bottom (§9): base line, then
-    // the entered measurements A–J, their shrinkage and the body data, then
+    // the entered measurements A–J, their shrinkage and the body data, then Label
+    // (which sits right after the measurements block, before the optionals), then
     // Ties → Elastic waist → High waist → Collar → Hems → Embroidery →
-    // Manufacturer's logo → Label. The amounts were read above in the ENGINE's
-    // line order, so reordering the pushes here is purely presentational. The
-    // model itself lives in the panel title (and the cart-line name), so the
-    // base line reads "fully-tailored · full set · 6 to 8".
+    // Manufacturer's logo. The amounts were read above in the ENGINE's line
+    // order, so reordering the pushes here is purely presentational. The model
+    // itself lives in the panel title (and the cart-line name), so the base line
+    // reads "fully-tailored · full set · 6 to 8".
     features.push({
       label: `${t("giLine")} · ${t(`purchaseUnitsShort.${state.purchaseUnit}`)} · ${t(`bandsShort.${band.bandCode}`)}`,
       amountJpy: baseAmt,
@@ -665,6 +668,12 @@ export function GiCustomConfigurator({
       features.push({
         label: `${bodyHeightCm}cm · ${bodyWeightKg}kg · ${bodyWaistCm}cm`,
       });
+    }
+    // Label leads the optional lines (it sits right after the measurements block
+    // in the form). It carries no amount, so its position doesn't disturb the
+    // positional cursor used for the priced lines above.
+    if (labelChosen) {
+      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
     }
     if (state.sideTies && jacket) features.push({ label: t("sideTiesShort") });
     if (state.chestTies && jacket) features.push({ label: t("chestTiesShort") });
@@ -696,9 +705,6 @@ export function GiCustomConfigurator({
         label: t(`mfrLogoShort.${state.mfrLogo}`),
         amountJpy: mfrAmt,
       });
-    }
-    if (labelChosen) {
-      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
     }
   }
 
@@ -779,7 +785,7 @@ export function GiCustomConfigurator({
         <>
         {headerField}
         {/* Model — no upstream: always selectable. */}
-        <p className={"text-lg font-bold mb-[3px]" + (headerField ? " pt-5" : "")}>{t("model")}</p>
+        <p className={"text-lg font-bold leading-tight mb-[3px]" + (headerField ? " pt-5" : "")}>{t("model")}</p>
         <p className="text-xs text-foreground leading-tight mb-2">{t("modelNote")}</p>
         <OptionTable>
           {models.map((m) => (
@@ -798,7 +804,7 @@ export function GiCustomConfigurator({
 
         {/* Purchase unit — selectable once a model is chosen. Drives which
             measurements are validated and which optionals show. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (unitPending ? " text-foreground-pending" : "")}>{t("purchaseUnit")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (unitPending ? " text-foreground-pending" : "")}>{t("purchaseUnit")}</p>
         <p className={"text-xs leading-tight mb-2 " + (unitPending ? "text-foreground-pending" : "text-foreground")}>{t("purchaseUnitNote")}</p>
         <OptionTable>
           {PURCHASE_UNITS.map((u) => (
@@ -817,7 +823,7 @@ export function GiCustomConfigurator({
 
         {/* Size band — sets the base price (× the purchase-unit multiplier).
             "above 8" is quote-on-request: selectable, but priced as a quote. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (bandPending ? " text-foreground-pending" : "")}>{t("band")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (bandPending ? " text-foreground-pending" : "")}>{t("band")}</p>
         <p className={"text-xs leading-tight mb-2 " + (bandPending ? "text-foreground-pending" : "text-foreground")}>{t("bandNote")}</p>
         <OptionTable>
           {bands.map((b) => {
@@ -856,7 +862,7 @@ export function GiCustomConfigurator({
             the ones outside the chosen purchase unit stay pending. Validated
             against the band's top size (F collected but not size-checked; H/J have
             the high waist subtracted). */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (measurementsPending ? " text-foreground-pending" : "")}>{t("measurements")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (measurementsPending ? " text-foreground-pending" : "")}>{t("measurements")}</p>
         <p className={"text-xs leading-tight mb-2 " + (measurementsPending ? "text-foreground-pending" : "text-foreground")}>
           {isQuote ? t("measurementsNoteQuote") : t("measurementsNote")}
         </p>
@@ -952,8 +958,29 @@ export function GiCustomConfigurator({
           />
         </OptionTable>
 
+        {/* Label — free, required (no default). Placed right after the
+            measurements block (measurements + shrinkage + body data), before the
+            optional sections. Selectable once the core resolves; a required
+            single choice like every other section. */}
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
+        <OptionTable>
+          {labels.map((l) => (
+            <OptionRow
+              key={l.id}
+              selected={coreReady && state.labelId === l.id}
+              selectable={coreReady}
+              onClick={() =>
+                update({ labelId: state.labelId === l.id ? undefined : l.id })
+              }
+            >
+              {l.name}
+            </OptionRow>
+          ))}
+        </OptionTable>
+
         {/* Ties — jacket, free toggles (all models). */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (tiesBlocked ? " text-foreground-blocked" : tiesPending ? " text-foreground-pending" : "")}>{t("ties")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (tiesBlocked ? " text-foreground-blocked" : tiesPending ? " text-foreground-pending" : "")}>{t("ties")}</p>
         <OptionTable>
           <OptionRow
             selected={jacket && state.sideTies}
@@ -978,7 +1005,7 @@ export function GiCustomConfigurator({
         {/* Elastic waist — pants, Tsubasa only. Pending until the core resolves
             with pants in scope; blocked for non-Tsubasa. Does not replace the
             high waist. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (elasticBlocked ? " text-foreground-blocked" : elasticPending ? " text-foreground-pending" : "")}>{t("elasticWaistTitle")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (elasticBlocked ? " text-foreground-blocked" : elasticPending ? " text-foreground-pending" : "")}>{t("elasticWaistTitle")}</p>
         <p className={"text-xs leading-tight mb-2 " + (elasticBlocked ? "text-foreground-blocked" : elasticPending ? "text-foreground-pending" : "text-foreground")}>{t("elasticNote")}</p>
         <OptionTable>
           <OptionRow
@@ -998,7 +1025,7 @@ export function GiCustomConfigurator({
         {/* High waist — pants; one radio per cm band (price = the band's). Once a
             band is picked, an input collects the exact cm, validated to fall
             inside that band. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (highWaistBlocked ? " text-foreground-blocked" : highWaistPending ? " text-foreground-pending" : "")}>{t("highWaist")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (highWaistBlocked ? " text-foreground-blocked" : highWaistPending ? " text-foreground-pending" : "")}>{t("highWaist")}</p>
         <p className={"text-xs leading-tight mb-2 " + (highWaistBlocked ? "text-foreground-blocked" : highWaistPending ? "text-foreground-pending" : "text-foreground")}>{t("highWaistNote")}</p>
         <OptionTable>
           {highWaistBands.map((b) => {
@@ -1044,7 +1071,7 @@ export function GiCustomConfigurator({
 
         {/* Collar thickness — jacket, kata only. Pending until the core resolves
             with a jacket in scope; blocked (struck through) for kumite. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (collarBlocked ? " text-foreground-blocked" : collarPending ? " text-foreground-pending" : "")}>{t("collar")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (collarBlocked ? " text-foreground-blocked" : collarPending ? " text-foreground-pending" : "")}>{t("collar")}</p>
         <p className={"text-xs leading-tight mb-2 " + (collarBlocked ? "text-foreground-blocked" : collarPending ? "text-foreground-pending" : "text-foreground")}>{t("collarNote")}</p>
         <OptionTable>
           {CollarOptions.map((c) => (
@@ -1066,7 +1093,7 @@ export function GiCustomConfigurator({
             default is NOT a row (it's the note above); clicking a selected row
             toggles back to it. kumite models may only use the normal-thickness
             rows; the rest render blocked for them once the core resolves. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (hemsPending ? " text-foreground-pending" : "")}>{t("hems")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (hemsPending ? " text-foreground-pending" : "")}>{t("hems")}</p>
         <p className={"text-xs leading-tight mb-2 " + (hemsPending ? "text-foreground-pending" : "text-foreground")}>{t("hemsNote")}</p>
         <OptionTable>
           {HEM_OPTIONS.filter((o) => !o.isDefault).map((o) => {
@@ -1103,7 +1130,7 @@ export function GiCustomConfigurator({
         {/* Embroidery — one global thread color; four fields (per part). All four
             fields always show; ones outside the purchase unit, or before a thread
             colour is chosen, stay pending. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (embroideryPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (embroideryPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
         <p className={"text-xs mb-1 " + (embroideryPending ? "text-foreground-pending" : "text-foreground")}>{t("threadColorTitle")}</p>
         <OptionTable>
           {GI_THREAD_COLORS.map((tc) => (
@@ -1116,7 +1143,7 @@ export function GiCustomConfigurator({
                 update({ threadColor: state.threadColor === tc ? undefined : tc })
               }
             >
-              {t(`threadColors.${tc}`)}
+              {tThread(`threadColors.${tc}`)}
             </OptionRow>
           ))}
         </OptionTable>
@@ -1140,7 +1167,7 @@ export function GiCustomConfigurator({
         </OptionTable>
 
         {/* Manufacturer's logo — jacket, all custom models. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (mfrBlocked ? " text-foreground-blocked" : mfrPending ? " text-foreground-pending" : "")}>{t("mfrLogoTitle")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (mfrBlocked ? " text-foreground-blocked" : mfrPending ? " text-foreground-pending" : "")}>{t("mfrLogoTitle")}</p>
         <p className={"text-xs leading-tight mb-2 " + (mfrBlocked ? "text-foreground-blocked" : mfrPending ? "text-foreground-pending" : "text-foreground")}>{t("mfrLogoNote")}</p>
         <OptionTable>
           {MfrLogoPlacements.map((placement) => (
@@ -1155,25 +1182,6 @@ export function GiCustomConfigurator({
               }
             >
               {t(`mfrLogoPlacements.${placement}`)}
-            </OptionRow>
-          ))}
-        </OptionTable>
-
-        {/* Label — free, required (no default). Selectable once the core
-            resolves; a required single choice like the other sections. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
-        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
-        <OptionTable>
-          {labels.map((l) => (
-            <OptionRow
-              key={l.id}
-              selected={coreReady && state.labelId === l.id}
-              selectable={coreReady}
-              onClick={() =>
-                update({ labelId: state.labelId === l.id ? undefined : l.id })
-              }
-            >
-              {l.name}
             </OptionRow>
           ))}
         </OptionTable>

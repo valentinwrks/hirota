@@ -41,7 +41,7 @@ export default async function AdminOrdersPage({
           {t("orders.empty")}
         </div>
       ) : (
-        <div className="p-3 overflow-x-auto scrollbar-thin">
+        <div className="p-3 max-md:px-2 overflow-x-auto scrollbar-thin">
           {/* Same framed, content-width table as the pricing editors: 4-sided
               border, last row drops its faint border-b so the frame's bottom
               edge stays strong (cell borders outrank the table's in collapse). */}

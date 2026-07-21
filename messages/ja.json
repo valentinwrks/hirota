@@ -251,7 +251,7 @@
     "widthSpecial": "4.5cm（特上）",
     "embroidery": "刺繍（任意）",
     "embroideryPlaceholder": "なし",
-    "embroiderySubtitle": "刺繍",
+    "embroiderySubtitle": "刺繍 — 漢字・カタカナ・ローマ字でご記入いただけます。",
     "threadColorTitle": "糸の色（1文字あたりの価格）",
     "perChar": "1文字",
     "threadNeedsText": "いずれかの端に文字を入力するか、糸の色を解除してください。",
@@ -357,6 +357,20 @@
     "readyMade": "既製品（標準サイズ）",
     "fullyTailored": "特別仕立て（フルオーダー）"
   },
+  "GiThread": {
+    "threadColors": {
+      "black": "黒",
+      "red": "赤",
+      "gold": "純金",
+      "silver": "純銀"
+    },
+    "threadColorsShort": {
+      "black": "黒",
+      "red": "赤",
+      "gold": "純金",
+      "silver": "純銀"
+    }
+  },
   "GiStandard": {
     "model": "モデル",
     "modelNote": "空手衣の生地をお選びください。",
@@ -409,22 +423,10 @@
     },
     "embroidery": "刺繍（任意）",
     "embroideryPlaceholder": "なし",
-    "embroiderySubtitle": "刺繍 — 最大4箇所",
+    "embroiderySubtitle": "刺繍 — 最大4箇所、漢字・カタカナ・ローマ字でご記入いただけます。",
     "threadColorTitle": "糸の色（1文字あたりの価格）",
     "perChar": "／文字",
     "threadNeedsText": "少なくとも1箇所に文字を入力するか、糸の色を解除してください。",
-    "threadColors": {
-      "black": "黒",
-      "red": "赤",
-      "gold": "純金",
-      "silver": "純銀"
-    },
-    "threadColorsShort": {
-      "black": "黒",
-      "red": "赤",
-      "gold": "純金",
-      "silver": "純銀"
-    },
     "embroideryFields": {
       "lapel": "上衣の衿",
       "shoulder": "左肩",
@@ -604,7 +606,7 @@
     "sideTiesShort": "脇紐",
     "chestTiesShort": "胸紐",
     "free": "無料",
-    "hems": "ヘム（任意）",
+    "hems": "ヘムの幅・厚み（任意）",
     "hemsNote": "上下に同じ幅・厚みを適用します。4cm普通が標準（無料）です。組手用モデルは普通厚のみ対応。",
     "hemOptions": {
       "4-normal": "4cm幅・普通（標準）",
@@ -638,21 +640,9 @@
     "embroidery": "刺繍（任意）",
     "threadColorTitle": "糸の色（1文字あたりの価格）",
     "perChar": "／文字",
-    "embroiderySubtitle": "刺繍 — 最大4箇所",
+    "embroiderySubtitle": "刺繍 — 最大4箇所、漢字・カタカナ・ローマ字でご記入いただけます。",
     "embroideryPlaceholder": "なし",
     "threadNeedsText": "少なくとも1箇所に文字を入力するか、糸の色を解除してください。",
-    "threadColors": {
-      "black": "黒",
-      "red": "赤",
-      "gold": "純金",
-      "silver": "純銀"
-    },
-    "threadColorsShort": {
-      "black": "黒",
-      "red": "赤",
-      "gold": "純金",
-      "silver": "純銀"
-    },
     "embroideryFields": {
       "lapel": "上衣の衿",
       "shoulder": "左肩",

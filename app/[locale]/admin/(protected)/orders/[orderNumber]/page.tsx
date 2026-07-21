@@ -43,7 +43,7 @@ export default async function OrderDetailPage({
   const t = await getTranslations("Admin");
 
   return (
-    <div className="p-3 pb-10 max-w-[900px] flex flex-col gap-5 text-[12px]">
+    <div className="p-3 max-md:px-2 pb-10 max-w-[900px] flex flex-col gap-5 text-[12px]">
       <div>
         {/* Same treatment as the PDP's "← back" link. */}
         <Link

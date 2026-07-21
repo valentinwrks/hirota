@@ -150,7 +150,7 @@ export function CheckoutSheet() {
       {/* White paper sheet — edge-to-edge below md, floating card on md+. */}
       <div className="relative w-full max-w-2xl my-8 mx-4 max-md:my-0 max-md:mx-0 max-md:min-h-dvh bg-background text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)]">
         {/* Header */}
-        <div className="flex items-center justify-between px-3 h-[30px] border-b border-border bg-foreground-selected text-background text-sm">
+        <div className="flex items-center justify-between px-3 max-md:px-2 h-[30px] border-b border-border bg-foreground-selected text-background text-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hirota/logo-checkout.png"
@@ -174,7 +174,7 @@ export function CheckoutSheet() {
             t={t}
           />
         ) : (
-          <div className="p-3 space-y-4">
+          <div className="p-3 max-md:px-2 space-y-4">
             {/* ---- Order summary (read-only) ---- */}
             <section>
               <h3 className="text-sm font-normal uppercase mb-1.5">
@@ -360,7 +360,7 @@ function Confirmation({
   t: ReturnType<typeof useTranslations>;
 }) {
   return (
-    <div className="p-4 space-y-3">
+    <div className="p-4 max-md:px-2 space-y-3">
       <h3 className="text-base font-bold">{t("confirmTitle")}</h3>
       <p>{t("confirmBody", { number })}</p>
       <p className="text-[11px] italic text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">

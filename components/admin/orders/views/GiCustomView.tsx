@@ -20,10 +20,12 @@ export async function GiCustomView({
 }) {
   const t = await getTranslations("GiCustom");
   const tA = await getTranslations("Admin");
+  // Thread colours live in the shared GiThread namespace (one gi palette, §8.4).
+  const tThread = await getTranslations("GiThread");
   const s = snapshot.summary;
 
   const m = s.measurements ?? {};
-  const thread = s.threadColorKey ? t(`threadColors.${s.threadColorKey}`) : null;
+  const thread = s.threadColorKey ? tThread(`threadColors.${s.threadColorKey}`) : null;
   const byField = new Map(s.embroidery.map((f) => [f.field, f]));
 
   // Hem: an explicit selection, or the free 4cm/normal default.

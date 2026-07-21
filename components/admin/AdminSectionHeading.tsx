@@ -16,7 +16,7 @@ export function AdminSectionHeading() {
   if (!section) return null;
 
   return (
-    <h1 className="px-3 pt-3 text-[22px] font-bold leading-tight text-foreground">
+    <h1 className="px-3 max-md:px-2 pt-3 text-[22px] font-bold leading-tight text-foreground">
       {t(`sections.${section.key}`)}
     </h1>
   );

@@ -6,7 +6,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import {
@@ -14,6 +13,8 @@ import {
   type SimpleVariantGroup,
   cartSubtotalJpy,
 } from "./types";
+import { GI_THREAD_COLORS } from "@/lib/gi-standard/model";
+import { OBI_THREAD_COLORS } from "@/lib/obi/model";
 
 // Guest-only cart with localStorage persistence (no accounts, no cross-device
 // sync — AGENTS §2). Survives reloads. Happy path only.
@@ -68,11 +69,35 @@ function sameSimpleLine(a: CartItem, b: Extract<CartItem, { kind: "simple" }>) {
   );
 }
 
+// A stored cart outlives the catalog it was built from: localStorage persists
+// across deploys, so a line can name an option value that a later build retired
+// (e.g. the gi embroidery palette dropped white/golden brown/silver grey when it
+// was corrected to black/red/gold/silver). A retired `threadColorKey` has no
+// i18n message, and the lookup throws inside the cart column — which is rendered
+// by the store layout, so one stale line takes down every page.
+//
+// Thread colour is a pure fulfilment detail: the engine prices by thread
+// CATEGORY (`config.embroidery[].thread`), which is untouched here, so dropping
+// the colour never changes a stored price. Losing it degrades the line to "no
+// colour recorded" instead of crashing the store.
+function sanitizeStoredItem(item: CartItem): CartItem {
+  if (item.kind !== "configured") return item;
+
+  const known: readonly string[] =
+    item.config.kind === "obi" ? OBI_THREAD_COLORS : GI_THREAD_COLORS;
+  const { threadColorKey } = item.config.summary;
+  if (threadColorKey == null || known.includes(threadColorKey)) return item;
+
+  const { threadColorKey: _retired, ...summary } = item.config.summary;
+  return {
+    ...item,
+    config: { ...item.config, summary } as typeof item.config,
+  };
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
-  // Guard so the first (empty) render doesn't overwrite stored cart before load.
-  const loadedRef = useRef(false);
 
   // Load once on mount.
   useEffect(() => {
@@ -80,20 +105,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) setItems(parsed as CartItem[]);
+        if (Array.isArray(parsed)) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-time hydration-safe restore from localStorage
+          setItems((parsed as CartItem[]).map(sanitizeStoredItem));
+        }
       }
     } catch {
       // Corrupt storage → start empty.
     }
-    loadedRef.current = true;
     setHydrated(true);
   }, []);
 
-  // Persist on change (after initial load).
+  // Persist on change — but ONLY after the load effect has run. This gates on
+  // the `hydrated` STATE, not a ref, and that distinction is the whole fix for
+  // the "cart empties on language switch" bug: switching locale re-mounts the
+  // entire [locale] subtree, so this provider remounts with `items` back at [].
+  // On that mount both effects fire in the same commit; a ref flipped inside the
+  // load effect is already true by the time this one runs, so it would write the
+  // empty [] over the stored cart before the loaded items commit. `hydrated`
+  // stays false for the whole mount commit and only turns true once the loaded
+  // state is applied, so this write can never clobber storage with an empty cart.
   useEffect(() => {
-    if (!loadedRef.current) return;
+    if (!hydrated) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+  }, [items, hydrated]);
 
   const addItem = useCallback((input: AddInput) => {
     const quantity = input.quantity ?? 1;

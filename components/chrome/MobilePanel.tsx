@@ -61,7 +61,7 @@ export function MobilePanel({
         aria-hidden={parked}
         inert={parked}
         className={
-          "md:contents max-md:fixed max-md:inset-x-0 max-md:top-[26px] max-md:bottom-0 " +
+          "md:contents max-md:fixed max-md:inset-x-0 max-md:top-[32px] max-md:bottom-0 " +
           "max-md:z-[45] max-md:bg-white max-md:transition-all max-md:duration-[450ms] " +
           "max-md:[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
           (open ? "" : "max-md:-translate-y-full max-md:pointer-events-none")
@@ -75,7 +75,7 @@ export function MobilePanel({
   return (
     <div
       className={
-        "md:contents max-md:fixed max-md:inset-x-0 max-md:top-[26px] max-md:bottom-0 max-md:z-40 app-gradient" +
+        "md:contents max-md:fixed max-md:inset-x-0 max-md:top-[32px] max-md:bottom-0 max-md:z-40 app-gradient" +
         (open ? "" : " max-md:hidden")
       }
     >

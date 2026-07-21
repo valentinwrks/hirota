@@ -38,7 +38,7 @@ export function ConfiguratorLayout({
       onClick={() => setPanel(value)}
       aria-pressed={panel === value}
       className={
-        "relative z-10 px-2 py-px text-xs font-bold tracking-wide text-center " +
+        "relative z-10 flex items-center justify-center px-2 text-xs font-bold tracking-wide " +
         "cursor-pointer rounded-full transition-colors " +
         (panel === value
           ? "text-background"
@@ -50,49 +50,52 @@ export function ConfiguratorLayout({
   );
 
   return (
-    <div className="flex flex-col w-full">
-      {/* Mobile-only panel switch. Sticky at the top of the shop scroll area
-          (right under the TopBar, since the mobile shop section bar is gone) so
-          it stays reachable while scrolling a long form. Hidden from md up, where
-          both panels render side by side. Rounded-full pill switch: the track
-          (border) and the active fill are both fully rounded, and the fill is a
-          single pill that SLIDES between the two halves on toggle.
-          The switch rides on a solid background box (10px inset all round); a
-          fade scrim beneath it dissolves the scrolling form content into that
-          background as it rises toward the switch — replaces the former
-          glassmorphism (backdrop blur). */}
-      <div className="md:hidden sticky top-0 z-[5]">
-        <div className="px-2.5 py-2.5 bg-background">
-          <div className="relative grid grid-cols-2 rounded-full border border-border">
-            {/* The sliding fill: a half-width pill filling one cell edge-to-edge
-                (no inset), parked behind the labels and translated to the right
-                half when "product" is active. */}
-            <span
-              aria-hidden="true"
-              className={
-                "pointer-events-none absolute inset-y-0 left-0 w-1/2 " +
-                "rounded-full bg-foreground-selected transition-all duration-300 " +
-                "[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
-                (panel === "product" ? "translate-x-full" : "translate-x-0")
-              }
-            />
-            {tab("configurator", configuratorLabel)}
-            {tab("product", productLabel)}
-          </div>
+    // Below md the shell becomes a bounded flex column that fills the shop
+    // scroll area: a non-scrolling switch header on top, and the active panel
+    // scrolling in its OWN region below it. It sizes itself to the viewport
+    // (100dvh minus the fixed 32px mobile TopBar it sits directly under —
+    // the desktop section bar and category nav above it are max-md:hidden) so
+    // it doesn't depend on any ancestor carrying a definite height. From md up
+    // it stays a plain full-width block that page-scrolls with both panels side
+    // by side.
+    <div className="flex flex-col w-full max-md:h-[calc(100dvh-32px)] max-md:min-h-0">
+      {/* Mobile-only panel switch. A non-scrolling header pinned above the
+          panel's own scroll region (no longer sticky-over-content), so nothing
+          scrolls BEHIND it — which lets it sit on a transparent background and
+          show the body's animated gradient through, instead of an opaque white
+          box. Hidden from md up, where both panels render side by side.
+          Rounded-full pill switch: the track (border) and the active fill are
+          both fully rounded, and the fill is a single pill that SLIDES between
+          the two halves on toggle. */}
+      <div className="md:hidden shrink-0 px-2 py-2.5">
+        <div className="relative grid grid-cols-2 h-[26px] rounded-full border border-border">
+          {/* The sliding fill: a half-width pill filling one cell edge-to-edge
+              (no inset), parked behind the labels and translated to the right
+              half when "product" is active. */}
+          <span
+            aria-hidden="true"
+            className={
+              "pointer-events-none absolute inset-y-0 left-0 w-1/2 " +
+              "rounded-full bg-foreground-selected transition-all duration-300 " +
+              "[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
+              (panel === "product" ? "translate-x-full" : "translate-x-0")
+            }
+          />
+          {tab("configurator", configuratorLabel)}
+          {tab("product", productLabel)}
         </div>
-        {/* Fade scrim: content scrolling up behind the switch fades to zero as it
-            nears the switch, dissolving into the background (h-6 fade distance). */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none h-6 [background:linear-gradient(to_bottom,var(--background),transparent)]"
-        />
       </div>
 
-      <div className="flex w-full max-md:flex-col">
+      {/* Panels. Below md this is the single internal scroll region for the
+          active panel, with a top-edge mask so content dissolves to genuine
+          transparency (revealing the body gradient) as it nears the switch —
+          the fade that used to be an opaque white scrim. From md up the mask /
+          internal scroll drop away and both panels page-scroll side by side. */}
+      <div className="flex w-full max-md:flex-col max-md:flex-1 max-md:min-h-0 max-md:overflow-y-auto max-md:overscroll-contain max-md:scrollbar-none max-md:[mask-image:linear-gradient(to_bottom,transparent,black_1.25rem)] max-md:[-webkit-mask-image:linear-gradient(to_bottom,transparent,black_1.25rem)]">
         {/* LEFT — the configuration form. Full width on mobile when active. */}
         <div
           className={
-            "basis-[60%] max-md:basis-auto pt-2 px-2.5 pb-10 max-md:pb-16 leading-tight " +
+            "basis-[60%] max-md:basis-auto pt-2 px-2.5 max-md:px-2 pb-10 max-md:pb-16 leading-tight " +
             (panel === "configurator" ? "" : "max-md:hidden")
           }
         >
@@ -102,7 +105,7 @@ export function ConfiguratorLayout({
         {/* RIGHT — figure, model info, live features + CTA. */}
         <div
           className={
-            "basis-[40%] max-md:basis-auto flex flex-col mt-8 max-md:mt-4 mb-5 max-md:mb-16 mx-8 max-md:mx-2.5 min-w-0 " +
+            "basis-[40%] max-md:basis-auto flex flex-col mt-8 max-md:mt-4 mb-5 max-md:mb-16 mx-8 max-md:mx-2 min-w-0 " +
             (panel === "product" ? "" : "max-md:hidden")
           }
         >

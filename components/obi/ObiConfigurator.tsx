@@ -211,9 +211,11 @@ export function ObiConfigurator({
         endBText = "";
       }
 
-      // Label is gated on the width (top-to-bottom UX flow); with no width its
+      // Label sits right after Size (top-to-bottom UX flow); with no size its
       // table is pending, so drop the selection like every other pending table.
-      if (widthCm == null) {
+      // `sizeCode` is reconciled just above, so this also covers any upstream
+      // axis (color/material/width) being cleared.
+      if (sizeCode == null) {
         labelId = undefined;
       }
 
@@ -236,9 +238,11 @@ export function ObiConfigurator({
   const materialReady = state.material != null;
   const sizeUpstreamReady =
     state.color != null && state.material != null && state.widthCm != null;
-  // Label doesn't depend on width logically, but we gate it on width so the form
-  // reads strictly top-to-bottom (UX flow), keeping Label pending until then.
-  const labelReady = state.widthCm != null;
+  // Label sits right after Size in the form, so it stays pending until the size
+  // resolves — keeping the form strictly top-to-bottom (UX flow). `sizeCode` is
+  // only set once color + material + width are all chosen (reconcile clears it
+  // otherwise), so this also implies every upstream axis is done.
+  const labelReady = state.sizeCode != null;
 
   const availableSizes = useMemo(
     () =>
@@ -424,6 +428,12 @@ export function ObiConfigurator({
     // has text.
     const threadSuffix =
       state.threadColor != null ? ` (${t(`threadColorsShort.${state.threadColor}`)})` : "";
+    // Label leads the optional lines (mirrors the form order: it sits right after
+    // Size, before embroidery). It carries no amount, so its position among the
+    // priced lines doesn't disturb the positional `i` cursor below.
+    if (labelChosen) {
+      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
+    }
     if (endAChars > 0) {
       features.push({
         label: `${t("endAShort")} = ${state.endAText.trim()}${threadSuffix}`,
@@ -435,9 +445,6 @@ export function ObiConfigurator({
         label: `${t("endBShort")} = ${state.endBText.trim()}${threadSuffix}`,
         amountJpy: breakdown.lines[i++]?.amountJpy,
       });
-    }
-    if (labelChosen) {
-      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
     }
   }
 
@@ -483,7 +490,7 @@ export function ObiConfigurator({
         <>
         {/* Color — no upstream: always selectable. Grouped by grade/use, each
             group captioned like the legacy "jacket/pants measurements" subtitles. */}
-        <p className="text-lg font-bold mb-1.5">{t("color")}</p>
+        <p className="text-lg font-bold leading-tight mb-1.5">{t("color")}</p>
         {OBI_COLOR_GROUPS.map((group, gi) => (
           <div key={group.colors[0]}>
             {group.titleKey && (
@@ -508,7 +515,7 @@ export function ObiConfigurator({
 
         {/* Material — depends on color; incompatible materials mute once a
             color is chosen. */}
-        <p className={"text-lg font-bold pt-5 mb-1.5" + (materialPending ? " text-foreground-pending" : "")}>{t("material")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-1.5" + (materialPending ? " text-foreground-pending" : "")}>{t("material")}</p>
         <OptionTable>
           {OBI_MATERIALS.map((m) => {
             const valid = colorReady && COLOR_MATERIALS[state.color!].includes(m);
@@ -527,7 +534,7 @@ export function ObiConfigurator({
         </OptionTable>
 
         {/* Width — depends on material; e.g. Nami mutes 4.5cm. */}
-        <p className={"text-lg font-bold pt-5 mb-1.5" + (widthPending ? " text-foreground-pending" : "")}>{t("width")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-1.5" + (widthPending ? " text-foreground-pending" : "")}>{t("width")}</p>
         <OptionTable>
           {OBI_WIDTHS.map((w) => {
             const valid = materialReady && MATERIAL_WIDTHS[state.material!].includes(w);
@@ -549,7 +556,7 @@ export function ObiConfigurator({
 
         {/* Size — all #0–#13 with cm always shown. Not selectable until color +
             material + width are set; then prices appear, unavailable sizes mute. */}
-        <p className={"text-lg font-bold pt-5 mb-1.5" + (sizePending ? " text-foreground-pending" : "")}>{t("size")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-1.5" + (sizePending ? " text-foreground-pending" : "")}>{t("size")}</p>
         <OptionTable>
           {allSizes.map(([code, lengthCm]) => {
             const valid = availableSizes.has(code);
@@ -569,10 +576,31 @@ export function ObiConfigurator({
           })}
         </OptionTable>
 
+        {/* Label — free, required (no default). Selectable once the size
+            resolves; a required single choice like the other sections, placed
+            before the optional embroidery. HIROTA's standard label-specification
+            note sits under the heading (localized). */}
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
+        <OptionTable>
+          {labels.map((l) => (
+            <OptionRow
+              key={l.id}
+              selected={labelReady && state.labelId === l.id}
+              selectable={labelReady}
+              onClick={() =>
+                update({ labelId: state.labelId === l.id ? undefined : l.id })
+              }
+            >
+              {l.name}
+            </OptionRow>
+          ))}
+        </OptionTable>
+
         {/* Embroidery (optional). One thread color is chosen globally for both
             ends; metallic mutes until an eligible belt is picked. Colored belts
             (white–brown) cannot be embroidered — the whole section blocks. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (embroideryBlocked ? " text-foreground-blocked" : embroideryHeaderPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (embroideryBlocked ? " text-foreground-blocked" : embroideryHeaderPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
 
         {/* thread color (single table, prices per character). Every option stays
             pending until a width sets the per-character price; then standard
@@ -622,26 +650,6 @@ export function ObiConfigurator({
             disabled={!embroideryAllowed}
             pending={embroideryPending}
           />
-        </OptionTable>
-
-        {/* Label — free, required (no default). Selectable once the width
-            resolves; a required single choice like the other sections. HIROTA's
-            standard label-specification note sits under the heading (localized). */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
-        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
-        <OptionTable>
-          {labels.map((l) => (
-            <OptionRow
-              key={l.id}
-              selected={labelReady && state.labelId === l.id}
-              selectable={labelReady}
-              onClick={() =>
-                update({ labelId: state.labelId === l.id ? undefined : l.id })
-              }
-            >
-              {l.name}
-            </OptionRow>
-          ))}
         </OptionTable>
         </>
       }

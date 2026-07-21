@@ -28,6 +28,8 @@ export function CartItemCard({
   const tObi = useTranslations("Obi");
   const tGi = useTranslations("GiStandard");
   const tGiC = useTranslations("GiCustom");
+  // One thread palette for both gi kinds (§8.4); obi keeps its own.
+  const tGiThread = useTranslations("GiThread");
   const locale = useLocale() as Locale;
   const { removeItem, setQuantity } = useCart();
   const { format } = useCurrency();
@@ -99,7 +101,7 @@ export function CartItemCard({
       `${tGi("giLine")} · ${tGi(`fitsShort.${s.fit}`)} · ${sizeLabel}`,
     ];
     const threadSuffix = s.threadColorKey
-      ? ` (${tGi(`threadColorsShort.${s.threadColorKey}`)})`
+      ? ` (${tGiThread(`threadColorsShort.${s.threadColorKey}`)})`
       : "";
     for (const f of s.embroidery) {
       lines.push(`${tGi(`embroideryFieldsShort.${f.field}`)} = ${f.text}${threadSuffix}`);
@@ -174,7 +176,7 @@ export function CartItemCard({
       );
     }
     const threadSuffix = s.threadColorKey
-      ? ` (${tGiC(`threadColorsShort.${s.threadColorKey}`)})`
+      ? ` (${tGiThread(`threadColorsShort.${s.threadColorKey}`)})`
       : "";
     for (const f of s.embroidery) {
       lines.push(`${tGiC(`embroideryFieldsShort.${f.field}`)} = ${f.text}${threadSuffix}`);

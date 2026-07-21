@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 // A drop-in replacement for `useState` that persists the value to localStorage
 // and restores it on mount. Used by the configurators (custom/standard gi, obi)
@@ -19,9 +19,6 @@ export function usePersistentState<T extends object>(
 ): [T, Dispatch<SetStateAction<T>>, boolean] {
   const [state, setState] = useState<T>(initial);
   const [hydrated, setHydrated] = useState(false);
-  // Guard so the persist effect doesn't write the initial value back over
-  // storage before the load effect has had a chance to read it.
-  const loadedRef = useRef(false);
 
   // Restore once on mount. Deliberately a mount effect, not a lazy useState
   // initializer: these run in server-rendered client components, and reading
@@ -41,19 +38,25 @@ export function usePersistentState<T extends object>(
     } catch {
       // Corrupt/unavailable storage → keep the initial value.
     }
-    loadedRef.current = true;
     setHydrated(true);
   }, [storageKey]);
 
-  // Persist on every change, after the initial load.
+  // Persist on every change, but ONLY after the load effect has run. Gating on
+  // the `hydrated` STATE (not a ref) is deliberate: a remount — e.g. a locale
+  // switch re-mounts the whole [locale] subtree — brings `state` back to the
+  // initial value, and this effect fires in the same commit as the load effect.
+  // A ref flipped inside the load effect is already true by then, so this write
+  // would clobber the stored value with the initial one before the restored
+  // state commits. `hydrated` stays false for the entire mount commit, so the
+  // first write can never overwrite saved data.
   useEffect(() => {
-    if (!loadedRef.current) return;
+    if (!hydrated) return;
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(state));
     } catch {
       // Quota/availability errors are non-fatal — the form still works.
     }
-  }, [storageKey, state]);
+  }, [storageKey, state, hydrated]);
 
   return [state, setState, hydrated];
 }

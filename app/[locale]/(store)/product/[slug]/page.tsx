@@ -35,7 +35,7 @@ export default async function ProductPage({
       {/* Keep the "products / <category>" context bar visible on the PDP. */}
       <CategorySubHeader category={product.category} />
 
-      <div className="p-2.5 max-w-[640px]">
+      <div className="p-2.5 max-md:px-2 max-w-[640px]">
         <Link
           href={`/${product.category}`}
           className="text-xs text-foreground-muted hover:text-foreground"

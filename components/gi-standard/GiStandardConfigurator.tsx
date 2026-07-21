@@ -111,6 +111,8 @@ export function GiStandardConfigurator({
   headerField?: React.ReactNode;
 }) {
   const t = useTranslations("GiStandard");
+  // Thread colours are shared with the fully-tailored gi (one palette, §8.4).
+  const tThread = useTranslations("GiThread");
   const { format } = useCurrency();
   const { addItem } = useCart();
 
@@ -418,7 +420,7 @@ export function GiStandardConfigurator({
 
   const fitLabel = (f: GiFit) => t(`fits.${f}`);
   const threadColorSuffix =
-    state.threadColor != null ? ` (${t(`threadColorsShort.${state.threadColor}`)})` : "";
+    state.threadColor != null ? ` (${tThread(`threadColorsShort.${state.threadColor}`)})` : "";
 
   // Per-size base price (a direct lookup of a stored cell — not math).
   const sizePrice = (sizeCode: string): number | null => {
@@ -472,14 +474,19 @@ export function GiStandardConfigurator({
     const cAmt = includeC ? breakdown.lines[i++]?.amountJpy : undefined;
     const hAmt = includeH ? breakdown.lines[i++]?.amountJpy : undefined;
 
-    // Display order mirrors the form: base, embroidery, sleeve & pants cut
-    // (C, H, shrinkage), manufacturer's logo, label. The model itself lives in
-    // the panel title (and the cart-line name), so the base line reads
+    // Display order mirrors the form: base, label, embroidery, sleeve & pants
+    // cut (C, H, shrinkage), manufacturer's logo. The model itself lives in the
+    // panel title (and the cart-line name), so the base line reads
     // "ready-made · slim cut · #7".
     features.push({
       label: `${t("giLine")} · ${t(`fitsShort.${state.fit}`)} · ${sizeLabel}`,
       amountJpy: baseAmt,
     });
+    // Label leads the optional lines (it sits right after Size in the form). It
+    // carries no amount, so its position doesn't disturb the positional cursor.
+    if (labelChosen) {
+      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
+    }
     for (const f of embFields) {
       if (charCount(f.text) > 0 && thread != null) {
         features.push({
@@ -513,9 +520,6 @@ export function GiStandardConfigurator({
         label: t(`mfrLogoShort.${state.mfrLogo}`),
         amountJpy: logoAmt,
       });
-    }
-    if (labelChosen) {
-      features.push({ label: t("labelLine", { name: displayLabelName(labelName) }) });
     }
   }
 
@@ -582,7 +586,7 @@ export function GiStandardConfigurator({
         <>
         {headerField}
         {/* Model — no upstream: always selectable. */}
-        <p className={"text-lg font-bold mb-[3px]" + (headerField ? " pt-5" : "")}>{t("model")}</p>
+        <p className={"text-lg font-bold leading-tight mb-[3px]" + (headerField ? " pt-5" : "")}>{t("model")}</p>
         <p className="text-xs text-foreground leading-tight mb-2">{t("modelNote")}</p>
         <OptionTable>
           {models.map((m) => (
@@ -602,7 +606,7 @@ export function GiStandardConfigurator({
         {/* Fit — always shown (both slim & normal). A model that isn't sold in a
             fit renders it blocked; the offered fit(s) are selectable and the user
             must click one (no auto-selection), even for single-fit models. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (fitPending ? " text-foreground-pending" : "")}>{t("fit")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (fitPending ? " text-foreground-pending" : "")}>{t("fit")}</p>
         <p className={"text-xs leading-tight mb-2 " + (fitPending ? "text-foreground-pending" : "text-foreground")}>{t("fitNote")}</p>
         <OptionTable>
           {Fits.map((f) => {
@@ -624,7 +628,7 @@ export function GiStandardConfigurator({
         {/* Size — the full universe (S5…8) always shown. Pending until model +
             fit resolve; then sizes offered for that (model, fit) become selectable
             with a price, and the rest render blocked. No runtime size math. */}
-        <p className={"text-lg font-bold pt-5 mb-1.5" + (sizePending ? " text-foreground-pending" : "")}>{t("size")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-1.5" + (sizePending ? " text-foreground-pending" : "")}>{t("size")}</p>
         <OptionTable>
           {allSizes.map((row) => {
             const offered = sizeOffered(row.size_code);
@@ -650,9 +654,29 @@ export function GiStandardConfigurator({
           })}
         </OptionTable>
 
+        {/* Label — free, required (no default). Selectable once the core
+            resolves; a required single choice placed right after Size, before the
+            optional sections. */}
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
+        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
+        <OptionTable>
+          {labels.map((l) => (
+            <OptionRow
+              key={l.id}
+              selected={coreReady && state.labelId === l.id}
+              selectable={coreReady}
+              onClick={() =>
+                update({ labelId: state.labelId === l.id ? undefined : l.id })
+              }
+            >
+              {l.name}
+            </OptionRow>
+          ))}
+        </OptionTable>
+
         {/* Embroidery (optional). One thread color is chosen globally for all
             four fields; the per-character rate follows the thread's category. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (embroideryPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (embroideryPending ? " text-foreground-pending" : "")}>{t("embroidery")}</p>
         <p className={"text-xs mb-1 " + (embroideryPending ? "text-foreground-pending" : "text-foreground")}>{t("threadColorTitle")}</p>
         <OptionTable>
           {GI_THREAD_COLORS.map((tc) => (
@@ -665,7 +689,7 @@ export function GiStandardConfigurator({
                 update({ threadColor: state.threadColor === tc ? undefined : tc })
               }
             >
-              {t(`threadColors.${tc}`)}
+              {tThread(`threadColors.${tc}`)}
             </OptionRow>
           ))}
         </OptionTable>
@@ -687,7 +711,7 @@ export function GiStandardConfigurator({
             +price) that only ever SHORTENS; toggling it on reveals the length
             input below. mh-12 renders the radios blocked; otherwise they're
             pending until a size resolves (the input needs the chart ceiling). */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (adjustExcluded ? " text-foreground-blocked" : adjustPending ? " text-foreground-pending" : "")}>{t("adjust")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (adjustExcluded ? " text-foreground-blocked" : adjustPending ? " text-foreground-pending" : "")}>{t("adjust")}</p>
         <p className={"text-xs leading-tight mb-2 " + (adjustExcluded ? "text-foreground-blocked" : adjustPending ? "text-foreground-pending" : "text-foreground")}>{t("adjustNote")}</p>
         <OptionTable>
           <OptionRow
@@ -776,7 +800,7 @@ export function GiStandardConfigurator({
 
         {/* Manufacturer's logo — always shown. Only tsubasa & pinac-kumite offer
             it; every other model renders both placements blocked. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (mfrExcluded ? " text-foreground-blocked" : mfrPending ? " text-foreground-pending" : "")}>{t("mfrLogoTitle")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (mfrExcluded ? " text-foreground-blocked" : mfrPending ? " text-foreground-pending" : "")}>{t("mfrLogoTitle")}</p>
         <p className={"text-xs leading-tight mb-2 " + (mfrExcluded ? "text-foreground-blocked" : mfrPending ? "text-foreground-pending" : "text-foreground")}>{t("mfrLogoNote")}</p>
         <OptionTable>
           {MfrLogoPlacements.map((placement) => (
@@ -793,25 +817,6 @@ export function GiStandardConfigurator({
               }
             >
               {t(`mfrLogoPlacements.${placement}`)}
-            </OptionRow>
-          ))}
-        </OptionTable>
-
-        {/* Label — free, required (no default). Selectable once the core
-            resolves; a required single choice like the other sections. */}
-        <p className={"text-lg font-bold pt-5 mb-[3px]" + (labelPending ? " text-foreground-pending" : "")}>{t("label")}</p>
-        <p className={"text-xs leading-tight mb-2 " + (labelPending ? "text-foreground-pending" : "text-foreground")}>{t("labelSpecNote")}</p>
-        <OptionTable>
-          {labels.map((l) => (
-            <OptionRow
-              key={l.id}
-              selected={coreReady && state.labelId === l.id}
-              selectable={coreReady}
-              onClick={() =>
-                update({ labelId: state.labelId === l.id ? undefined : l.id })
-              }
-            >
-              {l.name}
             </OptionRow>
           ))}
         </OptionTable>

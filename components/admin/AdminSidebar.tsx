@@ -6,8 +6,8 @@ import { Link, usePathname } from "@/lib/i18n/navigation";
 
 // The six admin sections: Orders + the five catalog mirrors. Each carries an
 // i18n `key` into the Admin.sections namespace (EN/JA) rather than a hardcoded
-// label. Exported so the mobile dropdown (AdminMobileNav), the content-bar title
-// and the section heading render the same list.
+// label. Exported so the mobile menu flap (AdminMobileMenu), the content-bar
+// title and the section heading render the same list.
 export const SECTIONS = [
   { href: "/admin/orders", key: "orders" },
   { href: "/admin/karate-gi-custom", key: "giCustom" },

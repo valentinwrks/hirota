@@ -5,6 +5,8 @@ import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminPanelTitle } from "@/components/admin/AdminPanelTitle";
 import { AdminSectionHeading } from "@/components/admin/AdminSectionHeading";
 import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
+import { AdminMobileMenu } from "@/components/admin/AdminMobileMenu";
+import { AdminMobileChromeProvider } from "@/components/admin/AdminMobileChromeProvider";
 import { SignOutButton } from "@/components/admin/SignOutButton";
 import { TopBar } from "@/components/chrome/TopBar";
 
@@ -47,19 +49,18 @@ export default async function AdminProtectedLayout({
   // hides the JPY/USD switch (showCurrency={false}) and every amount renders as
   // the stored JPY integer.
   return (
-    <>
-      {/* Below md the sidebar is hidden and navigation moves into the TopBar's
-          dropdown menu (AdminMobileNav) — sections, switches, and sign-out. */}
-      <TopBar
-        showCurrency={false}
-        mobile={
-          <AdminMobileNav
-            locale={locale}
-            signOut={<SignOutButton locale={locale} />}
-          />
-        }
+    <AdminMobileChromeProvider>
+      {/* Below md the sidebar is hidden and navigation moves into the mobile menu
+          flap (AdminMobileMenu) — sections, language switch, and sign-out —
+          toggled by the TopBar hamburger (AdminMobileNav). The flap is a TopBar
+          sibling (z below it) so the opaque bar hides it while it slides in/out
+          from behind, matching the public store menu. */}
+      <TopBar showCurrency={false} mobile={<AdminMobileNav />} />
+      <AdminMobileMenu
+        locale={locale}
+        signOut={<SignOutButton locale={locale} variant="link" />}
       />
-      <div className="mt-[26px] h-[calc(100dvh-26px)] overflow-hidden flex text-[13px]">
+      <div className="mt-[32px] md:mt-[26px] h-[calc(100dvh-32px)] md:h-[calc(100dvh-26px)] overflow-hidden flex text-[13px]">
         {/* Each column opens with the same 26px title row the public site puts
             under the TopBar (regular weight, text-sm) — "HIROTA / ADMIN" on the
             sidebar, the open section's name on the content column. */}
@@ -73,7 +74,10 @@ export default async function AdminProtectedLayout({
           </div>
         </aside>
         <main className="flex-1 min-w-0 flex flex-col">
-          <div className="shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
+          {/* Section-name bar — desktop only. On mobile the TopBar carries all
+              the nav chrome (the menu flap), so this row is dropped, matching the
+              public shop column. */}
+          <div className="max-md:hidden shrink-0 h-[26px] flex items-center px-1.5 border-b border-border text-sm leading-none">
             <AdminPanelTitle />
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none">
@@ -82,6 +86,6 @@ export default async function AdminProtectedLayout({
           </div>
         </main>
       </div>
-    </>
+    </AdminMobileChromeProvider>
   );
 }

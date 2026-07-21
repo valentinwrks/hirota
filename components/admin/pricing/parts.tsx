@@ -14,7 +14,7 @@ export function TableBlock({
   children: ReactNode;
 }) {
   return (
-    <section className="p-3">
+    <section className="p-3 max-md:px-2">
       {/* Same style as the configurator section titles (text-lg = 18px, bold). */}
       <h3 className="text-lg font-bold leading-tight mb-[3px]">{title}</h3>
       {note ? (

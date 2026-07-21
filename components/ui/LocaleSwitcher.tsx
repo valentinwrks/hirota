@@ -15,7 +15,16 @@ const LOCALE_ORDER: { locale: Locale; label: string }[] = [
 
 // EN/JA switch. Navigates to the same path under the chosen locale (next-intl
 // locale-aware router preserves the current route + params).
-export function LocaleSwitcher({ label }: { label: string }) {
+export function LocaleSwitcher({
+  label,
+  mobile = false,
+}: {
+  label: string;
+  /** Mobile-menu tone: solid #404040 text, and the selected option blinks like
+   *  the active nav link (.blink-active) instead of the desktop transparency
+   *  scheme. */
+  mobile?: boolean;
+}) {
   const active = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -36,25 +45,35 @@ export function LocaleSwitcher({ label }: { label: string }) {
 
   return (
     <div className="flex items-center gap-0.5" aria-label={label}>
-      {LOCALE_ORDER.map(({ locale, label: code }, i) => (
-        <span key={locale} className="flex items-center gap-0.5">
-          {i > 0 && <span className="text-foreground-muted">·</span>}
-          <button
-            type="button"
-            onClick={() => select(locale)}
-            disabled={isPending}
-            aria-pressed={locale === active}
-            className={
-              "cursor-pointer " +
-              (locale === active
-                ? "uppercase text-foreground-strong"
-                : "uppercase text-foreground-muted hover:text-foreground-strong")
-            }
-          >
-            {code}
-          </button>
-        </span>
-      ))}
+      {LOCALE_ORDER.map(({ locale, label: code }, i) => {
+        const isActive = locale === active;
+        return (
+          <span key={locale} className="flex items-center gap-0.5">
+            {i > 0 && (
+              <span className={mobile ? "text-[#404040]" : "text-foreground-muted"}>
+                ·
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => select(locale)}
+              disabled={isPending}
+              aria-pressed={isActive}
+              className={
+                "cursor-pointer uppercase " +
+                (mobile
+                  ? "text-[#404040]" +
+                    (isActive ? " blink-active" : " hover:opacity-60")
+                  : isActive
+                    ? "text-foreground-strong"
+                    : "text-foreground-muted hover:text-foreground-strong")
+              }
+            >
+              {code}
+            </button>
+          </span>
+        );
+      })}
     </div>
   );
 }

@@ -1,18 +1,16 @@
-// Decorative HIROTA wordmark closing off mobile views (md:hidden — desktop keeps
-// its three-column chrome, no footer). Rendered at the very bottom of every
-// mobile section EXCEPT the "Your product" panel of the configurators and the
-// cart view. Spans 95% of the viewport width, centred. `max-w-full` keeps it
-// from overflowing its padded container on the narrowest phones.
+import { HirotaWordmark } from "./HirotaWordmark";
+
+// Decorative HIROTA wordmark heading the about column. Shown on mobile AND on
+// the three-column desktop layout (md–2xl); dropped from 2xl up, where the
+// dedicated vertical-logo band (LogoColumn, `hidden 2xl:flex`) appears and would
+// otherwise double the mark. Spans 96vw on mobile; on the narrow desktop about
+// column `max-w-full` clamps it to the column width, with a 6px side gutter
+// (md:px-1.5) matching the column content. Inlined as SVG (not <img>) so its
+// outline stays a constant 0.8px stroke across viewports.
 export function MobileLogoFooter() {
   return (
-    <div className="md:hidden pb-5 flex justify-center">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/hirota/logo-unflavored.svg"
-        alt=""
-        aria-hidden="true"
-        className="w-[96vw] max-w-full select-none opacity-45"
-      />
+    <div className="2xl:hidden pt-[15px] pb-[10px] md:px-1.5 flex justify-center">
+      <HirotaWordmark className="w-[96vw] max-w-full h-auto select-none opacity-50" />
     </div>
   );
 }

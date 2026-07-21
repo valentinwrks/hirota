@@ -45,12 +45,9 @@ export function StoreMobileNav() {
         onClick={toggleCart}
         aria-pressed={view === "cart"}
         aria-label={tCart("title")}
-        className={
-          "cursor-pointer flex items-center gap-0.5 " +
-          (view === "cart" ? "text-foreground-strong" : "text-foreground")
-        }
+        className="cursor-pointer flex items-center gap-0.5 text-[#404040]"
       >
-        <ShoppingBagIcon className="w-[15px] h-[15px]" />
+        <ShoppingBagIcon className="w-[18px] h-[18px]" />
         {hydrated && count > 0 ? `(${count})` : ""}
       </button>
 

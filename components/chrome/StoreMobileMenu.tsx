@@ -57,7 +57,7 @@ export function StoreMobileMenu() {
       aria-hidden={!menuOpen}
       inert={!menuOpen}
       className={
-        "md:hidden fixed inset-x-0 top-[26px] z-[45] rounded-b-3xl bg-white " +
+        "md:hidden fixed inset-x-0 top-[32px] z-[45] rounded-b-3xl bg-white " +
         "shadow-[0_4px_6px_-2px_rgba(0,0,0,0.12)] transition-all duration-300 " +
         "[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
         (menuOpen ? "translate-y-0" : "-translate-y-full pointer-events-none")
@@ -74,7 +74,10 @@ export function StoreMobileMenu() {
               onClick={closeMenu}
               style={itemDelay(i)}
               className={
-                itemClass + " " + linkWeight + (active ? "" : " hover:opacity-60")
+                itemClass +
+                " text-[#404040] " +
+                linkWeight +
+                (active ? "" : " hover:opacity-60")
               }
             >
               {/* Active category blinks (hard on/off — see .blink-active). The
@@ -94,8 +97,8 @@ export function StoreMobileMenu() {
           style={itemDelay(CATEGORIES.length)}
           className={"mt-4 flex w-full items-baseline justify-between " + itemClass}
         >
-          <LocaleSwitcher label={t("language")} />
-          <CurrencySwitcher label={t("currency")} />
+          <LocaleSwitcher label={t("language")} mobile />
+          <CurrencySwitcher label={t("currency")} mobile />
         </div>
       </nav>
     </div>
