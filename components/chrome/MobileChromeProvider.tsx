@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { usePathname } from "@/lib/i18n/navigation";
 
 // Mobile (< md) chrome state for the store shell. On desktop the three columns
@@ -27,21 +35,41 @@ type MobileChromeContext = {
 
 const Context = createContext<MobileChromeContext | null>(null);
 
+// Module-scoped so it survives the remount that a locale switch triggers: Next
+// re-mounts everything under the [locale] segment, which would reset a plain
+// useState back to closed. Persisting it here (client singleton, per tab) keeps
+// the mobile menu open across an en↔ja switch — the pathname is unchanged, only
+// the locale did. Genuine navigations still close it (see the pathname effect),
+// which writes false back here too.
+let persistedMenuOpen = false;
+
 export function MobileChromeProvider({ children }: { children: ReactNode }) {
   const [cartOpen, setCartOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpenState] = useState(() => persistedMenuOpen);
   const pathname = usePathname();
+
+  // Mirror every menu change into the module-scoped flag so a subsequent remount
+  // re-initialises from the last real value.
+  const setMenuOpen = useCallback((open: boolean) => {
+    persistedMenuOpen = open;
+    setMenuOpenState(open);
+  }, []);
 
   // The about overlay is open iff we are at the store index. usePathname is
   // locale-stripped, so root is "/".
   const atHome = pathname === "/";
 
   // Any navigation drops the menu and the ephemeral cart so the destination is
-  // actually visible. The about overlay follows the route (atHome), not this.
+  // actually visible. Guarded against the initial mount (and the locale-switch
+  // remount, where the pathname is identical): only an ACTUAL pathname change
+  // closes them. The about overlay follows the route (atHome), not this.
+  const prevPath = useRef(pathname);
   useEffect(() => {
+    if (prevPath.current === pathname) return;
+    prevPath.current = pathname;
     setCartOpen(false);
     setMenuOpen(false);
-  }, [pathname]);
+  }, [pathname, setMenuOpen]);
 
   // Cart wins while open (it can be toggled over the about landing).
   const view: MobileView = cartOpen ? "cart" : atHome ? "about" : null;

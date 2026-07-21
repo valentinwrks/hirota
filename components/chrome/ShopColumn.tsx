@@ -29,7 +29,12 @@ export async function ShopColumn({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Scroll region — the category nav + routed content scroll here, below
-          the fixed bar. */}
+          the fixed bar. The category links (CategoryNav) AND the "products /
+          <category>" sub-header at the top of the routed content are persistent
+          chrome and stay STATIC across navigation. The scan-in reveal wraps only
+          the content BELOW that sub-header, applied inside each route (CategoryView
+          / PDP) rather than here, so the header bar + its divider don't animate on
+          a section change. */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain scrollbar-none">
         <CategoryNav labels={navLabels} />
         {children}

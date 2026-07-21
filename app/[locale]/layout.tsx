@@ -4,6 +4,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/lib/i18n/routing";
 import { ImageGuard } from "@/components/chrome/ImageGuard";
+import { Preloader } from "@/components/ui/Preloader";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
       {/* NOTE: body background gradient is applied in globals.css — do not touch. */}
       <body className="min-h-full">
         <NextIntlClientProvider messages={messages}>
+          <Preloader />
           <ImageGuard />
           {children}
         </NextIntlClientProvider>

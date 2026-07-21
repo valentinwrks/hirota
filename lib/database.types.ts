@@ -266,6 +266,30 @@ export type Database = {
         }
         Relationships: []
       }
+      news: {
+        Row: {
+          body: string
+          created_at: string
+          id: number
+          published_on: string
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: never
+          published_on?: string
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: never
+          published_on?: string
+          title?: string
+        }
+        Relationships: []
+      }
       obi_embroidery_prices: {
         Row: {
           price_per_char: number

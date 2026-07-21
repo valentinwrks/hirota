@@ -11,6 +11,7 @@ import {
 import { localize, type LocalizedText } from "@/lib/i18n/localized";
 import { ProductPurchase } from "@/components/pdp/ProductPurchase";
 import { CategorySubHeader } from "@/components/catalog/CategorySubHeader";
+import { ColumnReveal } from "@/components/chrome/ColumnReveal";
 
 export default async function ProductPage({
   params,
@@ -32,9 +33,11 @@ export default async function ProductPage({
 
   return (
     <div>
-      {/* Keep the "products / <category>" context bar visible on the PDP. */}
+      {/* Keep the "products / <category>" context bar visible on the PDP —
+          static chrome, outside the scan-in reveal below. */}
       <CategorySubHeader category={product.category} />
 
+      <ColumnReveal>
       <div className="p-2.5 max-md:px-2 max-w-[640px]">
         <Link
           href={`/${product.category}`}
@@ -80,6 +83,7 @@ export default async function ProductPage({
           </div>
         </div>
       </div>
+      </ColumnReveal>
     </div>
   );
 }

@@ -95,7 +95,7 @@ export function StoreMobileMenu() {
             the right. Appears last in the stagger. */}
         <div
           style={itemDelay(CATEGORIES.length)}
-          className={"mt-4 flex w-full items-baseline justify-between " + itemClass}
+          className={"mt-4 flex w-full items-center justify-center gap-6 " + itemClass}
         >
           <LocaleSwitcher label={t("language")} mobile />
           <CurrencySwitcher label={t("currency")} mobile />

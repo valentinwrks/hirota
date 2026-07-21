@@ -14,15 +14,34 @@
     },
     "nav": {
       "groupOrders": "orders",
+      "groupContent": "content",
       "groupPricing": "pricing & stocks"
     },
     "sections": {
       "orders": "Orders",
+      "news": "News",
       "giCustom": "Karate-gi Fully-tailored",
       "giStandard": "Karate-gi Ready-made",
       "obi": "Obi",
       "equipment": "Equipment",
       "accessories": "Accessories"
+    },
+    "news": {
+      "newPost": "New post",
+      "existing": "Posts",
+      "date": "Date",
+      "headline": "Title",
+      "body": "Body",
+      "add": "Add",
+      "save": "Save",
+      "saved": "Saved",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this post?",
+      "empty": "No posts yet.",
+      "required": "Date, title and body are required.",
+      "titlePlaceholder": "Summer hours notice"
     },
     "orders": {
       "colNumber": "#",
@@ -481,6 +500,7 @@
   },
   "About": {
     "title": "hirota (ヒロタ)",
+    "newsTitle": "News & Announcements",
     "intro": "is a Japanese manufacturing house specializing in premium karate-gi and karate equipment.",
     "history": "Founded in 1965, the company has established a long-standing reputation for precision craftsmanship, material excellence, and uncompromising quality. HIROTA uniforms are trusted and worn by masters, instructors, and elite competitors at the highest levels of traditional and competitive karate worldwide.",
     "tokyoTitle": "Tokyo Head Office (東京本社)",

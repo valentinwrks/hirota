@@ -203,3 +203,77 @@ input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+/* ------------------------------------------------------------------- */
+/* ----------------- REVELADO DE COLUMNA ("scanner") ----------------- */
+/* ------------------------------------------------------------------- */
+/* El contenido se revela línea a línea, de arriba hacia abajo, como un
+   scanner: una máscara con un borde de opacidad SUAVE (1.25rem, el mismo
+   que el fundido de mobile en ConfiguradorLayout) baja tapando todo el
+   contenido por igual — svg, textos, inputs, radios. No es un fundido
+   global: es una única línea de barrido que desciende.
+
+   Técnica: la máscara mide el DOBLE de alto que el elemento (mask-size
+   200%) y su mitad superior es opaca; animamos SU POSICIÓN (mask-position)
+   de 100% (todo el contenido cae en la zona transparente → oculto) a 0%
+   (todo cae en la zona opaca → visible). mask-position es una propiedad
+   nativamente animable, así que interpola de forma fluida (a diferencia de
+   una custom property, que saltaba entre dos estados).
+
+   Se re-dispara remontando el nodo (ColumnReveal usa `key`): centro por
+   pathname; laterales por locale (F5 e idioma, no al cambiar de sección).
+
+   SINCRONÍA CON EL PRELOADER: en el primer load el scanner arranca EN PAUSA
+   (animation-play-state: paused → se queda en el frame inicial, todo oculto)
+   para no barrer escondido detrás del preloader. El preloader, al terminar,
+   pone `data-app-loaded` en <html> y ahí recién arranca el barrido, visible.
+   El atributo persiste, así que en navegaciones posteriores (sección/idioma)
+   el barrido corre de inmediato, sin esperar a nada. */
+@keyframes columnScan {
+  from {
+    -webkit-mask-position: 0 100%;
+    mask-position: 0 100%;
+  }
+  to {
+    -webkit-mask-position: 0 0%;
+    mask-position: 0 0%;
+  }
+}
+
+.column-scan {
+  /* Degradado ANCHO y suave para que el contenido aparezca "de a poquito":
+     la banda de transición ocupa ~medio alto de columna, así cada fila se
+     funde gradualmente al pasar el frente, en vez de una línea dura.
+     Zona opaca 0–45% de la máscara + fundido 45→55% (el resto transparente).
+     La máscara mide 2.5× el alto (mask-size 250%): ese extra da recorrido
+     para ocultar todo al inicio y revelarlo por completo al final aun con la
+     banda (con 200% no entraría el degradado). */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 45%,
+    transparent 55%
+  );
+  mask-image: linear-gradient(to bottom, #000 45%, transparent 55%);
+  -webkit-mask-size: 100% 250%;
+  mask-size: 100% 250%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: columnScan 3000ms cubic-bezier(0.45, 0, 0.55, 1) both;
+  will-change: mask-position;
+  /* Arranca en pausa: se libera cuando el preloader marca <html data-app-loaded>. */
+  animation-play-state: paused;
+}
+
+/* El preloader terminó → liberar el barrido de todas las columnas montadas. */
+html[data-app-loaded="true"] .column-scan {
+  animation-play-state: running;
+}
+
+/* Respeta a quien pide menos movimiento: sin barrido, contenido visible. */
+@media (prefers-reduced-motion: reduce) {
+  .column-scan {
+    animation: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}

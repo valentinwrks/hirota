@@ -10,6 +10,7 @@ import { Link, usePathname } from "@/lib/i18n/navigation";
 // title and the section heading render the same list.
 export const SECTIONS = [
   { href: "/admin/orders", key: "orders" },
+  { href: "/admin/news", key: "news" },
   { href: "/admin/karate-gi-custom", key: "giCustom" },
   { href: "/admin/karate-gi-standard", key: "giStandard" },
   { href: "/admin/obi", key: "obi" },
@@ -27,9 +28,9 @@ export function AdminSidebar({ locale }: { locale: string }) {
     <nav className="flex flex-col">
       {SECTIONS.map(({ href, key }, i) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
-        // Two groups, each introduced by a muted 10px hint that carries the
-        // group's top gap: "orders" (index 0) and the catalog mirrors
-        // ("pricing & stocks", index 1).
+        // Three groups, each introduced by a muted 10px hint that carries the
+        // group's top gap: "orders" (index 0), "content" (news, index 1) and the
+        // catalog mirrors ("pricing & stocks", index 2).
         return (
           <Fragment key={href}>
             {i === 0 ? (
@@ -38,6 +39,11 @@ export function AdminSidebar({ locale }: { locale: string }) {
               </p>
             ) : null}
             {i === 1 ? (
+              <p className="mt-3 mb-1 px-1.5 text-[10px] leading-none text-foreground-muted">
+                {t("nav.groupContent")}
+              </p>
+            ) : null}
+            {i === 2 ? (
               <p className="mt-3 mb-1 px-1.5 text-[10px] leading-none text-foreground-muted">
                 {t("nav.groupPricing")}
               </p>

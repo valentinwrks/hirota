@@ -1,5 +1,15 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getNews } from "@/lib/news/queries";
 import { MobileLogoFooter } from "./MobileLogoFooter";
+import { ColumnReveal } from "./ColumnReveal";
+
+// "2026-07-14" → "2026.7.14" (year.month.day, no zero padding) — matching the
+// dotted date style HIROTA uses on its landing-page announcements.
+function formatNewsDate(iso: string): string {
+  const [y, m, d] = iso.split("-");
+  if (!y || !m || !d) return iso;
+  return `${y}.${Number(m)}.${Number(d)}`;
+}
 
 // Left "about" column: company history, offices, hours, visit policy, footer.
 // Narrowest of the three regions. Static chrome (server component). Below md it
@@ -8,6 +18,8 @@ import { MobileLogoFooter } from "./MobileLogoFooter";
 // (pick a category) or the logo (→ `/`).
 export async function AboutColumn() {
   const t = await getTranslations("About");
+  const locale = await getLocale();
+  const news = await getNews();
 
   return (
     <section className="basis-[22%] 2xl:basis-[20%] shrink-0 border-r border-border flex flex-col overflow-hidden max-md:h-full max-md:border-r-0">
@@ -21,26 +33,30 @@ export async function AboutColumn() {
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain scrollbar-none">
+      <ColumnReveal revealKey={locale}>
       <MobileLogoFooter />
-      <div className="mt-2 max-md:mt-[5px] mx-1.5 max-md:mx-2 pb-8 text-xs leading-tight">
+      <div className="mt-[5px] mx-1.5 max-md:mx-2 pb-8 text-xs leading-tight">
         <p>
-          <span className="font-bold">Hirota Co., Ltd (空手衣のヒロタ)</span> {t("intro")}
+          <span className="font-bold">HIROTA (ヒロタ)</span> {t("intro")}
         </p>
         <p className="mt-2">{t("history")}</p>
 
         {/* store symbol */}
-        <div className="mx-1.5 mt-[8px] max-md:mt-[5px] mb-3 max-md:mb-2 select-none">
+        <div className="mb-2 flex justify-center select-none">
+          {/* Same width system as the wordmark (SVG 1) but a touch narrower: 93vw,
+              centred, clamped by max-w-full to the column width on the narrow
+              desktop about column. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hirota/空手衣のヒロタ.svg"
             alt="空手衣のヒロタ"
-            className="w-full opacity-50 max-md:opacity-45"
+            className="w-[93vw] max-w-full opacity-50 max-md:opacity-45"
           />
         </div>
 
         {/* Tokyo head office */}
         <div>
-          <p className="font-bold">{t("tokyoTitle")}</p>
+          <p className="font-bold uppercase">{t("tokyoTitle")}</p>
           <p>{t("tokyoAddress")}</p>
           <div className="flex justify-between">
             <span>{t("tokyoTel")}</span>
@@ -56,8 +72,8 @@ export async function AboutColumn() {
         </div>
 
         {/* Fukuoka branch */}
-        <div className="mt-6 max-md:mt-[15px]">
-          <p className="font-bold">{t("fukuokaTitle")}</p>
+        <div className="mt-4">
+          <p className="font-bold uppercase">{t("fukuokaTitle")}</p>
           <p>{t("fukuokaAddress")}</p>
           <div className="flex justify-between">
             <span>{t("fukuokaTel")}</span>
@@ -73,8 +89,8 @@ export async function AboutColumn() {
         </div>
 
         {/* Aichi factory */}
-        <div className="mt-6 max-md:mt-[15px]">
-          <p className="font-bold">{t("aichiTitle")}</p>
+        <div className="mt-4">
+          <p className="font-bold uppercase">{t("aichiTitle")}</p>
           <p>{t("aichiAddress")}</p>
           <div className="flex justify-between">
             <span>{t("aichiTel")}</span>
@@ -83,13 +99,45 @@ export async function AboutColumn() {
         </div>
 
         {/* visit policy */}
-        <div className="mt-8 max-md:mt-6">
-          <p className="uppercase font-bold">{t("visitTitle")}</p>
+        <div className="mt-4">
+          <p className="uppercase">{t("visitTitle")}</p>
           <p>{t("visitP1")}</p>
           <p className="mt-2">{t("visitP2")}</p>
           <p className="mt-2">{t("visitP3")}</p>
         </div>
+
+        {/* news / お知らせ — replicates HIROTA's landing-page announcements feed.
+            Single-language posts (§ migration), newest first. Hidden entirely
+            when empty (and before the news table migration is applied). */}
+        {news.length > 0 && (
+          <div className="mt-6">
+            <p className="uppercase font-bold">{t("newsTitle")}</p>
+            <div className="mt-2 flex flex-col gap-4">
+              {news.map((post) => (
+                <div key={post.id}>
+                  {/* title (left) + date (right) on one baseline-aligned row;
+                      long titles wrap while the date stays pinned right. */}
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="font-bold min-w-0">{post.title}</p>
+                    <p className="shrink-0 font-bold tabular-nums">
+                      {formatNewsDate(post.published_on)}
+                    </p>
+                  </div>
+                  <p className="mt-0.5 whitespace-pre-line">{post.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* footer — copyright. Hidden for now, kept for possible future use.
+            Year resolved server-side so it stays current when re-enabled:
+        <p className="mt-6 text-center text-foreground">
+          {new Date().getFullYear()} © HIROTA CO. LTD. All rights reserved
+        </p>
+        */}
       </div>
+      </ColumnReveal>
       </div>
     </section>
   );
