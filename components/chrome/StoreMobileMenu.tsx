@@ -97,8 +97,8 @@ export function StoreMobileMenu() {
           style={itemDelay(CATEGORIES.length)}
           className={"mt-4 flex w-full items-center justify-center gap-6 " + itemClass}
         >
-          <LocaleSwitcher label={t("language")} mobile />
-          <CurrencySwitcher label={t("currency")} mobile />
+          <LocaleSwitcher label={t("language")} size="xl" />
+          <CurrencySwitcher label={t("currency")} size="xl" />
         </div>
       </nav>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/navigation";
 import { SECTIONS } from "./AdminSidebar";
@@ -38,6 +38,19 @@ export function AdminMobileMenu({
     transitionDelay: menuOpen ? `${PANEL_MS + i * 40}ms` : "0ms",
   });
 
+  // Per-locale link styling. JA: every link is bold (matching the desktop
+  // sidebar's JA weight), and the active one is set apart by a fainter text
+  // color instead of a weight change — a lower alpha than the base foreground
+  // (rgba 0,0,0,.5). We use a text color, NOT the `opacity` utility, because the
+  // entrance animation above already owns `opacity`. EN: active is bold, the rest
+  // plain, dimming on hover.
+  const linkClass = (active: boolean) =>
+    locale === "ja"
+      ? "font-bold " + (active ? "text-black/30" : "hover:opacity-60")
+      : active
+        ? "font-bold"
+        : "hover:opacity-60";
+
   return (
     <div
       aria-hidden={!menuOpen}
@@ -49,31 +62,77 @@ export function AdminMobileMenu({
         (menuOpen ? "translate-y-0" : "-translate-y-full pointer-events-none")
       }
     >
-      <nav className="flex flex-col items-baseline gap-1 p-[9px] pb-[14px] text-2xl leading-none lowercase">
+      <nav
+        className={
+          "flex flex-col items-baseline gap-1 p-[9px] pt-[14px] pb-[14px] text-[28px] leading-none " +
+          // EN labels are authored capitalized; render as-is. JA stays lowercased.
+          (locale === "en" ? "normal-case" : "lowercase")
+        }
+      >
         {SECTIONS.map(({ href, key }, i) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);
+          // Two group hints, mirroring the desktop sidebar: "content" (i 1) and
+          // the catalog mirrors (i 2). Orders (i 0) gets no hint — its own label
+          // already reads "orders", so a subtitle would just repeat it.
+          const group =
+            i === 1
+              ? "nav.groupContent"
+              : i === 2
+                ? "nav.groupPricing"
+                : null;
           return (
-            <Link
-              key={href}
-              href={href}
-              locale={locale}
-              style={itemDelay(i)}
-              className={
-                itemClass + (active ? " font-bold" : " hover:opacity-60")
-              }
-            >
-              {tAdmin(`sections.${key}`)}
-            </Link>
+            <Fragment key={href}>
+              {group ? (
+                <p
+                  style={itemDelay(i)}
+                  className={
+                    "mt-3 px-0.5 text-xs normal-case text-foreground-muted " +
+                    itemClass
+                  }
+                >
+                  {tAdmin(group)}
+                </p>
+              ) : null}
+              {i === 0 ? (
+                // The orders link shares its row with the language switch, pinned
+                // to the opposite end. The admin is JPY-only, so no currency
+                // switch (see shell).
+                <div
+                  style={itemDelay(0)}
+                  className={
+                    "flex w-full items-center justify-between " + itemClass
+                  }
+                >
+                  <Link
+                    href={href}
+                    locale={locale}
+                    className={linkClass(active)}
+                  >
+                    {tAdmin(`sections.${key}`)}
+                  </Link>
+                  <LocaleSwitcher label={t("language")} size="xl" />
+                </div>
+              ) : (
+                <Link
+                  href={href}
+                  locale={locale}
+                  style={itemDelay(i)}
+                  className={itemClass + " " + linkClass(active)}
+                >
+                  {tAdmin(`sections.${key}`)}
+                </Link>
+              )}
+            </Fragment>
           );
         })}
 
-        {/* language switch (left) + sign-out (right). Appears last in the
-            stagger. The admin is JPY-only, so no currency switch (see shell). */}
+        {/* sign-out on its own last line — the bordered, full-width "button"
+            variant, closing the stagger. Extra px-[11px] on top of the nav's 9px
+            padding lands the button 20px in from each flap edge. */}
         <div
           style={itemDelay(SECTIONS.length)}
-          className={"mt-4 flex w-full items-center justify-between " + itemClass}
+          className={"mt-4 flex flex-col w-full px-[11px] " + itemClass}
         >
-          <LocaleSwitcher label={t("language")} />
           {signOut}
         </div>
       </nav>

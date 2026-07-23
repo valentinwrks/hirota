@@ -8,6 +8,7 @@ import { localize, type LocalizedText } from "@/lib/i18n/localized";
 import type { Locale } from "@/lib/i18n/routing";
 import { type ProductOptions, productImage } from "@/lib/catalog/types";
 import type { SimpleVariantGroup } from "@/lib/cart/types";
+import { CommitButton } from "@/components/ui/CommitButton";
 
 // Interactive PDP block for a simple (Pattern A) product: size/color selectors
 // (price-neutral but REQUIRED when offered — AGENTS §8.1), stock display, and
@@ -109,20 +110,19 @@ export function ProductPurchase({
 
       {/* add to cart — reuses the legacy CTA styling. Disabled until every
           offered group has a selection. */}
-      <button
-        type="button"
-        onClick={handleAdd}
+      <CommitButton
+        onCommit={handleAdd}
         disabled={!canAdd}
         aria-label={localize(name, locale)}
         className={
           "w-full mt-2.5 text-xs font-bold bg-transparent border tracking-wide py-1 " +
           (canAdd
-            ? "text-foreground border-border hover:bg-foreground-hover cursor-pointer"
+            ? "text-foreground border-border btn-swipe cursor-pointer"
             : "text-foreground-blocked border-border-blocked")
         }
       >
         {!inStock ? t("outOfStock") : justAdded ? t("added") : t("addToCart")}
-      </button>
+      </CommitButton>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
 import { usePathname, useRouter } from "@/lib/i18n/navigation";
 import { type Locale } from "@/lib/i18n/routing";
-import { PillSwitch } from "./PillSwitch";
+import { PillSwitch, type Size } from "./PillSwitch";
 
 // Display order + labels. The routing locale codes stay "en"/"ja" (URLs, next-intl);
 // only the surfaced label differs (ja → "JA"). JA is shown first per design.
@@ -19,11 +19,15 @@ const LOCALE_ORDER: { locale: Locale; label: string }[] = [
 export function LocaleSwitcher({
   label,
   mobile = false,
+  size,
 }: {
   label: string;
-  /** Mobile-menu placement: renders the larger pill size to sit alongside the
+  /** Mobile-menu placement: renders the larger `lg` pill to sit alongside the
    *  menu's big type. */
   mobile?: boolean;
+  /** Explicit pill size, overriding `mobile`. The admin mobile menu passes "xl"
+   *  to match its 28px link type. */
+  size?: Size;
 }) {
   const active = useLocale() as Locale;
   const router = useRouter();
@@ -54,7 +58,7 @@ export function LocaleSwitcher({
       label={label}
       value={optimistic}
       onSelect={select}
-      size={mobile ? "lg" : "sm"}
+      size={size ?? (mobile ? "lg" : "sm")}
       options={[
         { value: LOCALE_ORDER[0].locale, label: LOCALE_ORDER[0].label },
         { value: LOCALE_ORDER[1].locale, label: LOCALE_ORDER[1].label },

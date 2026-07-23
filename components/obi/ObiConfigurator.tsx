@@ -32,6 +32,7 @@ import {
 } from "@/lib/obi/model";
 import type { LabelOption } from "@/lib/obi/queries";
 import { ConfiguratorLayout } from "@/components/configurator/ConfiguratorLayout";
+import { CommitButton } from "@/components/ui/CommitButton";
 
 // The obi configurator (Pattern B2). A client component: it runs the PURE
 // pricing engine against the reference data passed as props (no Supabase here,
@@ -729,9 +730,8 @@ export function ObiConfigurator({
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={handleAdd}
+            <CommitButton
+              onCommit={handleAdd}
               disabled={!canAdd}
               className={
                 "mt-2.5 text-xs font-bold border tracking-wide py-1 " +
@@ -740,12 +740,12 @@ export function ObiConfigurator({
                 (justAdded
                   ? "bg-foreground-selected text-background border-border cursor-pointer"
                   : canAdd
-                    ? "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer"
+                    ? "bg-transparent text-foreground border-border btn-swipe cursor-pointer"
                     : "bg-transparent text-foreground-blocked border-border-blocked")
               }
             >
               {justAdded ? t("added") : t("addToCart")}
-            </button>
+            </CommitButton>
 
             {/* What's still missing to enable the button — surfaced here rather
                 than inline in the form (mirrors the gi-standard configurator). */}

@@ -27,7 +27,7 @@ export function CategoryNav({
 
   return (
     // Hidden below md — the mobile dropdown menu carries the categories.
-    <nav className={"max-md:hidden flex flex-row items-baseline justify-between gap-2 p-[7px] pb-6 text-[24px] leading-none " + localeType}>
+    <nav className={"max-md:hidden flex flex-row items-baseline justify-between gap-2 p-[7px] pb-6 text-[20px] 2xl:text-[24px] leading-none " + localeType}>
       {NAV_CATEGORIES.map((category) => {
         const href = `/${category}`;
         const active = pathname === href;

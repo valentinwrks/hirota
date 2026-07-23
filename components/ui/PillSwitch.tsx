@@ -13,15 +13,18 @@ import { useEffect, useState } from "react";
 // area. Two options only — that's all the language / currency switches need.
 export type PillOption<T extends string> = { value: T; label: string };
 
-// Two proportional sizes. "lg" is exactly ×1.5 of "sm" on every dimension —
-// track height, the pill's overhang, segment width and text — so the mobile menu
-// switch reads as the same control, just bigger. Keep them in lockstep: if one
-// value changes, scale its pair by the same factor.
-type Size = "sm" | "lg";
+// Proportional sizes, each scaling every dimension together — track height, the
+// pill's overhang, segment width and text — so the switch reads as the same
+// control at any size. "lg" is ×1.5 of "sm"; "xl" is the admin mobile menu's
+// larger switch, sized so its pill height (28px, the tallest element) matches the
+// menu's 28px link type. Keep a size's dimensions in proportion: if one value
+// changes, scale the others by the same factor.
+export type Size = "sm" | "lg" | "xl";
 
 const SIZE: Record<Size, { track: string; pill: string; segment: string }> = {
   sm: { track: "h-[12px]", pill: "h-[14px]", segment: "w-7.5 text-[12px]" },
   lg: { track: "h-[18px]", pill: "h-[21px]", segment: "w-[45px] text-[18px]" },
+  xl: { track: "h-[24px]", pill: "h-[28px]", segment: "w-[60px] text-[24px]" },
 };
 
 export function PillSwitch<T extends string>({

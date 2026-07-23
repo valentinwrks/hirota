@@ -6,6 +6,7 @@ import { useCheckout } from "@/lib/checkout/CheckoutProvider";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import { CartItemCard } from "@/components/cart/CartItemCard";
+import { CommitButton } from "@/components/ui/CommitButton";
 import {
   submitCheckout,
   type CheckoutError,
@@ -441,19 +442,18 @@ export function CheckoutSheet() {
                 </p>
               )}
 
-              <button
-                type="button"
-                onClick={handleSubmit}
+              <CommitButton
+                onCommit={handleSubmit}
                 disabled={!isValid || submitting}
                 className={
                   "w-full text-xs font-bold uppercase bg-transparent border tracking-wide py-1.5 " +
                   (isValid && !submitting
-                    ? "text-foreground border-border hover:bg-foreground-hover cursor-pointer"
+                    ? "text-foreground border-border btn-swipe cursor-pointer"
                     : "text-foreground-blocked border-border-blocked cursor-default")
                 }
               >
                 {submitting ? t("processing") : t("pay")}
-              </button>
+              </CommitButton>
             </section>
           </div>
         )}
@@ -500,13 +500,12 @@ function Confirmation({
       <p className="text-[11px] text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
         {t("emailStub")}
       </p>
-      <button
-        type="button"
-        onClick={onContinue}
-        className="mt-3 w-full text-xs font-bold uppercase bg-transparent text-foreground border border-border tracking-wide py-1.5 hover:bg-foreground-hover cursor-pointer"
+      <CommitButton
+        onCommit={onContinue}
+        className="mt-3 w-full text-xs font-bold uppercase bg-transparent text-foreground border border-border tracking-wide py-1.5 btn-swipe cursor-pointer"
       >
         {t("continue")}
-      </button>
+      </CommitButton>
     </div>
   );
 }

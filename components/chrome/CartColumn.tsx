@@ -7,6 +7,7 @@ import { useCheckout } from "@/lib/checkout/CheckoutProvider";
 import { CartItemCard } from "@/components/cart/CartItemCard";
 import { MobileCloseButton } from "@/components/chrome/MobileCloseButton";
 import { ColumnReveal } from "@/components/chrome/ColumnReveal";
+import { CommitButton } from "@/components/ui/CommitButton";
 
 // Right "cart" column: medium width. Guest cart with localStorage persistence,
 // rendered from the CartProvider. Line items (via the shared CartItemCard),
@@ -61,13 +62,12 @@ export function CartColumn() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={open}
-              className="w-full mt-2.5 text-xs font-bold bg-transparent text-foreground border border-border tracking-wide py-1 hover:bg-foreground-hover cursor-pointer"
+            <CommitButton
+              onCommit={open}
+              className="w-full mt-2.5 text-xs font-bold bg-transparent text-foreground border border-border tracking-wide py-1 btn-swipe cursor-pointer"
             >
               {t("checkout")}
-            </button>
+            </CommitButton>
           </div>
         </>
       )}

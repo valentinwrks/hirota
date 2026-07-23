@@ -2,7 +2,7 @@
 
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import type { Currency } from "@/lib/currency/format";
-import { PillSwitch } from "./PillSwitch";
+import { PillSwitch, type Size } from "./PillSwitch";
 
 const CURRENCIES: Currency[] = ["JPY", "USD"];
 
@@ -11,11 +11,14 @@ const CURRENCIES: Currency[] = ["JPY", "USD"];
 export function CurrencySwitcher({
   label,
   mobile = false,
+  size,
 }: {
   label: string;
-  /** Mobile-menu placement: renders the larger pill size to sit alongside the
+  /** Mobile-menu placement: renders the larger `lg` pill to sit alongside the
    *  menu's big type. */
   mobile?: boolean;
+  /** Explicit pill size, overriding `mobile`. */
+  size?: Size;
 }) {
   const { currency, setCurrency } = useCurrency();
 
@@ -24,7 +27,7 @@ export function CurrencySwitcher({
       label={label}
       value={currency}
       onSelect={setCurrency}
-      size={mobile ? "lg" : "sm"}
+      size={size ?? (mobile ? "lg" : "sm")}
       options={[
         { value: CURRENCIES[0], label: CURRENCIES[0] },
         { value: CURRENCIES[1], label: CURRENCIES[1] },

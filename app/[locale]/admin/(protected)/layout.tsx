@@ -58,7 +58,13 @@ export default async function AdminProtectedLayout({
       <TopBar showCurrency={false} mobile={<AdminMobileNav />} />
       <AdminMobileMenu
         locale={locale}
-        signOut={<SignOutButton locale={locale} variant="link" />}
+        signOut={
+          <SignOutButton
+            locale={locale}
+            variant="button"
+            className="text-[20px] w-full rounded-full"
+          />
+        }
       />
       <div className="mt-[32px] md:mt-[26px] h-[calc(100dvh-32px)] md:h-[calc(100dvh-26px)] overflow-hidden flex text-[13px]">
         {/* Each column opens with the same 26px title row the public site puts

@@ -82,6 +82,39 @@
 
 
 /* ------------------------------------------------------------------- */
+/* ---- Botones CTA: relleno de hover/press tipo "loading bar" -------- */
+/* ------------------------------------------------------------------- */
+/* El fondo de hover (--foreground-hover) barre de izquierda a derecha en
+   lugar de aparecer de golpe. Se implementa como un gradiente de fondo
+   cuyo ancho (background-size) anima de 0% a 100%, así queda SIEMPRE por
+   detrás del texto sin tocar el markup ni el z-index. La curva arranca
+   lenta y acelera hacia el final (ease-in fuerte, easeInQuint). Se usa en
+   ADD TO CART, CHECKOUT, SIMULATE PAYMENT y CONTINUE SHOPPING. */
+.btn-swipe {
+  background-image: linear-gradient(
+    to right,
+    var(--foreground-hover),
+    var(--foreground-hover)
+  );
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0% 100%;
+  transition: background-size 500ms cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+.btn-swipe:hover,
+.btn-swipe:active {
+  background-size: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-swipe {
+    transition: none;
+  }
+}
+
+
+/* ------------------------------------------------------------------- */
 /* ---------------------------- GENERALES ---------------------------- */
 /* ------------------------------------------------------------------- */
 
