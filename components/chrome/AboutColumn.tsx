@@ -99,10 +99,19 @@ export async function AboutColumn() {
 
         {/* visit policy */}
         <div className="mt-4">
-          <p className="uppercase">{t("visitTitle")}</p>
-          <p>{t("visitP1")}</p>
-          <p className="mt-2">{t("visitP2")}</p>
-          <p className="mt-2">{t("visitP3")}</p>
+          <p className="uppercase font-bold">{t("visitTitle")}</p>
+          <p>{t("visitIntro")}</p>
+          {/* Numbered steps. The list marker is placed manually (absolute at
+              left-0) rather than via list-decimal, because CSS list markers are
+              right-aligned to the text edge — a two-glyph "1." then hangs past
+              the padding's left border. This pins each number's left edge to the
+              start of the 16px (pl-4) text indent, matching the hours bullets. */}
+          <ol className="[&>li]:relative [&>li]:pl-4">
+            <li><span className="absolute left-0">1.</span>{t("visitStep1")}</li>
+            <li><span className="absolute left-0">2.</span>{t("visitStep2")}</li>
+            <li><span className="absolute left-0">3.</span>{t("visitStep3")}</li>
+          </ol>
+          <p className="text-black/30">{t("visitClosing")}</p>
         </div>
 
         {/* news / お知らせ — replicates HIROTA's landing-page announcements feed.

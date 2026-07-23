@@ -8,6 +8,7 @@ import { AboutColumn } from "@/components/chrome/AboutColumn";
 import { ShopColumn } from "@/components/chrome/ShopColumn";
 import { CartColumn } from "@/components/chrome/CartColumn";
 import { CheckoutSheet } from "@/components/checkout/CheckoutSheet";
+import { DesktopFooter } from "@/components/chrome/DesktopFooter";
 import { MobileChromeProvider } from "@/components/chrome/MobileChromeProvider";
 import { MobilePanel } from "@/components/chrome/MobilePanel";
 import { StoreMobileNav } from "@/components/chrome/StoreMobileNav";
@@ -57,6 +58,8 @@ export default async function StoreLayout({
             {/* The checkout sheet is a full-screen overlay; it lives outside
                 the column <main> and renders only when opened. */}
             <CheckoutSheet />
+            {/* Floating copyright — fixed bottom-left, desktop only. */}
+            <DesktopFooter />
           </MobileChromeProvider>
         </CheckoutProvider>
       </CartProvider>
