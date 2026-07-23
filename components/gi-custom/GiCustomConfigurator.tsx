@@ -687,8 +687,14 @@ export function GiCustomConfigurator({
       features.push({ label: `${t(`collarOptions.${state.collar}`).toLowerCase()}`, amountJpy: collarAmt });
     }
     if (state.hem) {
+      const hemParts = t(
+        pants && !jacket ? "hemsPartsPants" : jacket && !pants ? "hemsPartsJacket" : "hemsPartsSet",
+      );
       features.push({
-        label: t("hemLine", { option: t(`hemOptions.${hemOptionKey(state.hem)}`) }),
+        label: t("hemLine", {
+          parts: hemParts,
+          option: t(`hemOptions.${hemOptionKey(state.hem)}`),
+        }),
         amountJpy: hemAmt,
       });
     }
@@ -863,7 +869,7 @@ export function GiCustomConfigurator({
             against the band's top size (F collected but not size-checked; H/J have
             the high waist subtracted). */}
         <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (measurementsPending ? " text-foreground-pending" : "")}>{t("measurements")}</p>
-        <p className={"text-xs leading-tight mb-2 " + (measurementsPending ? "text-foreground-pending" : "text-foreground")}>
+        <p className={"text-xs leading-tight mb-[4px] " + (measurementsPending ? "text-foreground-pending" : "text-foreground")}>
           {isQuote ? t("measurementsNoteQuote") : t("measurementsNote")}
         </p>
         <OptionTable>
@@ -890,6 +896,11 @@ export function GiCustomConfigurator({
             );
           })}
         </OptionTable>
+        {pants && (
+          <p className={"text-xs leading-tight mt-[4px] " + (measurementsPending ? "text-foreground-pending" : "text-foreground-muted")}>
+            {t("measurementsHighWaistNote")}
+          </p>
+        )}
         {/* Per-letter "too large" hints, inline under the inputs. */}
         {ALL_LETTERS.map((l) => {
           const inScope = coreReady && letterInScope(l);
@@ -1093,7 +1104,7 @@ export function GiCustomConfigurator({
             default is NOT a row (it's the note above); clicking a selected row
             toggles back to it. kumite models may only use the normal-thickness
             rows; the rest render blocked for them once the core resolves. */}
-        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (hemsPending ? " text-foreground-pending" : "")}>{t("hems")}</p>
+        <p className={"text-lg font-bold leading-tight pt-5 mb-[3px]" + (hemsPending ? " text-foreground-pending" : "")}>{t(pants && !jacket ? "hemsPants" : jacket && !pants ? "hemsJacket" : "hemsSet")}</p>
         <p className={"text-xs leading-tight mb-2 " + (hemsPending ? "text-foreground-pending" : "text-foreground")}>{t("hemsNote")}</p>
         <OptionTable>
           {HEM_OPTIONS.filter((o) => !o.isDefault).map((o) => {

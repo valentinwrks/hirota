@@ -11,7 +11,6 @@ import { NotOffered, TableBlock, TD, TD_NUM, TH, TH_NUM } from "@/components/adm
 // auto-priced is a business change, not a price edit.
 
 const HEM_ROWS = [
-  { width_cm: 4, thickness: "normal" },
   { width_cm: 4, thickness: "thick" },
   { width_cm: 4, thickness: "ultra" },
   { width_cm: 5, thickness: "normal" },
@@ -26,6 +25,9 @@ const COLLAR_CODES = ["collar_thick", "collar_extra_thick"];
 export default async function AdminGiCustomPage() {
   const { bands, options, hems, highWaist, embroidery } = await getGiCustomTables();
   const t = await getTranslations("Admin");
+  // Hem rows read with the SAME labels the public configurator shows
+  // (GiCustom.hemOptions), so the admin table stays analogous to the storefront.
+  const tGi = await getTranslations("GiCustom");
 
   const collars = options.filter((o) => COLLAR_CODES.includes(o.code));
   const otherOptions = options.filter((o) => !COLLAR_CODES.includes(o.code));
@@ -130,7 +132,7 @@ export default async function AdminGiCustomPage() {
               className="hover:bg-foreground-hover-subtle"
             >
               <td className={`${TD} text-foreground`}>
-                {width_cm}cm · {t(`pricing.thickness.${thickness}`)}
+                {tGi(`hemOptions.${width_cm}-${thickness}`)}
               </td>
               {(["jacket", "pants"] as const).map((part) => {
                 const row = hems.find(

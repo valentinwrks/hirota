@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ObiConfiguredSnapshot } from "@/lib/admin/orders/snapshot";
 import { Section, Grid, Field } from "../parts";
 
@@ -14,6 +14,7 @@ export async function ObiView({
 }) {
   const t = await getTranslations("Obi");
   const tA = await getTranslations("Admin");
+  const locale = await getLocale();
   const s = snapshot.summary;
 
   const thread = s.threadColorKey
@@ -40,7 +41,7 @@ export async function ObiView({
             label={tA("view.width")}
             value={s.widthCm === 4 ? t("widthNormal") : t("widthSpecial")}
           />
-          <Field label={tA("view.size")} value={`#${s.sizeCode}`} />
+          <Field label={tA("view.size")} value={locale === "ja" ? `${s.sizeCode}号` : `#${s.sizeCode}`} />
           <Field label={tA("view.label")} value={s.labelName} />
         </Grid>
       </Section>

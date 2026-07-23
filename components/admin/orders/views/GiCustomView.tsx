@@ -65,7 +65,16 @@ export async function GiCustomView({
             label={tA("view.collar")}
             value={s.collar ? t(`collarOptions.${s.collar}`) : null}
           />
-          <Field label={tA("view.hems")} value={t(`hemOptions.${hemKey}`)} />
+          <Field
+            label={t(
+              s.purchaseUnit === "jacket"
+                ? "hemsPartsJacket"
+                : s.purchaseUnit === "pants"
+                  ? "hemsPartsPants"
+                  : "hemsPartsSet",
+            )}
+            value={t(`hemOptions.${hemKey}`)}
+          />
           <Field label={tA("view.sideTies")} value={s.sideTies ? tA("view.yes") : false} />
           <Field
             label={tA("view.highWaist")}

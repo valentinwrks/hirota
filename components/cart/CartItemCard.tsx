@@ -169,8 +169,16 @@ export function CartItemCard({
       lines.push(tGiC(`collarOptions.${s.collar}`).toLowerCase());
     }
     if (s.hem) {
+      const hemParts = tGiC(
+        s.purchaseUnit === "jacket"
+          ? "hemsPartsJacket"
+          : s.purchaseUnit === "pants"
+            ? "hemsPartsPants"
+            : "hemsPartsSet",
+      );
       lines.push(
         tGiC("hemLine", {
+          parts: hemParts,
           option: tGiC(`hemOptions.${s.hem.widthCm}-${s.hem.thickness}`),
         }),
       );

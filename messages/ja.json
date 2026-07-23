@@ -20,11 +20,11 @@
     "sections": {
       "orders": "注文",
       "news": "お知らせ",
-      "giCustom": "空手衣（フルオーダー）",
-      "giStandard": "空手衣（既製）",
+      "giCustom": "空手衣（特別仕立て）",
+      "giStandard": "空手衣（既製品）",
       "obi": "帯",
-      "equipment": "用具",
-      "accessories": "アクセサリー"
+      "equipment": "用品",
+      "accessories": "ウェア・グッズ"
     },
     "news": {
       "newPost": "新規投稿",
@@ -89,8 +89,8 @@
     "item": {
       "kindSimple": "単品",
       "kindObi": "帯",
-      "kindGiStandard": "既製空手衣",
-      "kindGiCustom": "オーダー空手衣",
+      "kindGiStandard": "既製品空手衣",
+      "kindGiCustom": "特別仕立て空手衣",
       "qty": "数量 {count}",
       "snapshotUnavailable": "スナップショットを読み込めませんでした。",
       "price": "価格",
@@ -110,7 +110,7 @@
       "material": "素材",
       "width": "幅",
       "label": "ラベル",
-      "embroidery": "刺繍",
+      "embroidery": "刺しゅう",
       "model": "モデル",
       "fit": "仕立て",
       "mfrLogo": "メーカーロゴ",
@@ -121,7 +121,7 @@
       "measurements": "寸法（cm）",
       "options": "オプション",
       "collar": "衿",
-      "hems": "ヘム",
+      "hems": "裾",
       "sideTies": "脇紐",
       "highWaist": "ハイウエスト",
       "chestTies": "胸紐",
@@ -139,24 +139,24 @@
       "stockAria": "在庫",
       "titles": {
         "stockEditor": "価格・在庫",
-        "obiNormal": "並仕立て（4cm）— 価格",
-        "obiSpecial": "特別仕立て（4.5cm）— 価格",
-        "obiEmbroidery": "帯の刺繍 — 1文字あたりの価格",
-        "giCustomBase": "基本価格 — 号数帯",
+        "obiNormal": "並仕立て（4cm巾）— 価格",
+        "obiSpecial": "特別仕立て（4.5cm巾）— 価格",
+        "obiEmbroidery": "帯の刺しゅう — 1文字あたりの価格",
+        "giCustomBase": "特別仕立て基本価格（号数帯）",
         "giCustomOptionals": "オプション",
         "giCustomCollar": "衿の厚み",
-        "giCustomHems": "ヘムの幅・厚み",
+        "giCustomHems": "袖、ズボン裾、上着裾",
         "giCustomHighWaist": "ハイウエスト",
-        "giEmbroidery": "空手衣の刺繍 — 1文字あたりの価格",
-        "giStandardPrices": "既製空手衣 — 上下セット価格",
-        "giStandardAdjust": "袖（C）・ズボン（H）丈の調整"
+        "giEmbroidery": "空手衣の刺しゅう — 1文字あたりの価格",
+        "giStandardPrices": "既製品空手衣 — 上下セット価格",
+        "giStandardAdjust": "袖・ズボン裾カット"
       },
       "obiColors": {
         "black": "黒", "blue": "青", "red": "赤", "white": "白",
         "green": "緑", "yellow": "黄", "purple": "紫", "orange": "橙", "brown": "茶"
       },
       "obiMaterials": {
-        "nami": "並", "shushi": "朱子", "yohachi": "洋八", "silk": "絹"
+        "nami": "並", "shushi": "朱子", "yohachi": "洋八", "silk": "本絹"
       },
       "simpleNote": "価格は円・税込。在庫は商品単位（バリエーション別ではありません）。編集はストアフロントと今後の注文にのみ反映され、確定済みの注文は凍結価格を保持します。",
       "colId": "ID",
@@ -170,43 +170,43 @@
       "obiEmbNote": "1文字あたりの円。幅×糸別。",
       "colWidth": "幅",
       "colStandardThread": "標準糸",
-      "colMetallic": "金属糸（金・銀）",
+      "colMetallic": "金属糸（純金・純銀）",
       "bandNote": "上下セットの基本価格（円）。購入者が選ぶ号数帯で決まります（上衣×0.6／ズボン×0.5はここから算出）。「—」はお見積り対応（編集不可）。",
       "colBand": "号数帯",
       "colBase": "基本価格（円）",
-      "optionsNote": "定額の追加料金（円）。0は「提供・無料」（紐類）— 他の価格と同様に編集可能。",
+      "optionsNote": "定額の追加料金（円）。0は「提供・無料」（ヒモ類）— 他の価格と同様に編集可能。",
       "colOption": "オプション",
       "colPart": "部位",
       "collarNote": "上衣のみ・形用モデル。普通衿（無料の標準）に対する定額追加（円）。",
       "colThickness": "厚み",
-      "hemsNote": "部位ごとの基準値（上衣＝ヘム2箇所、ズボン＝1箇所）。上下セット価格は2セルの合計。4cm普通が無料の標準。",
+      "hemsNote": "部位ごとの基準値（上衣＝裾2箇所、ズボン＝1箇所）。上下セット価格は2セルの合計。4cm普通が無料の標準。",
       "colWidthThickness": "幅・厚み",
       "colJacket": "上衣（円）",
       "colPants": "ズボン（円）",
       "highWaistNote": "購入者が正確なcmを入力し、価格は区分から決まります。13cm超は提供なし。",
       "giStandardPricesNote": "価格は円・税込。「—」はそのラインで提供のないサイズ（編集不可）。編集はストアフロントと今後の注文にのみ反映されます。",
       "colModelFit": "モデル・仕立て",
-      "colAdjustment": "調整",
-      "adjustNote": "既製空手衣の短縮のみの調整。各定額（円）。",
-      "giEmbNote": "共通表：この料金は既製・オーダー両方の空手衣（刺繍4箇所すべて）に適用されます。ここでの編集は全体に反映されます。",
+      "colAdjustment": "カット",
+      "adjustNote": "既製品空手衣の短縮のみのカット。各定額（円）。",
+      "giEmbNote": "共通表：この料金は既製・オーダー両方の空手衣（刺しゅう4箇所すべて）に適用されます。ここでの編集は全体に反映されます。",
       "colThread": "糸",
       "colPerChar": "1文字あたり（円）",
       "threadStandard": "標準色",
-      "threadMetallic": "金属色（金・銀）",
+      "threadMetallic": "金属色（純金・純銀）",
       "parts": { "jacket": "上衣", "pants": "ズボン", "both": "上下" },
       "thickness": { "normal": "普通", "thick": "厚", "ultra": "極厚" },
       "fits": { "slim": "スリム（ハイウエスト）", "normal": "ノーマル" },
-      "bands": { "up_to_2_5": "2½まで", "3_to_5_5": "3〜5½", "6_to_8": "6〜8", "above_8": "8超（お見積り）" },
+      "bands": { "up_to_2_5": "2½号まで", "3_to_5_5": "3〜5½号", "6_to_8": "6〜8号", "above_8": "8号以上（お見積り）" },
       "optionNames": {
-        "side_ties": "脇紐（わき）",
-        "chest_ties": "胸紐（むね）",
+        "side_ties": "わきヒモ",
+        "chest_ties": "むねヒモ",
         "elastic_waist": "ゴムウエスト（ツバサのみ）",
         "mfr_logo_neck": "メーカーロゴ — 衿のみ",
         "mfr_logo_breast_neck": "メーカーロゴ — 右胸＋衿",
-        "collar_thick": "厚め衿",
-        "collar_extra_thick": "極厚衿",
-        "adjust_sleeve_c": "袖丈の短縮（C・標準）",
-        "adjust_pant_h": "股下丈の短縮（H・標準）"
+        "collar_thick": "エリー厚手",
+        "collar_extra_thick": "エリー極厚",
+        "adjust_sleeve_c": "袖丈カット（C）",
+        "adjust_pant_h": "ズボン丈カット（H）"
       }
     }
   },
@@ -221,8 +221,8 @@
     "shop": "ショップ",
     "karateGi": "空手衣",
     "obi": "帯",
-    "equipment": "用具",
-    "accessories": "アクセサリー",
+    "equipment": "用品",
+    "accessories": "ウェア・グッズ",
     "products": "商品"
   },
   "Catalog": {
@@ -264,30 +264,30 @@
     "color": "色",
     "material": "素材",
     "width": "仕立て — 幅",
-    "size": "サイズ",
-    "sizeRow": "#{code} · {length}cm",
-    "widthNormal": "4cm（並）",
-    "widthSpecial": "4.5cm（特上）",
-    "embroidery": "刺繍（任意）",
+    "size": "サイズ — 長さ",
+    "sizeRow": "{code}号 · {length}cm",
+    "widthNormal": "並仕立て（4cm巾）",
+    "widthSpecial": "特別仕立て（4.5cm巾）",
+    "embroidery": "刺しゅう（任意）",
     "embroideryPlaceholder": "なし",
-    "embroiderySubtitle": "刺繍 — 漢字・カタカナ・ローマ字でご記入いただけます。",
+    "embroiderySubtitle": "刺しゅう — 漢字・カタカナ・ローマ字でご記入いただけます。",
     "threadColorTitle": "糸の色（1文字あたりの価格）",
-    "perChar": "1文字",
+    "perChar": "(1文字)",
     "threadNeedsText": "いずれかの端に文字を入力するか、糸の色を解除してください。",
     "endA": "A端",
-    "endAShort": "A端刺繍",
-    "endBShort": "B端刺繍",
+    "endAShort": "A端刺しゅう",
+    "endBShort": "B端刺しゅう",
     "endB": "B端",
-    "endAPlaceholder": "お名前？",
-    "endBPlaceholder": "流派・団体？",
+    "endAPlaceholder": "お名前",
+    "endBPlaceholder": "流派・団体",
     "chars": "文字",
     "threadColors": {
       "golden_brown": "金茶",
       "red": "赤",
       "white": "白",
-      "silver_grey": "銀鼠",
-      "gold": "金",
-      "silver": "銀"
+      "silver_grey": "銀ネズ",
+      "gold": "純金",
+      "silver": "純銀"
     },
     "threadColorsShort": {
       "golden_brown": "金茶",
@@ -297,9 +297,9 @@
       "gold": "純金",
       "silver": "純銀"
     },
-    "label": "ラベル",
+    "label": "ラベル指定",
     "labelLine": "{name}ラベル",
-    "labelSpecNote": "ラベルは必ずご指定ください。特に指定がない場合は、「ヒロタ」とお書きください。",
+    "labelSpecNote": "ラベルは必ずご指定ください。特に指定がない場合は「Hirota」をお選びください。",
     "labelRequired": "続けるにはラベルを選択してください。",
     "figureAlt": "帯の図",
     "startPromptColor": "色・素材・幅・サイズを選ぶと価格が表示されます。",
@@ -311,7 +311,7 @@
     "added": "追加しました",
     "colorGroups": {
       "competition": "競技用",
-      "kyu": "級位者用"
+      "kyu": "白帯・色帯"
     },
     "colors": {
       "black": "黒帯",
@@ -325,10 +325,10 @@
       "brown": "茶帯"
     },
     "materials": {
-      "nami": "並",
-      "shushi": "朱子",
-      "yohachi": "洋八",
-      "silk": "絹"
+      "nami": "並（綿）",
+      "shushi": "朱子（サテン）",
+      "yohachi": "洋八（綿上物）",
+      "silk": "本絹（絹上物）"
     },
     "colorsShort": {
       "black": "黒",
@@ -391,10 +391,10 @@
     }
   },
   "GiStandard": {
-    "model": "モデル",
+    "model": "仕立生地",
     "modelNote": "空手衣の生地をお選びください。",
     "modelNames": {
-      "tsubasa": "ツバサ",
+      "tsubasa": "翼（ツバサ）",
       "pinac-kumite": "ピナック組手用",
       "mh-10": "MH-10",
       "mh-11": "MH-11",
@@ -424,14 +424,14 @@
     "fit": "仕立て",
     "fitNote": "スリム仕立てはツバサとピナック組手用のみ対応しています。",
     "fits": {
-      "slim": "スリム（ハイウエスト）",
-      "normal": "ノーマル"
+      "slim": "スリムタイプ（ハイウエスト）",
+      "normal": "ノーマルタイプ（ノーマルウエスト）"
     },
     "size": "サイズ",
-    "sizeRow": "#{code}",
+    "sizeRow": "{code}号",
     "sizePending": "モデルと仕立てを選ぶとサイズが表示されます。",
     "mfrLogoTitle": "メーカーロゴ（任意）",
-    "mfrLogoNote": "空手衣にHIROTAのロゴを刺繍できます。デフォルトではロゴは付きません。ロゴなしにする場合は未選択のままにしてください。",
+    "mfrLogoNote": "空手衣にHIROTAのロゴを刺しゅうできます。デフォルトではロゴは付きません。ロゴなしにする場合は未選択のままにしてください。",
     "mfrLogoPlacements": {
       "neck": "衿のみ",
       "breast_neck": "右胸＋衿"
@@ -440,30 +440,30 @@
       "neck": "衿ロゴ",
       "breast_neck": "胸＋衿ロゴ"
     },
-    "embroidery": "刺繍（任意）",
+    "embroidery": "刺しゅう（任意）",
     "embroideryPlaceholder": "なし",
-    "embroiderySubtitle": "刺繍 — 最大4箇所、漢字・カタカナ・ローマ字でご記入いただけます。",
+    "embroiderySubtitle": "刺しゅう — 最大4箇所、漢字・カタカナ・ローマ字でご記入いただけます。",
     "threadColorTitle": "糸の色（1文字あたりの価格）",
-    "perChar": "／文字",
+    "perChar": "(1文字)",
     "threadNeedsText": "少なくとも1箇所に文字を入力するか、糸の色を解除してください。",
     "embroideryFields": {
-      "lapel": "上衣の衿",
+      "lapel": "個人名／上衣",
       "shoulder": "左肩",
       "chest": "胸",
-      "pants": "ズボン"
+      "pants": "個人名／ズボン"
     },
     "embroideryFieldsShort": {
-      "lapel": "衿刺繍",
-      "shoulder": "肩刺繍",
-      "chest": "胸刺繍",
-      "pants": "ズボン刺繍"
+      "lapel": "衿刺しゅう",
+      "shoulder": "肩刺しゅう",
+      "chest": "胸刺しゅう",
+      "pants": "ズボン刺しゅう"
     },
-    "adjust": "袖丈・ズボン丈の調整（任意）",
-    "adjustNote": "調整は短くするのみです。希望の仕上がり寸法（cm）を入力してください。現在のサイズより短い必要があります。",
-    "sleeveAdjust": "袖の調整",
-    "pantsAdjust": "ズボンの調整",
+    "adjust": "袖・ズボン裾カット（任意）",
+    "adjustNote": "カットは短くするのみです。希望の仕上がり寸法（cm）を入力してください。現在のサイズより短い必要があります。",
+    "sleeveAdjust": "袖丈カット",
+    "pantsAdjust": "ズボン丈カット",
     "adjustC": "新しい袖丈（C）",
-    "adjustH": "新しい股下丈（H）",
+    "adjustH": "新しいズボン丈（H）",
     "adjustCShort": "新C",
     "adjustHShort": "新H",
     "adjustLengthPlaceholder": "長さ",
@@ -471,24 +471,24 @@
     "pantsNeedsLength": "続けるには新しい股下丈（H）を入力してください",
     "adjustTooLongC": "新しいC値はサイズ{size}のC寸法（{max}cm）より短くしてください。",
     "adjustTooLongH": "新しいH値はサイズ{size}のH寸法（{max}cm）より短くしてください。",
-    "shrinkage": "縮み",
+    "shrinkage": "縮み分",
     "shrinkageOptions": {
-      "accounted": "考慮済み",
-      "to_add": "ヒロタで加える"
+      "accounted": "含む",
+      "to_add": "含まれていない"
     },
     "shrinkageShort": {
-      "accounted": "縮み考慮済み",
-      "to_add": "縮みはヒロタで加える"
+      "accounted": "縮み分 含む",
+      "to_add": "縮み分 含まれていない"
     },
     "shrinkageRequired": "続けるには縮みの選択をしてください。",
-    "label": "ラベル",
-    "labelSpecNote": "ラベルをご指定ください。特に指定がない場合は「Hirota」をお選びください。",
+    "label": "ラベル指定",
+    "labelSpecNote": "ラベルは必ずご指定ください。特に指定がない場合は「Hirota」をお選びください。",
     "labelLine": "{name}ラベル",
     "labelRequired": "続けるにはラベルを選択してください。",
-    "giLine": "既製",
+    "giLine": "既製品",
     "fitsShort": {
-      "slim": "スリム仕立て",
-      "normal": "ノーマル仕立て"
+      "slim": "スリムタイプ",
+      "normal": "ノーマルタイプ"
     },
     "figureAlt": "空手衣の図",
     "startPromptModel": "価格を表示するには、モデル・仕立て・サイズを選択してください。",
@@ -500,8 +500,9 @@
   },
   "About": {
     "title": "ヒロタ",
+    "brand": "HIROTA（ヒロタ）",
     "newsTitle": "お知らせ",
-    "intro": "は、高級空手衣と空手用具を専門とする日本の製造メーカーです。",
+    "intro": "は、高級空手衣と空手用品を専門とする日本の製造メーカーです。",
     "history": "1965年の創業以来、精緻な職人技、素材へのこだわり、そして妥協のない品質で、長年にわたり確かな信頼を築いてまいりました。ヒロタの空手衣は、世界の伝統空手・競技空手の最高峰で活躍する師範、指導者、トップ選手たちに信頼され、愛用されています。",
     "tokyoTitle": "東京本社",
     "tokyoAddress": "〒144-0052 東京都大田区蒲田5-33-6 NSビル1F",
@@ -529,13 +530,13 @@
     "disclaimer": "自主制作のコンセプト作品です。ヒロタからの依頼・承認によるものではありません。"
   },
   "GiCustom": {
-    "model": "モデル",
+    "model": "仕立生地",
     "modelNote": "空手衣の生地をお選びください。",
     "modelNames": {
-      "tsubasa": "ツバサ",
-      "kuu": "クウ",
+      "tsubasa": "翼（ツバサ）",
+      "kuu": "空（クウ）",
       "pinac-kumite": "ピナック組手用",
-      "takumi": "タクミ",
+      "takumi": "匠（タクミ）",
       "pinac-kata": "ピナック形用",
       "mh-10": "MH-10",
       "mh-11": "MH-11"
@@ -560,17 +561,17 @@
     },
     "modelDescription": {
       "tsubasa": "これまでの常識を超えた超軽量素材！特殊な織り方で生地の内側を凹凸に加工することにより、肌への張り付き感を軽減。また、約5％のストレッチ性を入れることで接地面への負担が減り動き易さも向上しました。",
-      "kuu": "ピナックよりもさらに軽い超軽量素材です。薄手ながら非常に柔らかな肌触りで、コンパクトに畳めて持ち運びも簡単です。",
+      "kuu": "ピナックより軽い超軽量。薄いのに極める感覚も兼ね備えている1着になります。コンパクトになるのでもち運びにも便利です。",
       "pinac-kumite": "すべてのヒロタ製品の核となるベストセラー空手衣です。型、組手の空手衣を分けることのなかった時代に一石を投じた画期的な商品です。より軽量な空手衣ができてきている今の時代で組手用とは明確には言えないかもしれませんが軽量で動きやすく、それでいて極まるオールマイティーな1着になります。多くの選手、指導者の方にご愛用頂いています。",
-      "takumi": "ピナック組手用に使用している糸を高密度に打ち込み、限界まで織り上げることでハリのあるパリッとした仕上がりを実現した生地です。薄手ながら構造がしっかりしていて動きやすく、抜群の切れを備えています。お子様からトップ選手まで幅広く愛用される、今もっとも人気のある1着です。",
-      "pinac-kata": "ピナック組手用より太い糸を使用した中厚の生地です。軽すぎず重すぎず、安定感のある扱いやすい1着です。",
+      "takumi": "ピナック組手用に使用されている糸を極限まで打ち込み、硬く仕上げた生地です。薄くて動きやすく、張りがあり、お子様からトップアスリートまで愛用されているいまもっとも人気の1着です。",
+      "pinac-kata": "ピナック組手用に使用されている糸を太くし、厚みを出した中厚の生地です。軽すぎず、重すぎず、安定感のある万能型の1着です。",
       "mh-10": "10号帆布（最高級コーマ糸使用）を使用した厚めの生地の空手衣です。生地が厚いので、形に向いています。薄い生地、中厚の生地では物足りないと言う方にもお勧めします。",
       "mh-11": "11号帆布（最高級コーマ糸使用）を使用した中厚の生地の空手衣です。生地が中厚ですので、形・組手の両方に使えます。"
     },
     "purchaseUnit": "購入単位",
     "purchaseUnitNote": "上衣とズボンは別価格です。上下セットが最もお得です。",
     "purchaseUnits": {
-      "set": "上下セット（上衣＋ズボン）",
+      "set": "上下セット",
       "jacket": "上衣のみ",
       "pants": "ズボンのみ"
     },
@@ -579,37 +580,38 @@
       "jacket": "上衣",
       "pants": "ズボン"
     },
-    "band": "号数帯（基本価格）",
+    "band": "特別仕立て基本価格（号数帯）",
     "bandNote": "ご自身のサイズを含む号数帯を選択してください。基本価格が決まります。",
     "bands": {
-      "up_to_2_5": "2½まで",
-      "3_to_5_5": "3-5½",
-      "6_to_8": "6-8",
-      "above_8": "8を超える"
+      "up_to_2_5": "2½号まで",
+      "3_to_5_5": "3〜5½号",
+      "6_to_8": "6〜8号",
+      "above_8": "8号以上"
     },
     "bandsShort": {
-      "up_to_2_5": "2½まで",
-      "3_to_5_5": "3-5½",
-      "6_to_8": "6-8",
-      "above_8": "8超"
+      "up_to_2_5": "2½号まで",
+      "3_to_5_5": "3〜5½号",
+      "6_to_8": "6〜8号",
+      "above_8": "8号超"
     },
     "quoteOnRequest": "お見積り",
     "quoteExplainer": "8を超えるサイズは個別のお見積りとなります。価格についてはHIROTAへお問い合わせください。",
     "quoteCta": "お見積り対応",
     "measurements": "寸法",
-    "measurementsNote": "仕上がり寸法（cm）を入力してください。選択した号数帯の上限で検証されます（Fは記録しますが、サイズ検証には使いません）。",
+    "measurementsNote": "寸法は選択した号数帯の上限で検証されます。",
     "measurementsNoteQuote": "この号数帯はお見積り対応です。寸法は記録しますが、ここでは検証されません。",
+    "measurementsHighWaistNote": "※ 寸法 HとJは、ハイウエスト分を含めて記入してください",
     "measureLabels": {
-      "a": "A — 上衣着丈",
-      "b": "B — 肩幅",
-      "c": "C — 袖丈",
-      "d": "D — 袖幅",
-      "e": "E — 袖口幅",
-      "f": "F — スリット丈",
-      "g": "G — ズボンウエスト",
-      "h": "H — 股下丈",
-      "i": "I — もも幅",
-      "j": "J — 裾幅"
+      "a": "A — 上衣の丈",
+      "b": "B — 上衣の巾",
+      "c": "C — 袖の長さ",
+      "d": "D — 袖口巾",
+      "e": "E — 袖付け巾",
+      "f": "F — スリット",
+      "g": "G — ズボン巾",
+      "h": "H — ズボン丈",
+      "i": "I — 裾巾",
+      "j": "J — 股上"
     },
     "measurePlaceholder": "数値",
     "measureExceeds": "{letter}はサイズ{size}の{max}cm以下にしてください。",
@@ -617,26 +619,31 @@
     "collar": "衿の厚み（任意）",
     "collarNote": "形用モデルのみ対応。組手用モデルでは選択できません。",
     "collarOptions": {
-      "thick": "厚め衿",
-      "extra_thick": "極厚衿"
+      "thick": "エリー厚手",
+      "extra_thick": "エリー極厚"
     },
     "ties": "紐",
-    "sideTies": "脇紐",
-    "chestTies": "胸紐",
-    "sideTiesShort": "脇紐",
-    "chestTiesShort": "胸紐",
+    "sideTies": "わきヒモ",
+    "chestTies": "むねヒモ",
+    "sideTiesShort": "わきヒモ",
+    "chestTiesShort": "むねヒモ",
     "free": "無料",
-    "hems": "ヘムの幅・厚み（任意）",
+    "hemsSet": "袖、ズボン裾、上着裾（任意）",
+    "hemsJacket": "袖、上着裾（任意）",
+    "hemsPants": "ズボン裾（任意）",
+    "hemsPartsSet": "袖、ズボン裾、上着裾",
+    "hemsPartsJacket": "袖、上着裾",
+    "hemsPartsPants": "ズボン裾",
     "hemsNote": "上下に同じ幅・厚みを適用します。4cm普通が標準（無料）です。組手用モデルは普通厚のみ対応。",
     "hemOptions": {
       "4-normal": "4cm幅・普通（標準）",
-      "4-thick": "4cm幅・厚",
+      "4-thick": "4cm幅・厚手",
       "4-ultra": "4cm幅・極厚",
-      "5-normal": "5cm幅・普通",
-      "5-thick": "5cm幅・厚",
+      "5-normal": "5cm幅・並厚",
+      "5-thick": "5cm幅・厚手",
       "5-ultra": "5cm幅・極厚"
     },
-    "hemLine": "{option}のヘム",
+    "hemLine": "{parts} = {option}",
     "highWaist": "ハイウエスト（任意）",
     "highWaistNote": "ハイウエストの区分を選び、その範囲内の正確な高さをcmで入力してください。",
     "highWaistBand": "ハイウエストを追加（{min}〜{max}cm）",
@@ -648,7 +655,7 @@
     "elasticWaist": "ゴムウエスト",
     "elasticWaistShort": "ゴムウエスト追加",
     "mfrLogoTitle": "メーカーロゴ（任意）",
-    "mfrLogoNote": "上衣にHIROTAのロゴを刺繍できます。デフォルトではロゴは付きません。",
+    "mfrLogoNote": "上衣にHIROTAのロゴを刺しゅうできます。デフォルトではロゴは付きません。",
     "mfrLogoPlacements": {
       "neck": "衿のみ",
       "breast_neck": "右胸＋衿"
@@ -657,33 +664,33 @@
       "neck": "衿ロゴ",
       "breast_neck": "胸＋衿ロゴ"
     },
-    "embroidery": "刺繍（任意）",
+    "embroidery": "刺しゅう（任意）",
     "threadColorTitle": "糸の色（1文字あたりの価格）",
-    "perChar": "／文字",
-    "embroiderySubtitle": "刺繍 — 最大4箇所、漢字・カタカナ・ローマ字でご記入いただけます。",
+    "perChar": "(1文字)",
+    "embroiderySubtitle": "刺しゅう — 最大4箇所、漢字・カタカナ・ローマ字でご記入いただけます。",
     "embroideryPlaceholder": "なし",
     "threadNeedsText": "少なくとも1箇所に文字を入力するか、糸の色を解除してください。",
     "embroideryFields": {
-      "lapel": "上衣の衿",
+      "lapel": "個人名／上衣",
       "shoulder": "左肩",
       "chest": "胸",
-      "pants": "ズボン"
+      "pants": "個人名／ズボン"
     },
     "embroideryFieldsShort": {
-      "lapel": "衿刺繍",
-      "shoulder": "肩刺繍",
-      "chest": "胸刺繍",
-      "pants": "ズボン刺繍"
+      "lapel": "衿刺しゅう",
+      "shoulder": "肩刺しゅう",
+      "chest": "胸刺しゅう",
+      "pants": "ズボン刺しゅう"
     },
-    "shrinkage": "縮み",
+    "shrinkage": "縮み分",
     "shrinkageNote": "必須 — 受注採寸のため選択してください。",
     "shrinkageOptions": {
-      "accounted": "考慮済み",
-      "to_add": "ヒロタで加える"
+      "accounted": "含む",
+      "to_add": "含まれていない"
     },
     "shrinkageShort": {
-      "accounted": "縮み考慮済み",
-      "to_add": "縮みはヒロタで加える"
+      "accounted": "縮み分 含む",
+      "to_add": "縮み分 含まれていない"
     },
     "shrinkageRequired": "続けるには縮みの選択をしてください。",
     "bodyData": "身体データ — 確認用の項目です。仕立てには使用しません。",
@@ -692,11 +699,11 @@
     "bodyWeight": "体重",
     "bodyWaist": "ウエスト",
     "bodyNeedsAll": "続けるには身長・体重・ウエストを入力してください。",
-    "label": "ラベル",
-    "labelSpecNote": "ラベルをご指定ください。特に指定がない場合は「Hirota」をお選びください。",
+    "label": "ラベル指定",
+    "labelSpecNote": "ラベルは必ずご指定ください。特に指定がない場合は「Hirota」をお選びください。",
     "labelLine": "{name}ラベル",
     "labelRequired": "続けるにはラベルを選択してください。",
-    "giLine": "フルオーダー",
+    "giLine": "特別仕立て",
     "figureAlt": "空手衣の図",
     "startPromptModel": "価格を表示するには、モデル・購入単位・号数帯を選択してください。",
     "startPromptUnit": "価格を表示するには、購入単位と号数帯を選択してください。",

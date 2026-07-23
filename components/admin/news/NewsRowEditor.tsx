@@ -142,7 +142,7 @@ export function NewsRowEditor({
             onClick={() => setEditing(true)}
             disabled={pending}
             aria-label={t("news.edit")}
-            className="border border-border-blocked p-1 hover:bg-foreground-hover-subtle cursor-pointer"
+            className="p-1 hover:bg-foreground-hover-subtle cursor-pointer"
           >
             <Pencil size={12} />
           </button>
@@ -151,7 +151,7 @@ export function NewsRowEditor({
             onClick={remove}
             disabled={pending}
             aria-label={t("news.delete")}
-            className="border border-border-blocked p-1 hover:bg-foreground-hover-subtle cursor-pointer"
+            className="p-1 hover:bg-foreground-hover-subtle cursor-pointer"
           >
             {pending ? (
               <Loader2 size={12} className="animate-spin" />

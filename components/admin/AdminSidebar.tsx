@@ -52,9 +52,10 @@ export function AdminSidebar({ locale }: { locale: string }) {
               href={href}
               locale={locale}
               className={
-                active
+                (active
                   ? "px-1.5 py-1 leading-none lowercase text-foreground bg-foreground-hover"
-                  : "px-1.5 py-1 leading-none lowercase text-foreground hover:bg-foreground-hover-subtle"
+                  : "px-1.5 py-1 leading-none lowercase text-foreground hover:bg-foreground-hover-subtle") +
+                (locale === "ja" ? " font-bold" : "")
               }
             >
               {t(`sections.${key}`)}

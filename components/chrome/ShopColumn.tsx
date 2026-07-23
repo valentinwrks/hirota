@@ -1,6 +1,7 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { NavCategory } from "@/lib/catalog/types";
 import { CategoryNav } from "@/components/catalog/CategoryNav";
+import { ColumnReveal } from "@/components/chrome/ColumnReveal";
 import { ShopSectionTitle } from "@/components/chrome/ShopSectionTitle";
 
 // Center "shop" column: widest region. Sticky "shop" header + the category nav
@@ -9,6 +10,7 @@ import { ShopSectionTitle } from "@/components/chrome/ShopSectionTitle";
 // mobile menu trigger (the dropdown replaces the category nav there).
 export async function ShopColumn({ children }: { children: React.ReactNode }) {
   const t = await getTranslations("Nav");
+  const locale = await getLocale();
 
   const navLabels: Record<NavCategory, string> = {
     "karate-gi": t("karateGi"),
@@ -29,14 +31,18 @@ export async function ShopColumn({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Scroll region — the category nav + routed content scroll here, below
-          the fixed bar. The category links (CategoryNav) AND the "products /
-          <category>" sub-header at the top of the routed content are persistent
-          chrome and stay STATIC across navigation. The scan-in reveal wraps only
-          the content BELOW that sub-header, applied inside each route (CategoryView
-          / PDP) rather than here, so the header bar + its divider don't animate on
-          a section change. */}
+          the fixed bar. The category links (CategoryNav) scan in on a FULL load
+          (after the preloader) and on a locale switch, but stay STATIC on a
+          section change — hence a ColumnReveal keyed by locale (like the side
+          columns), not by pathname: the layout persists across section changes so
+          the key doesn't change and the nav doesn't replay. The "products /
+          <category>" sub-header inside the routed content is persistent chrome and
+          stays static; the section content below it has its OWN pathname-keyed
+          reveal (in CategoryView / PDP), so it re-scans on every section change. */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain scrollbar-none">
-        <CategoryNav labels={navLabels} />
+        <ColumnReveal revealKey={locale}>
+          <CategoryNav labels={navLabels} />
+        </ColumnReveal>
         {children}
       </div>
     </section>

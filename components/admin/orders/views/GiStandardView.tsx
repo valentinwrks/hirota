@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { GiStandardConfiguredSnapshot } from "@/lib/admin/orders/snapshot";
 import { Section, Grid, Field } from "../parts";
 
@@ -18,9 +18,15 @@ export async function GiStandardView({
   const tA = await getTranslations("Admin");
   // Thread colours live in the shared GiThread namespace (one gi palette, §8.4).
   const tThread = await getTranslations("GiThread");
+  const locale = await getLocale();
   const s = snapshot.summary;
 
-  const sizeLabel = s.sizeCode.startsWith("S") ? s.sizeCode : `#${s.sizeCode}`;
+  // JA sizes carry the "号" unit; EN keeps "#". S-sizes (S5–S7) stay as-is.
+  const sizeLabel = s.sizeCode.startsWith("S")
+    ? s.sizeCode
+    : locale === "ja"
+      ? `${s.sizeCode}号`
+      : `#${s.sizeCode}`;
   const thread = s.threadColorKey ? tThread(`threadColors.${s.threadColorKey}`) : null;
   const byField = new Map(s.embroidery.map((f) => [f.field, f]));
   const adjusted = s.sleeveCcm != null || s.pantHcm != null;

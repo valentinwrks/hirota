@@ -37,7 +37,7 @@ export async function AboutColumn() {
       <MobileLogoFooter />
       <div className="mt-[5px] mx-1.5 max-md:mx-2 pb-8 text-xs leading-tight">
         <p>
-          <span className="font-bold">HIROTA (ヒロタ)</span> {t("intro")}
+          <span className="font-bold">{t("brand")}</span> {t("intro")}
         </p>
         <p className="mt-2">{t("history")}</p>
 

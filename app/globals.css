@@ -204,6 +204,14 @@ input[type="number"] {
   appearance: textfield;
 }
 
+/* Tone the native date-picker calendar icon down toward the muted foreground
+   used by the lucide icons (edit/delete) — the browser default paints this
+   indicator near full-black, making it look darker than the rest of the UI. */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
 /* ------------------------------------------------------------------- */
 /* ----------------- REVELADO DE COLUMNA ("scanner") ----------------- */
 /* ------------------------------------------------------------------- */
@@ -215,8 +223,9 @@ input[type="number"] {
 
    Técnica: la máscara mide el DOBLE de alto que el elemento (mask-size
    200%) y su mitad superior es opaca; animamos SU POSICIÓN (mask-position)
-   de 100% (todo el contenido cae en la zona transparente → oculto) a 0%
-   (todo cae en la zona opaca → visible). mask-position es una propiedad
+   de 92% (todo el contenido cae en la zona transparente → oculto, sin recorrido
+   muerto de sobra) a 0% (todo cae en la zona opaca → visible). mask-position
+   es una propiedad
    nativamente animable, así que interpola de forma fluida (a diferencia de
    una custom property, que saltaba entre dos estados).
 
@@ -231,8 +240,17 @@ input[type="number"] {
    el barrido corre de inmediato, sin esperar a nada. */
 @keyframes columnScan {
   from {
-    -webkit-mask-position: 0 100%;
-    mask-position: 0 100%;
+    /* 93%, no 100%: el 100% gastaba ~8% de la animación como "recorrido muerto"
+       (el borde del fundido aún no tocaba la primera fila) → se percibía como un
+       delay de 0.3–0.5s antes de que apareciera nada. Con la banda en px fijos
+       (90px, ver .column-scan) el umbral de "todo oculto" depende un poco de la
+       altura de la columna, y una banda más ancha lo empuja hacia arriba; 93%
+       deja el contenido 100% oculto en el frame inicial para cualquier columna de
+       ~310px de alto en adelante. En columnas muy altas hay algo de recorrido
+       muerto, pero con la banda ancha el borde aparece de forma gradual y no se
+       lee como delay. */
+    -webkit-mask-position: 0 93%;
+    mask-position: 0 93%;
   }
   to {
     -webkit-mask-position: 0 0%;
@@ -241,24 +259,42 @@ input[type="number"] {
 }
 
 .column-scan {
-  /* Degradado ANCHO y suave para que el contenido aparezca "de a poquito":
-     la banda de transición ocupa ~medio alto de columna, así cada fila se
-     funde gradualmente al pasar el frente, en vez de una línea dura.
-     Zona opaca 0–45% de la máscara + fundido 45→55% (el resto transparente).
-     La máscara mide 2.5× el alto (mask-size 250%): ese extra da recorrido
-     para ocultar todo al inicio y revelarlo por completo al final aun con la
-     banda (con 200% no entraría el degradado). */
+  /* Banda de fundido de ancho FIJO (90px), no relativa a la altura: la franja
+     donde la opacidad va de 100%→0% mide siempre 90px reales en cualquier
+     columna, así el borde del scanner se ve consistente en las tres (about /
+     tienda / carrito), que tienen alturas distintas. Se centra con calc(50% ±45px)
+     sobre la máscara: opaca arriba, 90px de transición, transparente abajo.
+     La máscara mide 2.5× el alto (mask-size 250%): ese extra da recorrido para
+     ocultar todo al inicio y revelarlo por completo al final. */
   -webkit-mask-image: linear-gradient(
     to bottom,
-    #000 45%,
-    transparent 55%
+    #000,
+    #000 calc(50% - 45px),
+    transparent calc(50% + 45px),
+    transparent
   );
-  mask-image: linear-gradient(to bottom, #000 45%, transparent 55%);
+  mask-image: linear-gradient(
+    to bottom,
+    #000,
+    #000 calc(50% - 45px),
+    transparent calc(50% + 45px),
+    transparent
+  );
   -webkit-mask-size: 100% 250%;
   mask-size: 100% 250%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  animation: columnScan 3000ms cubic-bezier(0.45, 0, 0.55, 1) both;
+  /* Duración proporcional a la altura del contenido (la fija ColumnReveal por
+     JS en --scan-ms, midiendo offsetHeight) para que el frente del scanner se
+     mueva SIEMPRE a los mismos px/seg en todas las secciones. Con duración fija,
+     una sección corta (poco alto) barría a menos px/seg y se veía más lenta que
+     una larga. El fallback 3000ms cubre el primer paint antes de que corra el JS
+     y el caso sin JS. */
+  animation: columnScan 3000ms linear both;
+  /* OJO: var() NO resuelve dentro del shorthand `animation` en Chromium (cae al
+     fallback → duración fija). Como longhand SÍ, así que la duración va aparte y
+     pisa a la del shorthand. */
+  animation-duration: var(--scan-ms, 3000ms);
   will-change: mask-position;
   /* Arranca en pausa: se libera cuando el preloader marca <html data-app-loaded>. */
   animation-play-state: paused;

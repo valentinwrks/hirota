@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getGiStandardTables } from "@/lib/admin/pricing/queries";
 import { PriceCell } from "@/components/admin/pricing/PriceCell";
 import { GiEmbroideryTable } from "@/components/admin/pricing/GiEmbroideryTable";
@@ -23,6 +23,9 @@ export default async function AdminGiStandardPage() {
   const { prices, models, adjustments, embroidery } = await getGiStandardTables();
   const t = await getTranslations("Admin");
   const tg = await getTranslations("GiStandard");
+  // Numeric sizes read with the JA "号" unit / EN "#" prefix, matching the
+  // public size labels; S-sizes (S5–S7) stay as-is in both.
+  const locale = await getLocale();
 
   const modelOrder = new Map(models.map((m) => [m.slug, m.sort_order]));
 
@@ -54,7 +57,7 @@ export default async function AdminGiStandardPage() {
             <th className={TH}>{t("pricing.colModelFit")}</th>
             {sizes.map((s) => (
               <th key={s} className={TH_NUM}>
-                {s.startsWith("S") ? s : `#${s}`}
+                {s.startsWith("S") ? s : locale === "ja" ? `${s}号` : `#${s}`}
               </th>
             ))}
           </tr>
@@ -65,7 +68,7 @@ export default async function AdminGiStandardPage() {
             return (
               <tr key={line} className="hover:bg-foreground-hover-subtle">
                 <td className={`${TD} text-foreground`}>
-                  {tg(`modelNames.${slug}`)} · {t(`pricing.fits.${fit}`)}
+                  {tg(`modelNames.${slug}`)} · {tg(`fitsShort.${fit}`)}
                 </td>
                 {sizes.map((size) => {
                   const row = byKey.get(`${line}|${size}`);

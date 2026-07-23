@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getObiTables, type ObiPriceRow } from "@/lib/admin/pricing/queries";
 import { PriceCell } from "@/components/admin/pricing/PriceCell";
 import { NotOffered, TableBlock, TD, TD_NUM, TH, TH_NUM } from "@/components/admin/pricing/parts";
@@ -16,6 +16,8 @@ const MATERIAL_ORDER = ["nami", "shushi", "yohachi", "silk"] as const;
 
 async function WidthMatrix({ title, rows }: { title: string; rows: ObiPriceRow[] }) {
   const t = await getTranslations("Admin");
+  // JA sizes read with the "号" unit; EN keeps the "#" prefix (matches storefront).
+  const locale = await getLocale();
   const sizes = [...new Set(rows.map((r) => r.size_code))].sort((a, b) => a - b);
 
   // Distinct (color, material) combos, in the paper-table order.
@@ -45,7 +47,7 @@ async function WidthMatrix({ title, rows }: { title: string; rows: ObiPriceRow[]
           <th className={TH}>{t("pricing.colColourMaterial")}</th>
           {sizes.map((s) => (
             <th key={s} className={TH_NUM}>
-              #{s}
+              {locale === "ja" ? `${s}号` : `#${s}`}
             </th>
           ))}
         </tr>
