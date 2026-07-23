@@ -10,12 +10,12 @@ export function HamburgerIcon({ open }: { open: boolean }) {
     <span className="relative block w-[25px] h-[25px]" aria-hidden="true">
       <span
         className={
-          bar + (open ? " top-1/2 -translate-y-1/2 rotate-45" : " top-[7px]")
+          bar + (open ? " top-1/2 -translate-y-1/2 rotate-45" : " top-[8.5px]")
         }
       />
       <span
         className={
-          bar + (open ? " top-1/2 -translate-y-1/2 -rotate-45" : " top-[13px]")
+          bar + (open ? " top-1/2 -translate-y-1/2 -rotate-45" : " top-[14.5px]")
         }
       />
     </span>

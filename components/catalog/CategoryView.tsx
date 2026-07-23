@@ -25,18 +25,23 @@ export async function CategoryView({
           animate on a section change. */}
       <CategorySubHeader category={category} />
 
-      {/* Only the content below the sub-header scans in (keyed by pathname). */}
-      <ColumnReveal>
-        {isSimpleCategory(category) ? (
+      {/* Content below the sub-header scans in (keyed by pathname). The
+          configurators are the exception: they self-reveal INTERNALLY, wrapping
+          only their panels in the scan so the mobile configurator/product switch
+          appears instantly instead of scanning in with the rest. */}
+      {isSimpleCategory(category) ? (
+        <ColumnReveal>
           <ProductGrid products={await getSimpleProducts(category)} locale={locale} />
-        ) : category === "obi" ? (
-          <ObiConfiguratorSection />
-        ) : category === "karate-gi" ? (
-          <KarateGiConfiguratorSection />
-        ) : (
+        </ColumnReveal>
+      ) : category === "obi" ? (
+        <ObiConfiguratorSection />
+      ) : category === "karate-gi" ? (
+        <KarateGiConfiguratorSection />
+      ) : (
+        <ColumnReveal>
           <ConfiguratorPlaceholder />
-        )}
-      </ColumnReveal>
+        </ColumnReveal>
+      )}
     </div>
   );
 }

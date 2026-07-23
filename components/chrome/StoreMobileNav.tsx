@@ -26,6 +26,12 @@ export function StoreMobileNav() {
   // Reset on transition end so the animation can retrigger on the next tap.
   const [tapped, setTapped] = useState(false);
 
+  // An empty cart has nothing to show, so the bag is disabled and muted rather
+  // than opening a flap that would only render the "empty cart" line on mobile.
+  // Gated on `hydrated` so the button doesn't flash muted before localStorage is
+  // read (a cart-with-items user would otherwise see it disabled for a frame).
+  const empty = hydrated && count === 0;
+
   function toggleCart() {
     setTapped(true);
     if (view === "cart") {
@@ -49,9 +55,15 @@ export function StoreMobileNav() {
       <button
         type="button"
         onClick={toggleCart}
+        disabled={empty}
         aria-pressed={view === "cart"}
         aria-label={tCart("title")}
-        className="cursor-pointer flex items-center text-[#404040]"
+        className={
+          "flex items-center " +
+          (empty
+            ? "cursor-not-allowed text-[#ACACAC]"
+            : "cursor-pointer text-[#404040]")
+        }
       >
         <span
           onTransitionEnd={() => setTapped(false)}
