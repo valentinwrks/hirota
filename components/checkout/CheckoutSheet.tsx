@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useCheckout } from "@/lib/checkout/CheckoutProvider";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
@@ -20,6 +20,10 @@ import {
 // clears the cart; on failure the cart stays intact and the buyer can retry.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Duration of each animation stage (blur fade, sheet slide). Keep in sync with
+// the `duration-500` transition classes below.
+const ANIM_MS = 500;
 
 type FormState = {
   name: string;
@@ -51,6 +55,9 @@ const EMPTY_FORM: FormState = {
 
 export function CheckoutSheet() {
   const t = useTranslations("Checkout");
+  // Section headings render at weight 400 in English (sentence case reads better
+  // light) but keep 700 in Japanese, where the CJK glyphs need the extra weight.
+  const headingWeight = useLocale() === "ja" ? "font-bold" : "font-normal";
   const { isOpen, close } = useCheckout();
   const { items, subtotalJpy, clear } = useCart();
   const { format, currency, rate } = useCurrency();
@@ -59,6 +66,41 @@ export function CheckoutSheet() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [confirmedNumber, setConfirmedNumber] = useState<number | null>(null);
+
+  // Enter/exit animation, sequenced in two stages so the scrim and the sheet
+  // never move at the same time:
+  //   open  → mount → blur fades in → (blur done) sheet slides up
+  //   close → sheet slides down → (sheet gone) blur fades out → unmount
+  // `mounted` keeps the node in the DOM through the exit; `scrimShown` drives
+  // the blur/opacity; `sheetShown` drives the slide. Double-rAF on open lets
+  // the browser paint the off-screen state before we transition from it.
+  const [mounted, setMounted] = useState(false);
+  const [scrimShown, setScrimShown] = useState(false);
+  const [sheetShown, setSheetShown] = useState(false);
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    let raf1 = 0;
+    let raf2 = 0;
+    if (isOpen) {
+      setMounted(true);
+      raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => {
+          setScrimShown(true); // stage 1: blur fades in
+          timers.push(setTimeout(() => setSheetShown(true), ANIM_MS)); // stage 2
+        });
+      });
+    } else {
+      setSheetShown(false); // stage 1: sheet slides down
+      timers.push(setTimeout(() => setScrimShown(false), ANIM_MS)); // stage 2
+      timers.push(setTimeout(() => setMounted(false), ANIM_MS * 2)); // unmount
+    }
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      timers.forEach(clearTimeout);
+    };
+  }, [isOpen]);
 
   // Close on Escape (unless mid-submit).
   useEffect(() => {
@@ -71,7 +113,7 @@ export function CheckoutSheet() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, submitting]);
 
-  if (!isOpen) return null;
+  if (!mounted) return null;
 
   function set<K extends keyof FormState>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -144,24 +186,33 @@ export function CheckoutSheet() {
         type="button"
         aria-label={t("close")}
         onClick={handleClose}
-        className="fixed inset-0 bg-black/[17.5%] backdrop-blur-sm cursor-default"
+        className={
+          "fixed inset-0 bg-black/[12.5%] backdrop-blur-sm cursor-default transition-opacity duration-500 ease-in-out " +
+          (scrimShown ? "opacity-100" : "opacity-0")
+        }
       />
 
-      {/* White paper sheet — edge-to-edge below md, floating card on md+. */}
-      <div className="relative w-full max-w-2xl my-8 mx-4 max-md:my-0 max-md:mx-0 max-md:min-h-dvh bg-background text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)]">
+      {/* White paper sheet — edge-to-edge below md, floating card on md+. Slides
+          up into place on open. */}
+      <div
+        className={
+          "relative w-full max-w-2xl my-8 mx-4 max-md:my-0 max-md:mx-0 max-md:min-h-dvh bg-background text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)] transition-transform duration-500 ease-in-out motion-reduce:transition-none " +
+          (sheetShown ? "translate-y-0" : "translate-y-full")
+        }
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-3 max-md:px-2 h-[30px] border-b border-border bg-foreground-selected text-background text-sm">
+        <div className="flex items-center justify-between px-3 max-md:px-2 h-[36px] bg-background text-foreground text-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/hirota/logo-checkout.png"
+            src="/hirota/logo-footer.svg"
             alt="HIROTA"
-            className="h-[25px] w-auto object-contain object-center"
+            className="h-[27.5px] w-auto object-contain object-center opacity-80"
           />
           <button
             type="button"
             onClick={handleClose}
             aria-label={t("close")}
-            className="text-background/70 hover:text-background cursor-pointer leading-none"
+            className="md:hidden absolute top-2 right-2 inline-flex items-center justify-center w-4 h-4 rounded-full bg-foreground hover:bg-foreground-selected text-background text-[13px] cursor-pointer leading-none font-normal"
           >
             ✕
           </button>
@@ -174,20 +225,20 @@ export function CheckoutSheet() {
             t={t}
           />
         ) : (
-          <div className="p-3 max-md:px-2 space-y-4">
+          <div className="p-3 pt-2 max-md:px-2 space-y-4">
             {/* ---- Order summary (read-only) ---- */}
             <section>
-              <h3 className="text-sm font-normal uppercase mb-1.5">
+              <h3 className={`text-base ${headingWeight} mb-1.5`}>
                 {t("summary")}
               </h3>
-              <table className="w-full border-separate border-spacing-x-0 border-spacing-y-2.5 -mt-2.5 -mb-2.5">
+              <table className="w-full border-separate border-spacing-0 [&_tr:first-child_td]:border-t [&_tr:first-child_td]:border-border-blocked [&_tr:last-child_td]:border-b-0">
                 <tbody>
                   {items.map((item) => (
                     <CartItemCard key={item.lineId} item={item} readOnly />
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-between pt-[5px] mt-2.5 border-t border-border-blocked">
+              <div className="flex justify-end gap-[30px] px-1.5 pt-1 mt-[5px] border-t border-border">
                 <span className="text-sm font-bold">{t("total")}</span>
                 <span className="text-sm font-bold">{format(subtotalJpy)}</span>
               </div>
@@ -195,7 +246,7 @@ export function CheckoutSheet() {
 
             {/* ---- Contact ---- */}
             <section className="space-y-2">
-              <h3 className="text-sm font-normal uppercase">
+              <h3 className={`text-base ${headingWeight}`}>
                 {t("contactHeading")}
               </h3>
               <Field
@@ -228,7 +279,7 @@ export function CheckoutSheet() {
 
             {/* ---- Shipping ---- */}
             <section className="space-y-2">
-              <h3 className="text-sm font-normal uppercase">
+              <h3 className={`text-base ${headingWeight}`}>
                 {t("shippingHeading")}
               </h3>
               <Field
@@ -300,10 +351,10 @@ export function CheckoutSheet() {
 
             {/* ---- Simulated payment ---- */}
             <section className="space-y-2">
-              <h3 className="text-sm font-normal uppercase">
+              <h3 className={`text-base ${headingWeight}`}>
                 {t("paymentHeading")}
               </h3>
-              <p className="text-[11px] italic text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
+              <p className="text-[11px] text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
                 {t("simulationNotice")}
               </p>
 
@@ -399,22 +450,29 @@ function Field({
   const t = useTranslations("Checkout");
   return (
     <label className="block">
-      <span className="flex items-baseline gap-1.5 mb-0.5">
-        <span className="text-foreground">{label}</span>
-        <span className="text-[10px] text-foreground-muted">
-          {required ? t("required") : t("optional")}
+      <div className="flex items-center gap-1.5 border border-border-pending bg-black/[2%] px-2 py-1">
+        <span className="whitespace-nowrap">
+          {label}
+          <span className="ml-1.5 text-[10px] text-foreground-muted">
+            {required ? t("required") : t("optional")}
+          </span>
         </span>
-        {hint && <span className="text-[10px] italic text-foreground-muted">{hint}</span>}
-      </span>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-border bg-background px-2 py-1 text-xs outline-none focus:border-foreground"
-      />
+        <input
+          type={type}
+          value={value}
+          required={required}
+          autoComplete={autoComplete}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+          aria-label={label}
+          className="checkout-input min-w-0 flex-1 text-right bg-transparent focus:outline-none"
+        />
+      </div>
+      {hint && (
+        <span className="mt-0.5 block text-[10px] italic text-foreground-muted">
+          {hint}
+        </span>
+      )}
     </label>
   );
 }

@@ -100,7 +100,7 @@ function FieldRow({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             aria-label={label}
-            className="flex-1 text-right bg-transparent focus:outline-none disabled:cursor-default"
+            className="admin-input flex-1 text-right bg-transparent focus:outline-none disabled:cursor-default"
           />
         </div>
       </td>

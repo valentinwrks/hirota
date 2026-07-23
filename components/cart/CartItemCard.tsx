@@ -214,7 +214,16 @@ export function CartItemCard({
 
   return (
     <tr className="align-top">
-      <td className="px-2 py-1 border border-border">
+      {/* Cart column: each line is a bordered box. Checkout summary (readOnly):
+          borderless, lines separated by a divider (the last one is dropped by
+          the checkout table). */}
+      <td
+        className={
+          readOnly
+            ? "p-1.5 border-b border-border-blocked"
+            : "px-2 py-1 border border-border"
+        }
+      >
         {/* name + line total */}
         <div className="flex items-start justify-between gap-2">
           <p className="font-bold truncate min-w-0">

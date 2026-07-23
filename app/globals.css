@@ -212,6 +212,32 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+/* Kill the browser's blue/yellow autofill background on the checkout fields.
+   WebKit paints it via an internal button-shadow, so we override it with an
+   inset box-shadow the size of the field, matching the input's own background
+   (white sheet + the bg-black/2% tint = ~#fafafa) and keeping the text color. */
+.checkout-input:-webkit-autofill,
+.checkout-input:-webkit-autofill:hover,
+.checkout-input:-webkit-autofill:focus,
+.checkout-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #fafafa inset;
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+}
+
+/* The admin login inputs are transparent cells sitting on the body's animated
+   gradient, so a solid box-shadow would leave a static patch. Instead defer the
+   autofill background transition effectively forever: the blue highlight never
+   paints and the field stays transparent over the gradient. */
+.admin-input:-webkit-autofill,
+.admin-input:-webkit-autofill:hover,
+.admin-input:-webkit-autofill:focus,
+.admin-input:-webkit-autofill:active {
+  transition: background-color 600000s 0s, color 600000s 0s;
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+}
+
 /* ------------------------------------------------------------------- */
 /* ----------------- REVELADO DE COLUMNA ("scanner") ----------------- */
 /* ------------------------------------------------------------------- */
@@ -317,15 +343,15 @@ html[data-app-loaded="true"] .column-scan {
 /* Wordmark del preloader: el trazo es non-scaling-stroke (1px constante por el
    strokeWidth="1" del atributo), así que a --pw:305px de mobile la marca es más
    chica pero el trazo se lee pesado. Lo afinamos con reglas de autor sobre el
-   path (pisan el atributo): 0.6px en mobile, 0.8px de md en adelante (md–2xl y
+   path (pisan el atributo): 0.5px en mobile, 0.7px de md en adelante (md–2xl y
    ≥2xl por igual). */
 @media (max-width: 767px) {
   .preloader-logo path {
-    stroke-width: 0.6px;
+    stroke-width: 0.5px;
   }
 }
 @media (min-width: 768px) {
   .preloader-logo path {
-    stroke-width: 0.8px;
+    stroke-width: 0.7px;
   }
 }
