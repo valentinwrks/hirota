@@ -23,7 +23,7 @@ export function AdminMobileMenu({
 }) {
   const t = useTranslations("TopBar");
   const tAdmin = useTranslations("Admin");
-  const { menuOpen } = useAdminMobileChrome();
+  const { menuOpen, setMenuOpen } = useAdminMobileChrome();
   const pathname = usePathname();
 
   // Per-item entrance: fade + rise, staggered on open; delays collapse to 0 on
@@ -39,34 +39,54 @@ export function AdminMobileMenu({
   });
 
   // Per-locale link styling. JA: every link is bold (matching the desktop
-  // sidebar's JA weight), and the active one is set apart by a fainter text
-  // color instead of a weight change — a lower alpha than the base foreground
-  // (rgba 0,0,0,.5). We use a text color, NOT the `opacity` utility, because the
-  // entrance animation above already owns `opacity`. EN: active is bold, the rest
-  // plain, dimming on hover.
+  // sidebar's JA weight). The active link is NOT set apart by color or weight —
+  // it keeps the nav's base #404040 (and JA's bold) and is instead marked by the
+  // blink below, mirroring the public store's active category. Inactive links
+  // dim on hover; the active one drops the hover so it stays solid while blinking.
   const linkClass = (active: boolean) =>
     locale === "ja"
-      ? "font-bold " + (active ? "text-black/30" : "hover:opacity-60")
+      ? "font-bold " + (active ? "" : "hover:opacity-60")
       : active
-        ? "font-bold"
+        ? ""
         : "hover:opacity-60";
 
+  // Active link keeps its color/weight (linkClass) but blinks like the public
+  // store's active category. The blink lives on an inner span so its opacity
+  // animation doesn't collide with the Link's entrance opacity transition
+  // (itemClass) — transitions outrank animations in the cascade.
+  const label = (key: string, active: boolean) => {
+    const text = tAdmin(`sections.${key}`);
+    return active ? <span className="blink-active">{text}</span> : text;
+  };
+
   return (
-    <div
-      aria-hidden={!menuOpen}
-      inert={!menuOpen}
-      className={
-        "md:hidden fixed inset-x-0 top-[32px] z-[45] rounded-b-3xl bg-white " +
-        "shadow-[0_4px_6px_-2px_rgba(0,0,0,0.12)] transition-all duration-300 " +
+    <>
+      {/* Tap-outside-to-close scrim. Transparent, covering the screen below the
+          TopBar; sits under the flap (z-[45]) and TopBar (z-50) so both stay
+          interactive, and only exists while the menu is open. */}
+      {menuOpen && (
+        <div
+          aria-hidden
+          onClick={() => setMenuOpen(false)}
+          className="md:hidden fixed inset-x-0 top-[32px] bottom-0 z-[44]"
+        />
+      )}
+      <div
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
+        className={
+          "md:hidden fixed inset-x-0 top-[32px] z-[45] rounded-b-4xl bg-white " +
+        "shadow-[0_5px_6px_-2px_rgba(0,0,0,0.24)] transition-all duration-300 " +
         "[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
         (menuOpen ? "translate-y-0" : "-translate-y-full pointer-events-none")
       }
     >
       <nav
         className={
-          "flex flex-col items-baseline gap-1 p-[9px] pt-[14px] pb-[14px] text-[28px] leading-none " +
-          // EN labels are authored capitalized; render as-is. JA stays lowercased.
-          (locale === "en" ? "normal-case" : "lowercase")
+          "flex flex-col items-baseline gap-1 p-[9px] pt-[14px] pb-[14px] leading-none text-[#404040] " +
+          // EN labels are authored capitalized and set a touch smaller (26px); JA
+          // stays lowercased at 28px.
+          (locale === "en" ? "text-[26px] normal-case" : "text-[28px] lowercase")
         }
       >
         {SECTIONS.map(({ href, key }, i) => {
@@ -108,7 +128,7 @@ export function AdminMobileMenu({
                     locale={locale}
                     className={linkClass(active)}
                   >
-                    {tAdmin(`sections.${key}`)}
+                    {label(key, active)}
                   </Link>
                   <LocaleSwitcher label={t("language")} size="xl" />
                 </div>
@@ -119,7 +139,7 @@ export function AdminMobileMenu({
                   style={itemDelay(i)}
                   className={itemClass + " " + linkClass(active)}
                 >
-                  {tAdmin(`sections.${key}`)}
+                  {label(key, active)}
                 </Link>
               )}
             </Fragment>
@@ -136,6 +156,7 @@ export function AdminMobileMenu({
           {signOut}
         </div>
       </nav>
-    </div>
+      </div>
+    </>
   );
 }

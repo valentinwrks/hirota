@@ -64,7 +64,13 @@ export function MobilePanel({
           "md:contents max-md:fixed max-md:inset-x-0 max-md:top-[32px] max-md:bottom-0 " +
           "max-md:z-[45] max-md:bg-white max-md:transition-all max-md:duration-[450ms] " +
           "max-md:[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
-          (open ? "" : "max-md:-translate-y-full max-md:pointer-events-none")
+          // Rounded bottom (same radius as the category menu flap) while it slides
+          // down, so its leading edge isn't a hard rectangle mid-travel. Once fully
+          // open the corners flatten back to square — they'd otherwise sit
+          // off-screen below the viewport anyway, and a square edge covers cleanly.
+          (open
+            ? "max-md:rounded-b-none"
+            : "max-md:rounded-b-4xl max-md:-translate-y-full max-md:pointer-events-none")
         }
       >
         {children}

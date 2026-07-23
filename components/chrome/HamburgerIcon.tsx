@@ -5,9 +5,9 @@
 // owning its own open flag. Inherits colour via `bg-current`.
 export function HamburgerIcon({ open }: { open: boolean }) {
   const bar =
-    "absolute left-0 right-0 h-[2px] rounded-full bg-current transition-all duration-300 ease-in-out";
+    "absolute left-0 right-0 h-[2px] bg-current transition-all duration-300 ease-in-out";
   return (
-    <span className="relative block w-[23px] h-[23px]" aria-hidden="true">
+    <span className="relative block w-[25px] h-[25px]" aria-hidden="true">
       <span
         className={
           bar + (open ? " top-1/2 -translate-y-1/2 rotate-45" : " top-[7px]")

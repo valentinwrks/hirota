@@ -13,18 +13,26 @@ import { useEffect, useState } from "react";
 // area. Two options only — that's all the language / currency switches need.
 export type PillOption<T extends string> = { value: T; label: string };
 
-// Proportional sizes, each scaling every dimension together — track height, the
-// pill's overhang, segment width and text — so the switch reads as the same
-// control at any size. "lg" is ×1.5 of "sm"; "xl" is the admin mobile menu's
-// larger switch, sized so its pill height (28px, the tallest element) matches the
-// menu's 28px link type. Keep a size's dimensions in proportion: if one value
-// changes, scale the others by the same factor.
+// Proportional sizes. Track and pill are sized INDEPENDENTLY so the track can be
+// shorter than two pills — tightening the gap between the two labels while the
+// pill keeps its size. The pill sits at the left edge and travels `trackW - pillW`
+// to reach the right edge, so each label (a pillW-wide box pinned left / right)
+// stays centred over the pill's two rest positions.
+// - lg: trackW = 2×pillW and travel = pillW, i.e. the classic "two segments"
+//   layout (labels a full pill-width apart).
+// - sm (desktop) and xl use a track a touch shorter than 2×pillW to pull the two
+//   labels a little closer (same ratio, ~1.9×pillW).
+// "lg" is ×1.5 of "sm"; "xl" is the admin mobile menu's larger switch, its 28px
+// pill height matching the menu's 28px link type.
 export type Size = "sm" | "lg" | "xl";
 
-const SIZE: Record<Size, { track: string; pill: string; segment: string }> = {
-  sm: { track: "h-[12px]", pill: "h-[14px]", segment: "w-7.5 text-[12px]" },
-  lg: { track: "h-[18px]", pill: "h-[21px]", segment: "w-[45px] text-[18px]" },
-  xl: { track: "h-[24px]", pill: "h-[28px]", segment: "w-[60px] text-[24px]" },
+const SIZE: Record<
+  Size,
+  { trackH: string; trackW: string; pillH: string; pillW: string; travel: string; text: string }
+> = {
+  sm: { trackH: "h-[12px]", trackW: "w-[57px]", pillH: "h-[14px]", pillW: "w-[30px]", travel: "translate-x-[27px]", text: "text-[12px]" },
+  lg: { trackH: "h-[18px]", trackW: "w-[90px]", pillH: "h-[21px]", pillW: "w-[45px]", travel: "translate-x-[45px]", text: "text-[18px]" },
+  xl: { trackH: "h-[24px]", trackW: "w-[103px]", pillH: "h-[28px]", pillW: "w-[54px]", travel: "translate-x-[49px]", text: "text-[24px]" },
 };
 
 export function PillSwitch<T extends string>({
@@ -75,37 +83,39 @@ export function PillSwitch<T extends string>({
       onClick={toggle}
       disabled={disabled}
       className={
-        "group relative grid grid-cols-2 p-0 rounded-full " +
+        "group relative p-0 rounded-full " +
         "bg-[rgba(0,0,0,0.1)] cursor-pointer disabled:cursor-default " +
-        sz.track
+        sz.trackW + " " + sz.trackH
       }
     >
-      {/* Sliding fill: a half-width pill parked behind the labels, translated to
-          the right half when the second option is active. Taller than the track
-          and vertically centred, so it stands proud above and below the thinner
-          background band (sm: 14 vs 12px track; lg: 21 vs 18px). */}
+      {/* Sliding fill: a fixed-width pill parked at the left edge, translated by
+          `travel` (= trackW - pillW) to the right edge when the second option is
+          active. Taller than the track and vertically centred, so it stands proud
+          above and below the thinner background band (sm: 14 vs 12px track). */}
       <span
         aria-hidden="true"
         className={
-          "pointer-events-none absolute top-1/2 left-0 w-1/2 -translate-y-1/2 " +
-          sz.pill +
+          "pointer-events-none absolute top-1/2 left-0 -translate-y-1/2 " +
+          sz.pillW + " " + sz.pillH +
           " rounded-full bg-foreground-selected " +
           (slide
             ? "transition-transform duration-300 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)] "
             : "") +
-          (activeIndex === 1 ? "translate-x-full" : "translate-x-0")
+          (activeIndex === 1 ? sz.travel : "translate-x-0")
         }
       />
-      {options.map((o) => {
+      {options.map((o, i) => {
         const isActive = o.value === value;
         return (
           <span
             key={o.value}
             className={
-              "relative z-10 flex items-center justify-center leading-none " +
-              sz.segment +
-              " rounded-full transition-colors " +
-              (isActive ? "text-white" : "text-foreground")
+              "absolute top-0 z-10 flex h-full items-center justify-center leading-none " +
+              (i === 0 ? "left-0 " : "right-0 ") +
+              sz.pillW +
+              " transition-colors " +
+              sz.text +
+              (isActive ? " text-white" : " text-foreground")
             }
           >
             {o.label}

@@ -62,7 +62,12 @@ export default async function AdminProtectedLayout({
           <SignOutButton
             locale={locale}
             variant="button"
-            className="text-[20px] w-full rounded-full"
+            className={
+              "text-[20px] w-full rounded-full text-foreground bg-foreground-hover " +
+              // EN sign-out reads regular weight; JA keeps the bold it shares with
+              // the JA section links.
+              (locale === "en" ? "font-normal" : "font-bold")
+            }
           />
         }
       />

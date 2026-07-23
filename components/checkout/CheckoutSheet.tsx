@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCheckout } from "@/lib/checkout/CheckoutProvider";
+import { useMobileChrome } from "@/components/chrome/MobileChromeProvider";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import { CartItemCard } from "@/components/cart/CartItemCard";
-import { CommitButton } from "@/components/ui/CommitButton";
 import {
   submitCheckout,
   type CheckoutError,
@@ -60,6 +60,7 @@ export function CheckoutSheet() {
   // light) but keep 700 in Japanese, where the CJK glyphs need the extra weight.
   const headingWeight = useLocale() === "ja" ? "font-bold" : "font-normal";
   const { isOpen, close } = useCheckout();
+  const { setView: setMobileView } = useMobileChrome();
   const { items, subtotalJpy, clear } = useCart();
   const { format, currency, rate } = useCurrency();
 
@@ -162,6 +163,15 @@ export function CheckoutSheet() {
     // drop-out and resets transient state once the sheet is off-screen.
     clearSwap();
     close();
+  }
+
+  function handleContinue() {
+    // "Continue shopping" from the confirmation. On mobile the checkout was
+    // opened over the cart flap; the order is now placed and the cart cleared,
+    // so collapse the flap too — otherwise closing the sheet would reveal an
+    // empty cart overlay instead of the store underneath.
+    setMobileView(null);
+    handleClose();
   }
 
   const emailValid = EMAIL_RE.test(form.email.trim());
@@ -284,7 +294,7 @@ export function CheckoutSheet() {
             type="button"
             onClick={handleClose}
             aria-label={t("close")}
-            className="md:hidden absolute top-2 right-2 inline-flex items-center justify-center w-4 h-4 rounded-full bg-foreground hover:bg-foreground-selected text-background text-[13px] cursor-pointer leading-none font-normal"
+            className="md:hidden absolute top-2 right-2 inline-flex items-center justify-center w-4 h-4 rounded-full bg-foreground-selected hover:bg-foreground text-background text-[13px] cursor-pointer leading-none font-normal"
           >
             ✕
           </button>
@@ -293,7 +303,7 @@ export function CheckoutSheet() {
         {view === "confirm" ? (
           <Confirmation
             number={confirmedNumber!}
-            onContinue={handleClose}
+            onContinue={handleContinue}
             t={t}
             headingWeight={headingWeight}
           />
@@ -380,7 +390,7 @@ export function CheckoutSheet() {
                 onChange={(v) => set("line2", v)}
                 autoComplete="address-line2"
               />
-              <div className="flex gap-2">
+              <div className="flex max-md:flex-col gap-2">
                 <div className="flex-1">
                   <Field
                     label={t("city")}
@@ -399,7 +409,7 @@ export function CheckoutSheet() {
                   />
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex max-md:flex-col gap-2">
                 <div className="flex-1">
                   <Field
                     label={t("postalCode")}
@@ -442,18 +452,19 @@ export function CheckoutSheet() {
                 </p>
               )}
 
-              <CommitButton
-                onCommit={handleSubmit}
+              <button
+                type="button"
+                onClick={handleSubmit}
                 disabled={!isValid || submitting}
                 className={
                   "w-full text-xs font-bold uppercase bg-transparent border tracking-wide py-1.5 " +
                   (isValid && !submitting
-                    ? "text-foreground border-border btn-swipe cursor-pointer"
+                    ? "text-foreground border-border hover:bg-foreground-hover cursor-pointer"
                     : "text-foreground-blocked border-border-blocked cursor-default")
                 }
               >
                 {submitting ? t("processing") : t("pay")}
-              </CommitButton>
+              </button>
             </section>
           </div>
         )}
@@ -500,12 +511,13 @@ function Confirmation({
       <p className="text-[11px] text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
         {t("emailStub")}
       </p>
-      <CommitButton
-        onCommit={onContinue}
-        className="mt-3 w-full text-xs font-bold uppercase bg-transparent text-foreground border border-border tracking-wide py-1.5 btn-swipe cursor-pointer"
+      <button
+        type="button"
+        onClick={onContinue}
+        className="mt-3 w-full text-xs font-bold uppercase bg-transparent text-foreground border border-border tracking-wide py-1.5 hover:bg-foreground-hover cursor-pointer"
       >
         {t("continue")}
-      </CommitButton>
+      </button>
     </div>
   );
 }

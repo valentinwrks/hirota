@@ -33,6 +33,10 @@ export function StoreMobileMenu() {
   // the normal weight.
   const linkWeight = locale === "ja" ? "font-bold" : "";
 
+  // EN category labels are stored lowercase; render them starting with a capital.
+  // `first-letter:uppercase` (not `capitalize`) so "karate-gi" -> "Karate-gi".
+  const linkCase = locale === "en" ? " first-letter:uppercase" : "";
+
   const closeMenu = () => setMenuOpen(false);
 
   // Per-item entrance: fade + rise, staggered on open; delays collapse to 0 on
@@ -53,17 +57,28 @@ export function StoreMobileMenu() {
   });
 
   return (
-    <div
-      aria-hidden={!menuOpen}
-      inert={!menuOpen}
-      className={
-        "md:hidden fixed inset-x-0 top-[32px] z-[45] rounded-b-3xl bg-white " +
-        "shadow-[0_4px_6px_-2px_rgba(0,0,0,0.12)] transition-all duration-300 " +
+    <>
+      {/* Tap-outside-to-close scrim. Transparent, covering the screen below the
+          TopBar; sits under the flap (z-[45]) and TopBar (z-50) so both stay
+          interactive, and only exists while the menu is open. */}
+      {menuOpen && (
+        <div
+          aria-hidden
+          onClick={closeMenu}
+          className="md:hidden fixed inset-x-0 top-[32px] bottom-0 z-[44]"
+        />
+      )}
+      <div
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
+        className={
+          "md:hidden fixed inset-x-0 top-[32px] z-[45] rounded-b-4xl bg-white " +
+        "shadow-[0_5px_6px_-2px_rgba(0,0,0,0.24)] transition-all duration-300 " +
         "[transition-timing-function:cubic-bezier(0.4,0,0.2,1)] " +
         (menuOpen ? "translate-y-0" : "-translate-y-full pointer-events-none")
       }
     >
-      <nav className="flex flex-col items-baseline gap-1 p-[9px] pb-[14px] text-2xl leading-none">
+      <nav className="flex flex-col items-baseline gap-1 p-[9px] pt-[14px] pb-[14px] text-3xl leading-none">
         {CATEGORIES.map((category, i) => {
           const href = `/${category}`;
           const active = pathname === href && view === null;
@@ -77,6 +92,7 @@ export function StoreMobileMenu() {
                 itemClass +
                 " text-[#404040] " +
                 linkWeight +
+                linkCase +
                 (active ? "" : " hover:opacity-60")
               }
             >
@@ -95,12 +111,13 @@ export function StoreMobileMenu() {
             the right. Appears last in the stagger. */}
         <div
           style={itemDelay(CATEGORIES.length)}
-          className={"mt-4 flex w-full items-center justify-center gap-6 " + itemClass}
+          className={"mt-[21px] flex w-full items-center justify-center gap-6 " + itemClass}
         >
           <LocaleSwitcher label={t("language")} size="xl" />
           <CurrencySwitcher label={t("currency")} size="xl" />
         </div>
       </nav>
-    </div>
+      </div>
+    </>
   );
 }

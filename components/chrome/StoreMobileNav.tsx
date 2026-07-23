@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useMobileChrome } from "./MobileChromeProvider";
@@ -21,7 +22,12 @@ export function StoreMobileNav() {
   const { view, setView, menuOpen, setMenuOpen } = useMobileChrome();
   const { count, hydrated } = useCart();
 
+  // Brief tap feedback: the bag + count shrink 15% then spring back on each tap.
+  // Reset on transition end so the animation can retrigger on the next tap.
+  const [tapped, setTapped] = useState(false);
+
   function toggleCart() {
+    setTapped(true);
     if (view === "cart") {
       setView(null);
       return;
@@ -45,10 +51,27 @@ export function StoreMobileNav() {
         onClick={toggleCart}
         aria-pressed={view === "cart"}
         aria-label={tCart("title")}
-        className="cursor-pointer flex items-center gap-0.5 text-[#404040]"
+        className="cursor-pointer flex items-center text-[#404040]"
       >
-        <ShoppingBagIcon className="w-[18px] h-[18px]" />
-        {hydrated && count > 0 ? `(${count})` : ""}
+        <span
+          onTransitionEnd={() => setTapped(false)}
+          className={
+            "relative inline-flex transition-transform duration-150 ease-out " +
+            (tapped ? "scale-[0.85]" : "scale-100")
+          }
+        >
+          <ShoppingBagIcon className="w-[21px] h-[21px]" />
+          {/* Line count as a small circle pinned to the bag's bottom-right corner
+              (the icon's viewBox is cropped so that corner sits at the box edge). */}
+          {hydrated && count > 0 ? (
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-1 -right-1 flex items-center justify-center min-w-[11px] h-[11px] px-[2px] rounded-full bg-[#404040] text-white text-[9px] leading-none font-bold tabular-nums"
+            >
+              {count}
+            </span>
+          ) : null}
+        </span>
       </button>
 
       <MobileMenuButton />

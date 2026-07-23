@@ -52,7 +52,6 @@ import { displayLabelName } from "@/lib/cart/format";
 import type { LabelOption } from "@/lib/obi/queries";
 import { KarateGiVector } from "@/components/karate-gi/KarateGiVector";
 import { ConfiguratorLayout } from "@/components/configurator/ConfiguratorLayout";
-import { CommitButton } from "@/components/ui/CommitButton";
 
 // The custom (made-to-order) karate-gi configurator (Pattern C) — HIROTA's
 // flagship. A client component: it runs the PURE pricing engine against the
@@ -1253,20 +1252,21 @@ export function GiCustomConfigurator({
               </div>
             )}
 
-            <CommitButton
-              onCommit={handleAdd}
+            <button
+              type="button"
+              onClick={handleAdd}
               disabled={!canAdd}
               className={
                 "mt-2.5 text-xs font-bold border tracking-wide py-1 " +
                 (justAdded
                   ? "bg-foreground-selected text-background border-border cursor-pointer"
                   : canAdd
-                    ? "bg-transparent text-foreground border-border btn-swipe cursor-pointer"
+                    ? "bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer"
                     : "bg-transparent text-foreground-blocked border-border-blocked")
               }
             >
               {justAdded ? t("added") : isQuote ? t("quoteCta") : t("addToCart")}
-            </CommitButton>
+            </button>
 
             {!isQuote && blockingHints.length > 0 && (
               <div className="mt-2.5 flex flex-col gap-1.5">

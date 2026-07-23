@@ -18,10 +18,7 @@ export function AdminMobileNav() {
       onClick={() => setMenuOpen(!menuOpen)}
       aria-expanded={menuOpen}
       aria-label={menuOpen ? t("close") : t("menu")}
-      className={
-        "md:hidden flex items-center cursor-pointer " +
-        (menuOpen ? "text-foreground-strong" : "text-foreground")
-      }
+      className="md:hidden flex items-center cursor-pointer text-[#404040]"
     >
       <HamburgerIcon open={menuOpen} />
     </button>

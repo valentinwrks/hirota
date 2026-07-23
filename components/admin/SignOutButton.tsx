@@ -24,8 +24,8 @@ export async function SignOutButton({
   const cls =
     variant === "link"
       ? "normal-case text-left hover:opacity-60 cursor-pointer"
-      : "font-bold border tracking-wide py-1 uppercase bg-transparent text-foreground border-border hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer " +
-        (className ?? "text-xs");
+      : "tracking-wide py-1 hover:bg-foreground-hover active:bg-foreground-selected active:text-background cursor-pointer " +
+        (className ?? "font-bold text-xs text-foreground bg-transparent border border-border uppercase");
   return (
     <form action={signOut} className="flex flex-col">
       <input type="hidden" name="locale" value={locale} />
