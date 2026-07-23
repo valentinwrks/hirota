@@ -313,3 +313,19 @@ html[data-app-loaded="true"] .column-scan {
     mask-image: none;
   }
 }
+
+/* Wordmark del preloader: el trazo es non-scaling-stroke (1px constante por el
+   strokeWidth="1" del atributo), así que a --pw:305px de mobile la marca es más
+   chica pero el trazo se lee pesado. Lo afinamos con reglas de autor sobre el
+   path (pisan el atributo): 0.6px en mobile, 0.8px de md en adelante (md–2xl y
+   ≥2xl por igual). */
+@media (max-width: 767px) {
+  .preloader-logo path {
+    stroke-width: 0.6px;
+  }
+}
+@media (min-width: 768px) {
+  .preloader-logo path {
+    stroke-width: 0.8px;
+  }
+}

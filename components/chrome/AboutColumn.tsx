@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { getNews } from "@/lib/news/queries";
 import { MobileLogoFooter } from "./MobileLogoFooter";
 import { ColumnReveal } from "./ColumnReveal";
@@ -18,7 +18,6 @@ function formatNewsDate(iso: string): string {
 // (pick a category) or the logo (→ `/`).
 export async function AboutColumn() {
   const t = await getTranslations("About");
-  const locale = await getLocale();
   const news = await getNews();
 
   return (
@@ -33,7 +32,7 @@ export async function AboutColumn() {
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain scrollbar-none">
-      <ColumnReveal revealKey={locale}>
+      <ColumnReveal revealKey="static">
       <MobileLogoFooter />
       <div className="mt-[5px] mx-1.5 max-md:mx-2 pb-8 text-xs leading-tight">
         <p>

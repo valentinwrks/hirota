@@ -1,16 +1,8 @@
-import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Admin" });
-  return { title: t("login.metaTitle") };
-}
+// Title comes from admin/layout.tsx (uniform "ADMIN — HIROTA 空手衣のヒロタ"),
+// so this page defines no metadata of its own.
 
 // Standalone admin login: no store chrome, no admin sidebar. The proxy lets
 // unauthenticated users reach this page and bounces already-authenticated users

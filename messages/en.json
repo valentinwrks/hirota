@@ -1,9 +1,21 @@
 {
+  "Meta": {
+    "siteName": "HIROTA",
+    "title": "HIROTA 空手衣のヒロタ — Karate Gi & Karate Equipment Specialty Store",
+    "titleTemplate": "%s — HIROTA 空手衣のヒロタ",
+    "description": "The finest karate-gi, obi and karate equipment, manufactured in Japan. Premium, made-to-order karate wear by HIROTA.",
+    "category": {
+      "karate-gi": "Karate-gi",
+      "obi": "Obi",
+      "equipment": "Equipment",
+      "accessories": "Accessories"
+    }
+  },
   "Admin": {
     "title": "Hirota (ヒロタ) / admin",
+    "metaTitle": "ADMIN",
     "signOut": "Sign out",
     "login": {
-      "metaTitle": "HIROTA Admin — Sign in",
       "title": "Sign in",
       "email": "Email",
       "password": "Password",
@@ -231,12 +243,26 @@
     "configuratorComing": "configurator coming",
     "configuratorNote": "The made-to-order configurator for this line is in progress. Check back soon.",
     "viewProduct": "view",
-    "outOfStock": "out of stock"
+    "outOfStock": "out of stock",
+    "subcategories": {
+      "competition-equipment": "Competition equipment",
+      "referee-equipment": "Referee equipment",
+      "training-equipment": "Training equipment",
+      "apparel": "Apparel",
+      "goods": "Goods"
+    },
+    "variantSizes": "{count} sizes",
+    "variantColors": "{count} colors"
   },
   "Product": {
     "back": "← back",
     "size": "size",
     "color": "color",
+    "colors": {
+      "red": "Red", "blue": "Blue", "white": "White", "black": "Black",
+      "yellow": "Yellow", "brown": "Brown", "pink": "Pink",
+      "green": "Green", "purple": "Purple", "orange": "Orange"
+    },
     "selectSize": "select a size",
     "selectColor": "select a color",
     "inStock": "in stock",

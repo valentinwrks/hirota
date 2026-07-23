@@ -93,6 +93,7 @@ export function ProductPurchase({
           selected={color}
           onSelect={setColor}
           hint={needsColor ? t("selectColor") : undefined}
+          display={(v) => t(`colors.${v}`)}
         />
       )}
       {(offersSize || offersColor) && (
@@ -134,12 +135,15 @@ function VariantGroup({
   selected,
   onSelect,
   hint,
+  display,
 }: {
   label: string;
   values: string[];
   selected: string | undefined;
   onSelect: (value: string) => void;
   hint?: string;
+  // Optional value formatter (color keys → localized names); size stays raw.
+  display?: (value: string) => string;
 }) {
   return (
     <div className="mt-3">
@@ -163,7 +167,7 @@ function VariantGroup({
                   : "text-foreground-strong hover:bg-foreground-hover")
               }
             >
-              {value}
+              {display ? display(value) : value}
             </button>
           );
         })}

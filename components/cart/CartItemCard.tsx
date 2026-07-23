@@ -25,6 +25,7 @@ export function CartItemCard({
   readOnly?: boolean;
 }) {
   const t = useTranslations("Cart");
+  const tProduct = useTranslations("Product");
   const tObi = useTranslations("Obi");
   const tGi = useTranslations("GiStandard");
   const tGiC = useTranslations("GiCustom");
@@ -40,7 +41,7 @@ export function CartItemCard({
   function simpleLines(it: { size?: string; color?: string }): string[] {
     const lines: string[] = [];
     if (it.size) lines.push(`${t("size")}: ${it.size}`);
-    if (it.color) lines.push(`${t("color")}: ${it.color}`);
+    if (it.color) lines.push(`${t("color")}: ${tProduct(`colors.${it.color}`)}`);
     return lines.length > 0 ? lines : [""];
   }
 
@@ -275,7 +276,12 @@ export function CartItemCard({
             <button
               type="button"
               onClick={() => removeItem(item.lineId)}
-              className="text-foreground-muted underline hover:text-foreground cursor-pointer"
+              className={
+                // Latin "delete" reads better underlined; the JA 削除 doesn't —
+                // the underline crowds the CJK glyphs, so drop it in Japanese.
+                "text-foreground-muted hover:text-foreground cursor-pointer" +
+                (locale === "ja" ? "" : " underline")
+              }
             >
               {t("remove")}
             </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useCart } from "@/lib/cart/CartProvider";
 import { useCurrency } from "@/lib/currency/CurrencyProvider";
 import { useCheckout } from "@/lib/checkout/CheckoutProvider";
@@ -13,7 +13,6 @@ import { ColumnReveal } from "@/components/chrome/ColumnReveal";
 // subtotal in the currently-selected currency, and the checkout trigger.
 export function CartColumn() {
   const t = useTranslations("Cart");
-  const locale = useLocale();
   const { items, subtotalJpy, hydrated, count } = useCart();
   const { format } = useCurrency();
   const { open } = useCheckout();
@@ -31,7 +30,7 @@ export function CartColumn() {
       {/* Until hydrated we render nothing beyond the header to avoid a flash of
           the empty state before localStorage loads. The reveal wrapper carries
           the flex sizing so the footer stays pinned below the scrolling items. */}
-      <ColumnReveal revealKey={locale} className="flex-1 min-h-0 flex flex-col">
+      <ColumnReveal revealKey="static" className="flex-1 min-h-0 flex flex-col">
       {!hydrated ? null : items.length === 0 ? (
         <div className="mt-2.5 mx-2.5 max-md:mx-2 text-xs leading-tight">
           {/* Larger on the mobile cart flap, where the empty state is the whole

@@ -1,7 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useCallback, type ReactNode } from "react";
+import { usePathname } from "@/lib/i18n/navigation";
 
 // Constant reveal SPEED across sections. The `.column-scan` mask sweeps the WHOLE
 // content height in one animation, so a FIXED duration makes the scan front move at
@@ -33,14 +33,14 @@ const MAX_MS = 6000;
 // The reveal REPLAYS whenever the wrapper remounts, which we force by changing
 // its `key`:
 //
-//   • Center column (shop): no `revealKey` → keyed by the full pathname, so it
-//     replays on a fresh mount (F5 / first visit), a locale switch AND a section
-//     change (/obi, /equipment, …).
-//   • Side columns (about / cart): `revealKey={locale}` → keyed by locale only,
-//     so they replay on mount and on a locale switch, but stay STATIC when the
-//     user just navigates between sections (the store layout doesn't re-render
-//     those columns on a section change anyway; keying by locale makes the intent
-//     explicit and guards against future remounts).
+//   • Center column (shop): no `revealKey` → keyed by the LOCALE-AGNOSTIC
+//     pathname (next-intl's usePathname, without the /en · /ja prefix), so it
+//     replays on a fresh mount (F5 / first visit) and a section change (/obi,
+//     /equipment, …) but NOT on a locale switch — swapping language just swaps
+//     the text, like the currency switch, with no re-scan.
+//   • Side columns (about / cart) and the category nav: pass a CONSTANT
+//     `revealKey` → they only replay on a fresh mount, never on soft navigation
+//     (neither section nor locale change), matching their persistent placement.
 //
 // `className` is merged so callers can make the wrapper participate in the parent
 // flex layout (the cart body needs `flex-1 min-h-0 flex flex-col` to keep its

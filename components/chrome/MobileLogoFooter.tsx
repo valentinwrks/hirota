@@ -9,7 +9,7 @@ import { HirotaWordmark } from "./HirotaWordmark";
 // outline stays a constant 0.8px stroke across viewports.
 export function MobileLogoFooter() {
   return (
-    <div className="2xl:hidden pt-[15px] pb-[10px] md:px-1.5 flex justify-center">
+    <div className="2xl:hidden pt-[15px] pb-[10px] md:px-1.5 md:pt-[9px] md:pb-[5px] flex justify-center">
       <HirotaWordmark className="w-[96vw] max-w-full h-auto select-none opacity-50" />
     </div>
   );

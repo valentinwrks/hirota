@@ -1,36 +1,34 @@
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 import { Price } from "@/components/ui/Price";
 import { localize } from "@/lib/i18n/localized";
 import type { Locale } from "@/lib/i18n/routing";
 import { parseOptions, productImage, type ProductRow } from "@/lib/catalog/types";
 
-// Turn a subcategory enum slug ("competition-equipment") into a readable tag
-// ("competition equipment"). Language-agnostic; kept muted/uppercase as a
-// spreadsheet-style column label rather than prose.
-function subcategoryLabel(subcategory: string): string {
-  return subcategory.replace(/-/g, " ");
-}
-
 // A single product row in the catalog list. HORIZONTAL layout: square image on
 // the left, info column on the right — one product per row, table-like. Server
 // component: localized text is resolved here; only the price is a client island
 // (currency-reactive).
-export function ProductCard({
+export async function ProductCard({
   product,
   locale,
 }: {
   product: ProductRow;
   locale: Locale;
 }) {
+  const t = await getTranslations("Catalog");
   const name = localize(product.name, locale);
   const description = localize(product.description, locale);
+  const productType = localize(product.product_type, locale);
   const options = parseOptions(product.options);
   const outOfStock = product.stock <= 0;
 
-  // Small language-agnostic availability note (e.g. "3 sizes · 2 colors").
+  // Small availability note (e.g. "3 sizes · 2 colors"), localized.
   const optionParts: string[] = [];
-  if (options.size?.length) optionParts.push(`${options.size.length} sizes`);
-  if (options.color?.length) optionParts.push(`${options.color.length} colors`);
+  if (options.size?.length)
+    optionParts.push(t("variantSizes", { count: options.size.length }));
+  if (options.color?.length)
+    optionParts.push(t("variantColors", { count: options.color.length }));
 
   return (
     <Link
@@ -61,9 +59,9 @@ export function ProductCard({
           />
         </div>
 
-        {product.product_type && (
+        {productType && (
           <p className="text-[11px] italic text-foreground-muted">
-            {product.product_type}
+            {productType}
           </p>
         )}
 
@@ -73,7 +71,7 @@ export function ProductCard({
 
         {/* meta footer — subcategory + availability, pushed to the bottom */}
         <div className="mt-auto flex items-center gap-2 pt-1 text-[10px] uppercase tracking-wide text-foreground-muted">
-          <span>{subcategoryLabel(product.subcategory)}</span>
+          <span>{t(`subcategories.${product.subcategory}`)}</span>
           {optionParts.length > 0 && (
             <>
               <span className="text-foreground-blocked">·</span>
@@ -81,7 +79,9 @@ export function ProductCard({
             </>
           )}
           {outOfStock && (
-            <span className="ml-auto text-foreground-muted not-italic">out of stock</span>
+            <span className="ml-auto text-foreground-muted not-italic">
+              {t("outOfStock")}
+            </span>
           )}
         </div>
       </div>

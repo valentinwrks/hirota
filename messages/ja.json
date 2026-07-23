@@ -1,9 +1,21 @@
 {
+  "Meta": {
+    "siteName": "ヒロタ",
+    "title": "HIROTA 空手衣のヒロタ — 空手衣・空手用品専門店",
+    "titleTemplate": "%s — HIROTA 空手衣のヒロタ",
+    "description": "最高の空手衣・帯・空手用具を、日本で製作。ヒロタがつくる、こだわりのオーダーメイド空手衣。",
+    "category": {
+      "karate-gi": "空手衣",
+      "obi": "帯",
+      "equipment": "用品",
+      "accessories": "ウェア・グッズ"
+    }
+  },
   "Admin": {
     "title": "Hirota (ヒロタ) / 管理",
+    "metaTitle": "管理",
     "signOut": "サインアウト",
     "login": {
-      "metaTitle": "ヒロタ 管理 — サインイン",
       "title": "サインイン",
       "email": "メールアドレス",
       "password": "パスワード",
@@ -231,12 +243,26 @@
     "configuratorComing": "設定機能は近日公開",
     "configuratorNote": "このラインのオーダーメイド設定機能は現在準備中です。近日公開予定です。",
     "viewProduct": "見る",
-    "outOfStock": "在庫切れ"
+    "outOfStock": "在庫切れ",
+    "subcategories": {
+      "competition-equipment": "試合用品",
+      "referee-equipment": "審判用品",
+      "training-equipment": "鍛練用品",
+      "apparel": "ウェア",
+      "goods": "グッズ"
+    },
+    "variantSizes": "{count}サイズ",
+    "variantColors": "{count}色"
   },
   "Product": {
     "back": "← もどる",
     "size": "サイズ",
     "color": "色",
+    "colors": {
+      "red": "赤", "blue": "青", "white": "白", "black": "黒",
+      "yellow": "黄", "brown": "茶", "pink": "ピンク",
+      "green": "緑", "purple": "紫", "orange": "橙"
+    },
     "selectSize": "サイズを選択",
     "selectColor": "色を選択",
     "inStock": "在庫あり",

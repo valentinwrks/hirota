@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createPublicClient } from "../supabase/server";
 import type { ProductCategory, ProductRow } from "./types";
 
@@ -20,17 +21,23 @@ export async function getSimpleProducts(
   return data ?? [];
 }
 
-/** A single simple product by its unique slug, or null if not found. */
-export async function getProductBySlug(
-  slug: string,
-): Promise<ProductRow | null> {
-  const supabase = createPublicClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
+/**
+ * A single simple product by its unique slug, or null if not found.
+ * Wrapped in React `cache()` so the PDP's `generateMetadata` and the page body
+ * share one query per request instead of hitting the DB twice for the same slug.
+ */
+export const getProductBySlug = cache(
+  async (slug: string): Promise<ProductRow | null> => {
+    const supabase = createPublicClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
 
-  if (error) throw new Error(`failed to load product ${slug}: ${error.message}`);
-  return data ?? null;
-}
+    if (error) {
+      throw new Error(`failed to load product ${slug}: ${error.message}`);
+    }
+    return data ?? null;
+  },
+);

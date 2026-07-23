@@ -20,9 +20,10 @@ export function PreloaderView({
       }`}
     >
       {/* --pw drives both the logo (w-full) and the bar (w-[85%]) so the whole
-          mark scales from one value: 305px on mobile, 418px from md up. */}
-      <div className="flex w-[var(--pw)] flex-col items-center gap-3 [--pw:305px] md:[--pw:418px]">
-        <HirotaLogo className="w-full text-black" aria-label="HIROTA" />
+          mark scales from one value: 305px on mobile, 376px from md up, back to
+          418px from 2xl. */}
+      <div className="flex w-[var(--pw)] flex-col items-center gap-3 [--pw:305px] md:[--pw:376px] 2xl:[--pw:418px]">
+        <HirotaLogo className="preloader-logo w-full text-black" aria-label="HIROTA" />
         <div className="h-[3px] w-[85%] overflow-hidden rounded-full border border-border">
           <div
             // duration-[220ms] must match SEG_MS in Preloader.tsx.

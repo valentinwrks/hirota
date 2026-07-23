@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { NavCategory } from "@/lib/catalog/types";
 import { CategoryNav } from "@/components/catalog/CategoryNav";
 import { ColumnReveal } from "@/components/chrome/ColumnReveal";
@@ -10,7 +10,6 @@ import { ShopSectionTitle } from "@/components/chrome/ShopSectionTitle";
 // mobile menu trigger (the dropdown replaces the category nav there).
 export async function ShopColumn({ children }: { children: React.ReactNode }) {
   const t = await getTranslations("Nav");
-  const locale = await getLocale();
 
   const navLabels: Record<NavCategory, string> = {
     "karate-gi": t("karateGi"),
@@ -40,7 +39,7 @@ export async function ShopColumn({ children }: { children: React.ReactNode }) {
           stays static; the section content below it has its OWN pathname-keyed
           reveal (in CategoryView / PDP), so it re-scans on every section change. */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain scrollbar-none">
-        <ColumnReveal revealKey={locale}>
+        <ColumnReveal revealKey="static">
           <CategoryNav labels={navLabels} />
         </ColumnReveal>
         {children}

@@ -39,7 +39,7 @@ export async function SimpleProductsEditor({
             key={p.id}
             productId={p.id}
             name={localize(p.name, locale)}
-            productType={p.product_type}
+            productType={localize(p.product_type, locale)}
             price={p.price}
             stock={p.stock}
           />

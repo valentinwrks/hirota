@@ -14,13 +14,20 @@ export function CategoryNav({
   const pathname = usePathname();
   const locale = useLocale();
 
-  // The Japanese labels read better bold (weight 700); Latin ones keep the
+  const isJa = locale === "ja";
+  // The Japanese labels read better bold (weight 700); the Latin ones keep the
   // normal weight.
-  const jaBold = locale === "ja" ? "font-bold" : "";
+  const localeType = isJa ? "font-bold" : "";
+
+  // Sentence-case for Latin labels ("karate-gi" → "Karate-gi"): uppercase only
+  // the first letter. Done in JS, not CSS `capitalize`, which would also cap the
+  // post-hyphen letter ("Karate-Gi"). JA labels pass through untouched.
+  const display = (s: string) =>
+    isJa ? s : s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
     // Hidden below md — the mobile dropdown menu carries the categories.
-    <nav className={"max-md:hidden flex flex-col items-baseline gap-1 p-1.5 pb-3 text-[18px] 2xl:text-[20px] leading-none " + jaBold}>
+    <nav className={"max-md:hidden flex flex-row items-baseline justify-between gap-2 p-[7px] pb-6 text-[24px] leading-none " + localeType}>
       {NAV_CATEGORIES.map((category) => {
         const href = `/${category}`;
         const active = pathname === href;
@@ -29,12 +36,10 @@ export function CategoryNav({
             key={category}
             href={href}
             className={
-              active
-                ? "underline underline-offset-2 decoration-2"
-                : "hover:opacity-60"
+              active ? "text-black/30" : "hover:opacity-60"
             }
           >
-            {labels[category]}
+            {display(labels[category])}
           </Link>
         );
       })}

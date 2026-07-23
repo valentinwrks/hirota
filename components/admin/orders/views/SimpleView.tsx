@@ -10,13 +10,17 @@ import { Section, Grid, Field } from "../parts";
 export async function SimpleView({ snapshot }: { snapshot: SimpleSnapshot }) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("Admin");
+  const tP = await getTranslations("Product");
   return (
     <Section title={t("view.item")}>
       <Grid>
         <Field label={t("view.product")} value={localize(snapshot.name, locale)} />
         <Field label={t("view.sku")} value={snapshot.slug} />
         <Field label={t("view.size")} value={snapshot.size} />
-        <Field label={t("view.colour")} value={snapshot.color} />
+        <Field
+          label={t("view.colour")}
+          value={snapshot.color ? tP(`colors.${snapshot.color}`) : snapshot.color}
+        />
       </Grid>
     </Section>
   );
