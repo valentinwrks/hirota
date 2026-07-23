@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCheckout } from "@/lib/checkout/CheckoutProvider";
 import { useCart } from "@/lib/cart/CartProvider";
@@ -67,16 +67,32 @@ export function CheckoutSheet() {
   const [error, setError] = useState<CheckoutError | null>(null);
   const [confirmedNumber, setConfirmedNumber] = useState<number | null>(null);
 
-  // Enter/exit animation, sequenced in two stages so the scrim and the sheet
-  // never move at the same time:
-  //   open  → mount → blur fades in → (blur done) sheet slides up
-  //   close → sheet slides down → (sheet gone) blur fades out → unmount
-  // `mounted` keeps the node in the DOM through the exit; `scrimShown` drives
-  // the blur/opacity; `sheetShown` drives the slide. Double-rAF on open lets
-  // the browser paint the off-screen state before we transition from it.
+  // Enter/exit + swap animation. The sheet slides between three vertical
+  // positions ("below" / "center" / "above"); `scrimShown` fades the blur:
+  //   open    → mount → blur fades in → (blur done) sheet rises below→center
+  //   close   → sheet drops center→below → blur fades out → unmount
+  //   confirm → form rises center→above → (gone) swap content, jump to below
+  //             without animating → confirmation rises below→center
+  // `animateSheet` is toggled off for the instant below-jump so the browser
+  // doesn't tween the off-screen reposition. Double-rAF lets it paint the
+  // off-screen state before we transition from it.
   const [mounted, setMounted] = useState(false);
   const [scrimShown, setScrimShown] = useState(false);
-  const [sheetShown, setSheetShown] = useState(false);
+  const [pos, setPos] = useState<"below" | "center" | "above">("below");
+  const [animateSheet, setAnimateSheet] = useState(true);
+  const [view, setView] = useState<"form" | "confirm">("form");
+  // Timers/rAF driving the confirm swap, tracked so a mid-swap close can cancel
+  // them (otherwise a stray setPos would fight the close animation).
+  const swapRef = useRef<{
+    timers: ReturnType<typeof setTimeout>[];
+    rafs: number[];
+  }>({ timers: [], rafs: [] });
+
+  function clearSwap() {
+    swapRef.current.timers.forEach(clearTimeout);
+    swapRef.current.rafs.forEach(cancelAnimationFrame);
+    swapRef.current = { timers: [], rafs: [] };
+  }
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -84,22 +100,43 @@ export function CheckoutSheet() {
     let raf2 = 0;
     if (isOpen) {
       setMounted(true);
+      setView("form");
+      setAnimateSheet(true);
+      setPos("below");
       raf1 = requestAnimationFrame(() => {
         raf2 = requestAnimationFrame(() => {
           setScrimShown(true); // stage 1: blur fades in
-          timers.push(setTimeout(() => setSheetShown(true), ANIM_MS)); // stage 2
+          timers.push(setTimeout(() => setPos("center"), ANIM_MS)); // stage 2
         });
       });
     } else {
-      setSheetShown(false); // stage 1: sheet slides down
+      clearSwap();
+      setAnimateSheet(true);
+      // The form drops back down; the confirmation continues upward (it already
+      // arrived by rising, so it exits the same way it would keep going).
+      setPos(view === "confirm" ? "above" : "below"); // stage 1: sheet slides out
       timers.push(setTimeout(() => setScrimShown(false), ANIM_MS)); // stage 2
-      timers.push(setTimeout(() => setMounted(false), ANIM_MS * 2)); // unmount
+      timers.push(
+        setTimeout(() => {
+          setMounted(false);
+          // Reset for a fresh reopen (the confirmation content stays visible
+          // through the drop, so we only clear it once fully off-screen).
+          setView("form");
+          setConfirmedNumber(null);
+          setError(null);
+          setSubmitting(false);
+        }, ANIM_MS * 2),
+      );
     }
     return () => {
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
       timers.forEach(clearTimeout);
     };
+    // Runs only on open/close. `view` is read for the exit direction but must
+    // NOT be a dep: it flips during the swap while isOpen stays true, and a
+    // re-run would reset the animation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Close on Escape (unless mid-submit).
@@ -120,12 +157,10 @@ export function CheckoutSheet() {
   }
 
   function handleClose() {
+    // Cancel any in-flight confirm swap, then close(); the effect drives the
+    // drop-out and resets transient state once the sheet is off-screen.
+    clearSwap();
     close();
-    // Reset transient state so a later reopen starts fresh (after a successful
-    // order the cart is already cleared, so the trigger button is gone anyway).
-    setError(null);
-    setConfirmedNumber(null);
-    setSubmitting(false);
   }
 
   const emailValid = EMAIL_RE.test(form.email.trim());
@@ -162,21 +197,52 @@ export function CheckoutSheet() {
     });
 
     if (result.ok) {
-      // Show confirmation from the returned number, THEN clear the cart (the
-      // confirmation view no longer depends on cart items).
       setConfirmedNumber(result.orderNumber);
-      clear();
+      // Slide the checkout form UP and out, then bring the confirmation in from
+      // BELOW (mirrors the open animation, but as a swap). The cart is cleared
+      // and the content swapped only once the form is off-screen, so the rising
+      // form never flashes an emptied summary.
+      setPos("above");
+      const t1 = setTimeout(() => {
+        clear();
+        setView("confirm");
+        setAnimateSheet(false); // jump below without tweening
+        setPos("below");
+        const r1 = requestAnimationFrame(() => {
+          const r2 = requestAnimationFrame(() => {
+            setAnimateSheet(true);
+            setPos("center"); // confirmation rises into place
+          });
+          swapRef.current.rafs.push(r2);
+        });
+        swapRef.current.rafs.push(r1);
+      }, ANIM_MS);
+      swapRef.current.timers.push(t1);
     } else {
       setError(result.error);
     }
     setSubmitting(false);
   }
 
-  const confirmed = confirmedNumber !== null;
+  // Off-screen positions translate by the VIEWPORT height (100dvh), not the
+  // sheet's own height: a sheet shorter than the viewport would only move by its
+  // own height with translate-y-full and stay partly visible. 100dvh guarantees
+  // it starts/ends fully off-screen at any sheet size or screen size.
+  const posClass =
+    pos === "center"
+      ? "translate-y-0"
+      : pos === "above"
+        ? "-translate-y-[100dvh]"
+        : "translate-y-[100dvh]";
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto scrollbar-none"
+      className={
+        // The tall form scrolls from the top; the short confirmation sits
+        // centered in the viewport.
+        "fixed inset-0 z-50 flex justify-center overflow-y-auto scrollbar-none " +
+        (view === "confirm" ? "items-center" : "items-start")
+      }
       role="dialog"
       aria-modal="true"
       aria-label={t("title")}
@@ -193,11 +259,16 @@ export function CheckoutSheet() {
       />
 
       {/* White paper sheet — edge-to-edge below md, floating card on md+. Slides
-          up into place on open. */}
+          between below/center/above for open, close and the confirm swap. */}
       <div
         className={
-          "relative w-full max-w-2xl my-8 mx-4 max-md:my-0 max-md:mx-0 max-md:min-h-dvh bg-background text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)] transition-transform duration-500 ease-in-out motion-reduce:transition-none " +
-          (sheetShown ? "translate-y-0" : "translate-y-full")
+          "relative w-full max-w-2xl my-8 mx-4 max-md:my-0 max-md:mx-0 max-md:min-h-dvh flex flex-col bg-background text-xs leading-tight shadow-[10px_10px_6px_0_rgb(0_0_0_/_0.2)] motion-reduce:transition-none " +
+          // On desktop the form fills to 32px from the bottom (my-8 = 4rem
+          // top+bottom) so a short order isn't stranded at the top; the flexible
+          // gap below absorbs the slack. The confirmation stays its natural size.
+          (view === "form" ? "md:min-h-[calc(100dvh_-_4rem)] " : "") +
+          (animateSheet ? "transition-transform duration-500 ease-in-out " : "") +
+          posClass
         }
       >
         {/* Header */}
@@ -218,14 +289,15 @@ export function CheckoutSheet() {
           </button>
         </div>
 
-        {confirmed ? (
+        {view === "confirm" ? (
           <Confirmation
             number={confirmedNumber!}
             onContinue={handleClose}
             t={t}
+            headingWeight={headingWeight}
           />
         ) : (
-          <div className="p-3 pt-2 max-md:px-2 space-y-4">
+          <div className="p-3 pt-2 max-md:px-2 flex-1 flex flex-col">
             {/* ---- Order summary (read-only) ---- */}
             <section>
               <h3 className={`text-base ${headingWeight} mb-1.5`}>
@@ -243,6 +315,11 @@ export function CheckoutSheet() {
                 <span className="text-sm font-bold">{format(subtotalJpy)}</span>
               </div>
             </section>
+
+            {/* Gap between the summary and the contact block: 16px normally, but
+                on desktop it grows (md:flex-1) so a short sheet reaches the
+                bottom margin instead of leaving the slack down there. */}
+            <div aria-hidden className="min-h-4 md:flex-1" />
 
             {/* ---- Contact ---- */}
             <section className="space-y-2">
@@ -278,7 +355,7 @@ export function CheckoutSheet() {
             </section>
 
             {/* ---- Shipping ---- */}
-            <section className="space-y-2">
+            <section className="space-y-2 mt-4">
               <h3 className={`text-base ${headingWeight}`}>
                 {t("shippingHeading")}
               </h3>
@@ -350,7 +427,7 @@ export function CheckoutSheet() {
             </section>
 
             {/* ---- Simulated payment ---- */}
-            <section className="space-y-2">
+            <section className="space-y-2 mt-4">
               <h3 className={`text-base ${headingWeight}`}>
                 {t("paymentHeading")}
               </h3>
@@ -405,22 +482,28 @@ function Confirmation({
   number,
   onContinue,
   t,
+  headingWeight,
 }: {
   number: number;
   onContinue: () => void;
   t: ReturnType<typeof useTranslations>;
+  headingWeight: string;
 }) {
   return (
-    <div className="p-4 max-md:px-2 space-y-3">
-      <h3 className="text-base font-bold">{t("confirmTitle")}</h3>
-      <p>{t("confirmBody", { number })}</p>
-      <p className="text-[11px] italic text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
+    <div className="p-4 pt-2 max-md:px-2">
+      {/* Title matches the form sheet's section headings. */}
+      <h3 className={`text-base ${headingWeight}`}>{t("confirmTitle")}</h3>
+      <p className="mt-1.5">{t("confirmBody", { number })}</p>
+      {/* Second plain line, same styling; 48px gap before the note. */}
+      <p className="mt-1.5 mb-12">{t("confirmUpdates")}</p>
+      {/* Same treatment as the form's simulation notice. */}
+      <p className="text-[11px] text-foreground-muted border border-border-blocked bg-foreground-hover-subtle px-2 py-1.5">
         {t("emailStub")}
       </p>
       <button
         type="button"
         onClick={onContinue}
-        className="w-full text-xs font-bold bg-transparent text-foreground border border-border tracking-wide py-1.5 hover:bg-foreground-hover cursor-pointer"
+        className="mt-3 w-full text-xs font-bold uppercase bg-transparent text-foreground border border-border tracking-wide py-1.5 hover:bg-foreground-hover cursor-pointer"
       >
         {t("continue")}
       </button>
