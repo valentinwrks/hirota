@@ -41,7 +41,7 @@ export async function AboutColumn() {
         <p className="mt-2">{t("history")}</p>
 
         {/* store symbol */}
-        <div className="mb-2 flex justify-center select-none">
+        <div className="mt-1.5 mb-2.5 flex justify-center select-none">
           {/* Same width system as the wordmark (SVG 1) but a touch narrower: 93vw,
               centred, clamped by max-w-full to the column width on the narrow
               desktop about column. */}
@@ -53,8 +53,12 @@ export async function AboutColumn() {
           />
         </div>
 
+        {/* section separator — heads the three locations, mirrors the news
+            separator styling (§ お知らせ). */}
+        <p className="lowercase font-bold text-base md:text-sm 2xl:text-lg pb-0.5 md:pb-0 border-b border-black/30 md:border-b-0">{t("locationsTitle")}</p>
+
         {/* Tokyo head office */}
-        <div>
+        <div className="mt-2">
           <p className="font-bold uppercase">{t("tokyoTitle")}</p>
           <p>{t("tokyoAddress")}</p>
           <div className="flex justify-between">
@@ -118,8 +122,8 @@ export async function AboutColumn() {
             Single-language posts (§ migration), newest first. Hidden entirely
             when empty (and before the news table migration is applied). */}
         {news.length > 0 && (
-          <div className="mt-6">
-            <p className="uppercase font-bold">{t("newsTitle")}</p>
+          <div className="mt-[18px]">
+            <p className="lowercase font-bold text-base md:text-sm 2xl:text-lg pb-0.5 md:pb-0 border-b border-black/30 md:border-b-0">{t("newsTitle")}</p>
             <div className="mt-2 flex flex-col gap-4">
               {news.map((post) => (
                 <div key={post.id}>
