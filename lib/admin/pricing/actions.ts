@@ -199,6 +199,67 @@ export async function updatePriceCell(
   return { ok: true };
 }
 
+/**
+ * Pattern A copy save: the localized copy columns (name / description /
+ * product_type) in BOTH languages, authored together regardless of the admin's
+ * current locale. Each column is JSONB {en, ja}; we write only the non-empty
+ * keys (an empty JA leaves the object EN-only, matching localize()'s fallback).
+ * name.en is required (the column is NOT NULL and every catalog card needs a
+ * fallback); description/product_type may be dropped to NULL entirely.
+ * Price + stock are untouched here — a separate grant, a separate save.
+ */
+export type ProductCopyInput = {
+  nameEn: string;
+  nameJa: string;
+  descEn: string;
+  descJa: string;
+  typeEn: string;
+  typeJa: string;
+};
+
+/** Build a JSONB {en?, ja?} from a field pair, dropping blanks; null if empty. */
+function localizedFrom(
+  en: string,
+  ja: string,
+): { en?: string; ja?: string } | null {
+  const out: { en?: string; ja?: string } = {};
+  const e = en.trim();
+  const j = ja.trim();
+  if (e) out.en = e;
+  if (j) out.ja = j;
+  return out.en || out.ja ? out : null;
+}
+
+export async function updateProductCopy(
+  productId: number,
+  input: ProductCopyInput,
+): Promise<SaveResult> {
+  if (!Number.isInteger(productId)) {
+    return { ok: false, error: "Invalid product." };
+  }
+  const name = localizedFrom(input.nameEn, input.nameJa);
+  if (!name?.en) {
+    return { ok: false, error: "Name (English) is required." };
+  }
+  const description = localizedFrom(input.descEn, input.descJa);
+  const product_type = localizedFrom(input.typeEn, input.typeJa);
+
+  const supabase = await createAuthClient();
+  const { data, error } = await supabase
+    .from("products")
+    .update({ name, description, product_type })
+    .eq("id", productId)
+    .select("id");
+
+  if (error) return { ok: false, error: "Could not save." };
+  if (!data || data.length === 0) {
+    return { ok: false, error: "Not saved — product is not editable." };
+  }
+
+  revalidateStore();
+  return { ok: true };
+}
+
 /** Pattern A row save: price + stock together. Everything else is immutable. */
 export async function updateProduct(
   productId: number,

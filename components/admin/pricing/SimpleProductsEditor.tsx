@@ -6,9 +6,18 @@ import { listSimpleProducts } from "@/lib/admin/pricing/queries";
 import { ProductRowEditor } from "./ProductRowEditor";
 import { TableBlock, TH, TH_NUM } from "./parts";
 
+/** Read one language key of a JSONB {en, ja} without EN fallback (blank if absent). */
+function pick(value: unknown, key: "en" | "ja"): string {
+  if (!value || typeof value !== "object") return "";
+  const v = (value as Record<string, unknown>)[key];
+  return typeof v === "string" ? v : "";
+}
+
 // Pattern A section body (Equipment / Accessories): a row editor per simple
-// product. Price + stock are editable; everything else is read-only context.
-// These are the only two sections with stock — configurators are made-to-order.
+// product. Price + stock are editable inline; name / description / product_type
+// are editable (EN + JA) in an expandable panel per row. Everything else is
+// read-only context. These are the only two sections with stock — configurators
+// are made-to-order.
 export async function SimpleProductsEditor({
   category,
 }: {
@@ -26,8 +35,9 @@ export async function SimpleProductsEditor({
       <thead>
         <tr className="text-foreground">
           <th className={TH}>{t("pricing.colId")}</th>
+          <th className={TH}>{t("pricing.colImage")}</th>
           <th className={TH}>{t("pricing.colProduct")}</th>
-          <th className={`${TH} max-md:hidden`}>{t("pricing.colType")}</th>
+          <th className={TH}>{t("pricing.colType")}</th>
           <th className={TH_NUM}>{t("pricing.colPrice")}</th>
           <th className={TH_NUM}>{t("pricing.colStock")}</th>
           <th className={TH} aria-label={t("pricing.actions")} />
@@ -42,6 +52,12 @@ export async function SimpleProductsEditor({
             productType={localize(p.product_type, locale)}
             price={p.price}
             stock={p.stock}
+            nameEn={pick(p.name, "en")}
+            nameJa={pick(p.name, "ja")}
+            descEn={pick(p.description, "en")}
+            descJa={pick(p.description, "ja")}
+            typeEn={pick(p.product_type, "en")}
+            typeJa={pick(p.product_type, "ja")}
           />
         ))}
       </tbody>
