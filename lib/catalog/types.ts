@@ -44,7 +44,8 @@ export function parseOptions(options: unknown): ProductOptions {
   return { size: asStrings(o.size), color: asStrings(o.color) };
 }
 
-/** Public path to a product image. Files live at public/products/product-<id>.jpg. */
+/** Public path to a product image. Files live at public/products/product-<id>.png
+ *  (transparent-background cutouts). */
 export function productImage(id: number): string {
-  return `/products/product-${id}.jpg`;
+  return `/products/product-${id}.png`;
 }

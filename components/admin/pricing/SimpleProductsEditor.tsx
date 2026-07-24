@@ -26,6 +26,7 @@ export async function SimpleProductsEditor({
   const products = await listSimpleProducts(category);
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("Admin");
+  const tc = await getTranslations("Catalog");
 
   return (
     <TableBlock
@@ -37,7 +38,7 @@ export async function SimpleProductsEditor({
           <th className={TH}>{t("pricing.colId")}</th>
           <th className={TH}>{t("pricing.colImage")}</th>
           <th className={TH}>{t("pricing.colProduct")}</th>
-          <th className={TH}>{t("pricing.colType")}</th>
+          <th className={TH}>{t("pricing.colSubcategory")}</th>
           <th className={TH_NUM}>{t("pricing.colPrice")}</th>
           <th className={TH_NUM}>{t("pricing.colStock")}</th>
           <th className={TH} aria-label={t("pricing.actions")} />
@@ -49,7 +50,7 @@ export async function SimpleProductsEditor({
             key={p.id}
             productId={p.id}
             name={localize(p.name, locale)}
-            productType={localize(p.product_type, locale)}
+            subcategory={tc(`subcategories.${p.subcategory}`)}
             price={p.price}
             stock={p.stock}
             nameEn={pick(p.name, "en")}

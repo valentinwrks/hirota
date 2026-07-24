@@ -15,7 +15,7 @@ import { updateProduct, updateProductCopy } from "@/lib/admin/pricing/actions";
 export function ProductRowEditor({
   productId,
   name,
-  productType,
+  subcategory,
   price,
   stock,
   nameEn,
@@ -27,7 +27,7 @@ export function ProductRowEditor({
 }: {
   productId: number;
   name: string;
-  productType: string | null;
+  subcategory: string;
   price: number;
   stock: number;
   nameEn: string;
@@ -169,7 +169,7 @@ export function ProductRowEditor({
           </button>
         </td>
         <td className="px-3 py-1.5 border-b border-border-blocked text-foreground-muted whitespace-nowrap">
-          {productType ?? "—"}
+          {subcategory}
         </td>
         <td className="px-3 py-1.5 border-b border-border-blocked text-right">
           <input
@@ -240,7 +240,19 @@ export function ProductRowEditor({
           overflow-hidden wrapper is what collapses. Border/bg/padding live on
           the content div so nothing shows while collapsed. */}
       <tr>
-        <td colSpan={7} className="p-0">
+        {/* spacer under ID + IMG so the panel body starts at the Product column.
+            Its border/bg apply only while open — the cell isn't animated, so
+            keeping them always-on would draw a stray strip under the collapsed
+            row. When open, table cells equalise height, so this line/tint lands
+            flush with the content cell's. */}
+        <td
+          colSpan={2}
+          className={
+            "p-0 " +
+            (open ? "border-b border-border-blocked bg-[rgba(0,0,0,0.03)]" : "")
+          }
+        />
+        <td colSpan={5} className="p-0">
           <div
             className={
               "grid transition-[grid-template-rows] duration-200 ease-out " +
@@ -248,7 +260,7 @@ export function ProductRowEditor({
             }
           >
             <div className="overflow-hidden">
-              <div className="px-3 md:px-6 py-3 border-b border-border-blocked bg-[rgba(0,0,0,0.03)]">
+              <div className="pl-6 pr-6 py-3 border-b border-border-blocked bg-[rgba(0,0,0,0.03)]">
                 <div className="max-w-[560px] flex flex-col gap-3">
                   <CopyField
                 label={t("pricing.copyName")}
@@ -342,7 +354,7 @@ function CopyField({
     "focus:bg-background focus:border-foreground";
   return (
     <div className="flex flex-col gap-1">
-      <span className="font-bold text-foreground-strong">{label}</span>
+      <span className="font-bold text-foreground">{label}</span>
       <label className="flex items-center gap-2">
         <span className="w-6 shrink-0 text-foreground-muted">{enLabel}</span>
         <input

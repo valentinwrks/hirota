@@ -175,6 +175,7 @@
       "colImage": "画像",
       "colProduct": "商品",
       "colType": "種別",
+      "colSubcategory": "分類",
       "copyName": "商品名",
       "copyDescription": "説明",
       "copyType": "種別",

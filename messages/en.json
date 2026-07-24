@@ -175,6 +175,7 @@
       "colImage": "IMG",
       "colProduct": "Product",
       "colType": "Type",
+      "colSubcategory": "Category",
       "copyName": "Name",
       "copyDescription": "Description",
       "copyType": "Type",
